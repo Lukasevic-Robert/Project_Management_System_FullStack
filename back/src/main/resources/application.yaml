@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    password: VmVaBhzu9T4HgkNJBTfQ1zK3dC0jI8humGQbr8oh
+    url: jdbc:mysql://127.0.0.1:3306/jira?allowPublicKeyRetrieval=true&useSSL=false
+    username: root
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+    hibernate:
+      ddl-auto: update
+jwt:
+  header: Authorization
+  secret: belzebubas
+  expiration: 604800
