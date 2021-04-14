@@ -1,0 +1,26 @@
+import axios from 'axios';
+import authHeader from './authHeader';
+
+const API_BASE_URL = `http://localhost:8080/api`;
+const TEST_URL = `http://localhost:8080/api/v1/test/`;
+
+class UserService {
+
+    getPublicContent() {
+        return axios.get(API_BASE_URL);
+    }
+
+    getUserBoard() {
+        return axios.get(TEST_URL + 'user', { headers: authHeader() });
+    }
+
+    getModeratorBoard() {
+        return axios.get(TEST_URL + 'mod', { headers: authHeader() });
+    }
+
+    getAdminBoard() {
+        return axios.get(TEST_URL + 'admin', { headers: authHeader() });
+    }
+}
+
+export default new UserService();
