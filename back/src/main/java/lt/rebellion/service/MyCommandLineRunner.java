@@ -27,7 +27,7 @@ public class MyCommandLineRunner implements CommandLineRunner{
 	
 	@Override
 	public void run(String... args) throws Exception {
-		if(userRepository.findAll() == null) {
+		if(userRepository.findAll() == null || userRepository.findAll().isEmpty()) {
 		roleRepository.save(new Role(ERole.ROLE_MODERATOR));
 		roleRepository.save(new Role(ERole.ROLE_ADMIN));
 		roleRepository.save(new Role(ERole.ROLE_USER));
@@ -53,7 +53,6 @@ public class MyCommandLineRunner implements CommandLineRunner{
 		user.setRoles(rolesForUser);
 		
 		userRepository.save(user);
-		}
-		
+		}	
 	}
 }
