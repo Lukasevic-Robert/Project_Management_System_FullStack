@@ -21,16 +21,20 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler imple
 	@Override
 	public void commence(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException authException) throws IOException, ServletException {
-		response.setContentType("application/json");
+		response.setContentType("text/html; charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
 		response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-		response.getOutputStream().println("{ \"error\": \"" + authException.getMessage() + "\" }");
+		String responseString = "{ \"error\": \"" + authException.getMessage() + "\" }";
+		response.getOutputStream().write(responseString.getBytes("UTF-8"));
 	}
 
 	@ExceptionHandler(value = { AccessDeniedException.class })
 	public void commence(HttpServletRequest request, HttpServletResponse response, AccessDeniedException ex)
 			throws IOException {
-		response.setContentType("application/json");
+		response.setContentType("text/html; charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
 		response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-		response.getOutputStream().println("{ \"error\": \"" + ex.getMessage() + "\" }");
+		String responseString = "{ \"error\": \"" + ex.getMessage() + "\" }";
+		response.getOutputStream().write(responseString.getBytes("UTF-8"));
 	}
 }
