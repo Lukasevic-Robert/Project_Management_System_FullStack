@@ -33,8 +33,8 @@ public class GlobalControllerExceptionHandler {
 	}
 	
 	@ResponseStatus(HttpStatus.UNAUTHORIZED) // 401
-	@ExceptionHandler(UnprocessableEntityException.class)
-	public @ResponseBody ApiError handleJwtAuthenticationException(HttpServletRequest request, UnprocessableEntityException e) {
+	@ExceptionHandler(JwtAuthenticationException.class)
+	public @ResponseBody ApiError handleJwtAuthenticationException(HttpServletRequest request, JwtAuthenticationException e) {
 		return new ApiError(e.getMessage());
 	}
 	
