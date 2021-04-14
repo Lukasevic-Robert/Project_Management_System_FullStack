@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
@@ -14,14 +13,15 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import AuthService from '../services/authService';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
+import { FormControlLabel } from '@material-ui/core';
 
 
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
+      <Link color="inherit" href="https://github.com/Lukasevic-Robert/Project_Management_System_FullStack">
+        Spring Rebellion
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -51,16 +51,40 @@ const useStyles = makeStyles((theme) => ({
 
 
 export default function SignIn() {
+  const history = useHistory();
   const classes = useStyles();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
 
+
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+  }
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+  }
 
 
   const handleSubmit = (event) => {
+
     event.preventDefault();
-    AuthService.login(event.target.email, event.target.password);
+    setMessage("");
+    AuthService.login(email, password).then(
+      () => {
+        history.push("/profile");
+        window.location.reload();
+      }, error => {
+        const resMessage =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+        setMessage(resMessage);
+      }
+    ).catch(() => { });
   };
 
   return (
@@ -83,8 +107,11 @@ export default function SignIn() {
             id="email"
             label="Email Address"
             name="email"
+            value={email}
             autoComplete="email"
-            onChange={() => setEmail(TextValidator.value)}
+            validators={['required', 'isEmail']}
+            errorMessages={['this field is required', 'email is not valid']}
+            onChange={handleEmailChange}
             autoFocus
           />
           <TextValidator
@@ -96,7 +123,10 @@ export default function SignIn() {
             label="Password"
             type="password"
             id="password"
-            onChange={() => setPassword(TextValidator.value)}
+            value={password}
+            validators={['required']}
+            errorMessages={['this field is required']}
+            onChange={handlePasswordChange}
             autoComplete="current-password"
           />
           <FormControlLabel
@@ -125,6 +155,7 @@ export default function SignIn() {
             </Grid>
           </Grid>
         </ValidatorForm>
+
       </div>
       <Box mt={8}>
         <Copyright />

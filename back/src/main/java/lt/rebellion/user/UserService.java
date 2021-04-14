@@ -55,6 +55,7 @@ public class UserService {
 					.collect(Collectors.toList());
 			
 			Map<String, Object> response = new HashMap<>();
+			response.put("id", userDetails.getId());
 			response.put("email", request.getEmail());
 			response.put("token", token);
 			response.put("roles", roles);
