@@ -38,7 +38,7 @@ public class MyCommandLineRunner implements CommandLineRunner{
 	
 		User admin = new User();
 		admin.setEmail("admin@mail.com");
-		admin.setPassword(encoder.encode("admin"));
+		admin.setPassword(encoder.encode("Admin1"));
 		admin.setRoles(rolesForAdmin);
 		
 		userRepository.save(admin);
@@ -49,7 +49,7 @@ public class MyCommandLineRunner implements CommandLineRunner{
 		
 		User user = new User();
 		user.setEmail("user@mail.com");
-		user.setPassword(encoder.encode("user"));
+		user.setPassword(encoder.encode("User1"));
 		user.setRoles(rolesForUser);
 		
 		userRepository.save(user);
