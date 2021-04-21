@@ -99,6 +99,7 @@ export default function SignIn() {
         </Typography>
 
         <ValidatorForm className={classes.form} onSubmit={handleSubmit}>
+        {message.length>0&&<div className="alert alert-danger" role="alert"> Please double-check the email and password you entered and try again.</div>}
           <TextValidator
             variant="outlined"
             margin="normal"
@@ -124,8 +125,8 @@ export default function SignIn() {
             type="password"
             id="password"
             value={password}
-            validators={['required']}
-            errorMessages={['this field is required']}
+            validators={['required','matchRegexp:(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])']}
+            errorMessages={['this field is required','Password must contain at least one number digit, one uppercase letter and one lowercase letter']}
             onChange={handlePasswordChange}
             autoComplete="current-password"
           />
