@@ -3,8 +3,10 @@ spring:
         driverClassName: org.h2.Driver
         password: 
         platform: h2
+
 #        url: jdbc:h2:tcp://localhost/~/h2/rebel;COLLATION=LITHUANIAN;DB_CLOSE_ON_EXIT=FALSE
         url: jdbc:h2:mem:testdb;COLLATION=LITHUANIAN;DB_CLOSE_ON_EXIT=FALSE
+
         username: sa
     h2:
         console:
