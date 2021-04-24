@@ -9,6 +9,7 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
@@ -16,6 +17,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lt.rebellion.baseEntity.BaseEntity;
+import lt.rebellion.project.Project;
 import lt.rebellion.role.Role;
 
 @Entity
@@ -44,6 +46,9 @@ public class User extends BaseEntity{
 			joinColumns = @JoinColumn(name = "user_id"), 
 			inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private Set<Role> roles = new HashSet<>();
+	
+	@OneToMany(mappedBy = "user")
+	private Set<Project> projects = new HashSet<>();
 
 	public User(String email, String password) {
 		super();
