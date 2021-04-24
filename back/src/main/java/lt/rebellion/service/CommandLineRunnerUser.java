@@ -18,7 +18,7 @@ import lt.rebellion.user.UserRepository;
 @Component
 @Order(1)
 @AllArgsConstructor
-public class MyCommandLineRunner implements CommandLineRunner {
+public class CommandLineRunnerUser implements CommandLineRunner {
 
 	UserRepository userRepository;
 	BCryptPasswordEncoder encoder;

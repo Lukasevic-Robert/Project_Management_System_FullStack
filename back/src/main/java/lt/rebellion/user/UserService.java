@@ -116,22 +116,23 @@ public class UserService {
 	// GET Current User
 
 	public String getCurrentUserEmail() {
-
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		String username = "NOT FOUND";
-		if (principal instanceof UserDetails) {
-			username = ((UserDetails) principal).getUsername();
-		}
-		return username;
+		return getCurrentUser().getEmail();
 	}
 
 	public Long getCurrentUserId() {
-
-		String username = getCurrentUserEmail();
-		if (username == null || username.isBlank()) {
+		return getCurrentUser().getId();
+	}
+	
+	public User getCurrentUser() {
+		
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		String username = "";
+		if (principal instanceof UserDetails) {
+			username = ((UserDetails) principal).getUsername();
+		}
+		if(username.isBlank()) {
 			throw new NotFoundException("Current User Not Found");
 		}
-		User user = userRepository.findByEmail(username).get();
-		return user.getId();
+		return userRepository.findByEmail(username).get();
 	}
 }

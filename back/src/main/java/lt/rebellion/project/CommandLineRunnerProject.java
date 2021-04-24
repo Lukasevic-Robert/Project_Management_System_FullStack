@@ -24,10 +24,10 @@ public class CommandLineRunnerProject implements CommandLineRunner{
 		List<User> users = userRepository.findAll();
 		
 		// Creating projects for Admin and User
-		for (int i = 0; i < 5; i++) {
+		for (int i = 1; i < 6; i++) {
 			projectRepository.save(new Project("Project"+ i, "Project " + i + " description", users.get(0)));
 		}
-		for (int i = 5; i < 10; i++) {
+		for (int i = 6; i < 11; i++) {
 			projectRepository.save(new Project("Project"+ i, "Project " + i + " description", users.get(1)));
 		}
 	}

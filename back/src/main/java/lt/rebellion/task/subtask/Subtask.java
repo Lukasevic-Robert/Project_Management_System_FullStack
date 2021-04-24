@@ -37,10 +37,9 @@ public class Subtask {
 	@JsonBackReference
 	private Task task;
 
-	public Subtask(String description) {
+	public Subtask(String description, Task task) {
 		super();
 		this.description = description;
+		this.task = task;
 	}
-	
-	
 }

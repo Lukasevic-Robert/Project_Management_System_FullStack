@@ -1,7 +1,7 @@
 package lt.rebellion.task;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -48,8 +48,8 @@ public class Task extends BaseEntity {
 	@JsonBackReference
 	private Project project;
 
-	@OneToMany(mappedBy = "task", cascade = CascadeType.REMOVE, orphanRemoval = true)
-	private Set<Subtask> subtasks = new HashSet<>();
+	@OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Subtask> subtasks = new ArrayList<>();
 
 	public Task(String name, Project project) {
 		super();
