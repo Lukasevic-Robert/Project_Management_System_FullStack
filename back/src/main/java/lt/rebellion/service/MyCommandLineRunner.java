@@ -17,42 +17,41 @@ import lt.rebellion.user.UserRepository;
 
 @Component
 @Order(1)
-@AllArgsConstructor 
-public class MyCommandLineRunner implements CommandLineRunner{
+@AllArgsConstructor
+public class MyCommandLineRunner implements CommandLineRunner {
 
 	UserRepository userRepository;
 	BCryptPasswordEncoder encoder;
 	RoleRepository roleRepository;
-	
-	
+
 	@Override
 	public void run(String... args) throws Exception {
-		if(userRepository.findAll() == null || userRepository.findAll().isEmpty()) {
+		userRepository.deleteAll();
+		roleRepository.deleteAll();
 		roleRepository.save(new Role(ERole.ROLE_MODERATOR));
 		roleRepository.save(new Role(ERole.ROLE_ADMIN));
 		roleRepository.save(new Role(ERole.ROLE_USER));
-		
+
 		// CREATE ADMIN
 		Set<Role> rolesForAdmin = new HashSet<>();
 		rolesForAdmin.add(roleRepository.findByName(ERole.ROLE_ADMIN).get());
-	
+
 		User admin = new User();
 		admin.setEmail("admin@mail.com");
-		admin.setPassword(encoder.encode("admin"));
+		admin.setPassword(encoder.encode("Admin1"));
 		admin.setRoles(rolesForAdmin);
-		
+
 		userRepository.save(admin);
-		
-		//CREATE USER
+
+		// CREATE USER
 		Set<Role> rolesForUser = new HashSet<>();
 		rolesForUser.add(roleRepository.findByName(ERole.ROLE_USER).get());
-		
+
 		User user = new User();
 		user.setEmail("user@mail.com");
-		user.setPassword(encoder.encode("user"));
+		user.setPassword(encoder.encode("User1"));
 		user.setRoles(rolesForUser);
-		
+
 		userRepository.save(user);
-		}	
 	}
 }
