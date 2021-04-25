@@ -7,7 +7,7 @@ import lombok.Setter;
 @RequiredArgsConstructor
 @Getter
 @Setter
-public class CreateProjectRequestDTO {
+public class ProjectRequestDTO {
 
 	private String name;
 	private String description;

@@ -43,23 +43,43 @@ public class ProjectService implements ResponseService<ProjectDTO> {
 		Long id = project.getId();
 		int allTasks = taskRepository.getAllTaskCount(id);
 		int allUndoneTasks = taskRepository.getAllUndoneTaskCount(id);
-		return new ProjectDTO(id, project.getName(), project.getDescription(), project.getStatus().name(), allTasks,
-				allUndoneTasks, project.getCreated(), project.getUpdated());
+		return new ProjectDTO(id,
+				project.getName(),
+				project.getDescription(),
+				project.getStatus().name(),
+				allTasks, allUndoneTasks,
+				project.getCreated(),
+				project.getUpdated());
 	}
 
-	// Create new Project
-	public ResponseEntity<ProjectDTO> createProject(CreateProjectRequestDTO projectRequestDTO) {
+	// CREATE new Project
+	public ResponseEntity<ProjectDTO> createProject(ProjectRequestDTO projectRequestDTO) {
+		
 		Project project = new Project(projectRequestDTO.getName(), projectRequestDTO.getDescription(), userService.getCurrentUser());
 		projectRepository.save(project);
 		ProjectDTO projectDTO = toProjectDTO(project);
 		return new ResponseEntity<>(projectDTO, HttpStatus.OK);
 	}
+	
+	// UPDATE project by id
+	public ResponseEntity<ProjectDTO> updateProject(Long id, ProjectRequestDTO projectRequestDTO){
+		
+		if(validateRequestedProject(id)) {
+			Project project = projectRepository.findById(id).get();
+			project.setName(projectRequestDTO.getName());
+			project.setDescription(projectRequestDTO.getDescription());
+			projectRepository.save(project);
+			ProjectDTO projectDTO = toProjectDTO(project);
+			return new ResponseEntity<ProjectDTO>(projectDTO, HttpStatus.OK);
+		}
+		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	}
 
-	// Get Project by Id
+	// GET Project by Id
 	public ResponseEntity<Project> getProjectById(Long id) {
 
-		Project project = projectRepository.findByIdAndUserId(id, userService.getCurrentUserId());
 		if (validateRequestedProject(id)) {
+			Project project = projectRepository.findByIdAndUserId(id, userService.getCurrentUserId());
 			return new ResponseEntity<>(project, HttpStatus.OK);
 		}
 
@@ -68,6 +88,7 @@ public class ProjectService implements ResponseService<ProjectDTO> {
 
 	// DELETE Project by Id
 	public ResponseEntity<String> deleteProjectById(Long id) {
+		
 		if (validateRequestedProject(id)) {
 			projectRepository.deleteById(id);
 			return new ResponseEntity<String>(HttpStatus.OK);
@@ -77,6 +98,9 @@ public class ProjectService implements ResponseService<ProjectDTO> {
 	}
 
 	public Boolean validateRequestedProject(Long id) {
+		if(id == null) {
+			throw new NullPointerException("validateRequestedProject method was called - id Param = " + id);
+		}
 		Project project = projectRepository.findById(id).get();
 		if (project == null) {
 			throw new NotFoundException("Project Not Found");

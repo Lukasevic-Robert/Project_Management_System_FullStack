@@ -113,7 +113,6 @@ public class UserService {
 
 	}
 
-	// GET Current User
 
 	public String getCurrentUserEmail() {
 		return getCurrentUser().getEmail();
@@ -123,6 +122,7 @@ public class UserService {
 		return getCurrentUser().getId();
 	}
 	
+	// GET Current User
 	public User getCurrentUser() {
 		
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
