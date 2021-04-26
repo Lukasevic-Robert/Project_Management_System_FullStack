@@ -1,14 +1,34 @@
 spring:
-  datasource:
-    password: VmVaBhzu9T4HgkNJBTfQ1zK3dC0jI8humGQbr8oh
-    url: jdbc:mysql://127.0.0.1:3306/projects?allowPublicKeyRetrieval=true&useSSL=false
-    username: root
-  jpa:
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
-    hibernate:
-      ddl-auto: update
+    datasource:
+        driverClassName: org.h2.Driver
+        password: 
+        platform: h2
+
+#        url: jdbc:h2:tcp://localhost/~/h2/rebel;COLLATION=LITHUANIAN;DB_CLOSE_ON_EXIT=FALSE
+        url: jdbc:h2:mem:testdb;COLLATION=LITHUANIAN;DB_CLOSE_ON_EXIT=FALSE
+
+        username: sa
+    h2:
+        console:
+            enabled: true
+            path: /console
+            settings:
+                trace: false
+                web-allow-others: false
+    jpa:
+        database-platform: org.hibernate.dialect.H2Dialect
+        hibernate:
+            ddl-auto: update
+        properties:
+            hibernate:
+                hbm2ddl:
+                    auto: update
+                hibernate:
+                    dialect: org.hibernate.dialect.H2Dialect
+            javax:
+                persistence:
+                    validation:
+                        mode: auto
 jwt:
   header: Authorization
   secret: belzebubas

@@ -75,6 +75,8 @@ public class ProjectService implements ResponseService<ProjectDTO> {
 		Set<User> users = new HashSet<>();
 		users.add(userService.getCurrentUser());
 		Project project = new Project(projectRequestDTO.getName(), projectRequestDTO.getDescription(), users);
+		Set<User> userSet = new HashSet<>(projectRequestDTO.getUsersId().stream().map(u -> userService.getUserById(u)).collect(Collectors.toList()));
+		project.setUsers(userSet);
 		projectRepository.save(project);
 		ProjectDTO projectDTO = toProjectDTO(project);
 		return new ResponseEntity<>(projectDTO, HttpStatus.OK);

@@ -35,6 +35,8 @@ public class CommandLineRunnerUser implements CommandLineRunner {
 		rolesForAdmin.add(roleRepository.findByName(ERole.ROLE_ADMIN).get());
 
 		User admin = new User();
+		admin.setFirstName("Admin");
+		admin.setLastName("Adminovich");
 		admin.setEmail("admin@mail.com");
 		admin.setPassword(encoder.encode("Admin1"));
 		admin.setRoles(rolesForAdmin);
@@ -47,6 +49,8 @@ public class CommandLineRunnerUser implements CommandLineRunner {
 		rolesForUser.add(roleRepository.findByName(ERole.ROLE_USER).get());
 
 		User user = new User();
+		user.setFirstName("User");
+		user.setLastName("Userovich");
 		user.setEmail("user@mail.com");
 		user.setPassword(encoder.encode("User1"));
 		user.setRoles(rolesForUser);
@@ -59,6 +63,8 @@ public class CommandLineRunnerUser implements CommandLineRunner {
 		rolesForModerator.add(roleRepository.findByName(ERole.ROLE_MODERATOR).get());
 		
 		User moderator = new User();
+		moderator.setFirstName("Moderator");
+		moderator.setLastName("Moderatovich");
 		moderator.setEmail("moderator@mail.com");
 		moderator.setPassword(encoder.encode("Moderator1"));
 		moderator.setRoles(rolesForModerator);
