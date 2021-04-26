@@ -1,4 +1,4 @@
-package lt.rebellion.service;
+package lt.rebellion.user;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -12,8 +12,6 @@ import lombok.AllArgsConstructor;
 import lt.rebellion.role.ERole;
 import lt.rebellion.role.Role;
 import lt.rebellion.role.RoleRepository;
-import lt.rebellion.user.User;
-import lt.rebellion.user.UserRepository;
 
 @Component
 @Order(1)
@@ -32,7 +30,7 @@ public class CommandLineRunnerUser implements CommandLineRunner {
 		roleRepository.save(new Role(ERole.ROLE_ADMIN));
 		roleRepository.save(new Role(ERole.ROLE_USER));
 
-		// CREATE ADMIN
+		// CREATE ADMIN ===============================
 		Set<Role> rolesForAdmin = new HashSet<>();
 		rolesForAdmin.add(roleRepository.findByName(ERole.ROLE_ADMIN).get());
 
@@ -42,8 +40,9 @@ public class CommandLineRunnerUser implements CommandLineRunner {
 		admin.setRoles(rolesForAdmin);
 
 		userRepository.save(admin);
+		//=============================================
 
-		// CREATE USER
+		// CREATE USER ================================
 		Set<Role> rolesForUser = new HashSet<>();
 		rolesForUser.add(roleRepository.findByName(ERole.ROLE_USER).get());
 
@@ -53,5 +52,18 @@ public class CommandLineRunnerUser implements CommandLineRunner {
 		user.setRoles(rolesForUser);
 
 		userRepository.save(user);
+		//=============================================
+		
+		// CREATE MODERATOR ===========================
+		Set<Role> rolesForModerator = new HashSet<>();
+		rolesForModerator.add(roleRepository.findByName(ERole.ROLE_MODERATOR).get());
+		
+		User moderator = new User();
+		moderator.setEmail("moderator@mail.com");
+		moderator.setPassword(encoder.encode("Moderator1"));
+		moderator.setRoles(rolesForModerator);
+		
+		userRepository.save(moderator);
+		//=============================================
 	}
 }

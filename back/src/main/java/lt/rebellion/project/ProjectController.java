@@ -4,6 +4,7 @@ import javax.validation.Valid;
 
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,8 +27,14 @@ public class ProjectController {
 	
 	// GET Pagignated Projects
 	@GetMapping("/page")
-	public ResponseEntity<Page<ProjectDTO>> getAllProjectsByUserId(@RequestParam("page") int page, @RequestParam("size") int size){
+	public ResponseEntity<Page<ProjectDTO>> getAllProjects(@RequestParam("page") int page, @RequestParam("size") int size){
 		return projectService.findPaginated(page, size);
+	}
+	
+	// GET Pagignated Projects By User
+	@GetMapping("/pageByUser")
+	public ResponseEntity<Page<ProjectDTO>> getAllProjectsByUserId(@RequestParam("page") int page, @RequestParam("size") int size){
+		return projectService.findPaginatedByUserId(page, size);
 	}
 	
 	//GET project by id
@@ -37,19 +44,22 @@ public class ProjectController {
 	}
 	
 	// CREATE new Project
-	@PostMapping
+	@PostMapping("/createProject")
+	@PreAuthorize("hasRole('ROLE_MODERATOR') or hasRole('ROLE_ADMIN')")
 	public ResponseEntity<ProjectDTO> createProject(@Valid @RequestBody ProjectRequestDTO projectRequestDTO){
 		return projectService.createProject(projectRequestDTO);
 	}
 	
 	// UPDATE project by id
 	@PutMapping("/{id}")
+	@PreAuthorize("hasRole('ROLE_MODERATOR') or hasRole('ROLE_ADMIN')")
 	public ResponseEntity<ProjectDTO> updateProjectById(@PathVariable Long id, @Valid @RequestBody ProjectRequestDTO projectRequestDTO){
 		return projectService.updateProject(id, projectRequestDTO);
 	}
 	
 	// DELETE project by id
 	@DeleteMapping("/{id}")
+	@PreAuthorize("hasRole('ROLE_MODERATOR') or hasRole('ROLE_ADMIN')")
 	public ResponseEntity<String> deleteProjectById(@PathVariable Long id){
 		return projectService.deleteProjectById(id);
 	}

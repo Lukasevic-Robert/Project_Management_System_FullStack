@@ -11,14 +11,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ProjectRepository extends JpaRepository<Project, Long> {
 
-	@Query(value = "SELECT * FROM projects WHERE user_id = ?1", nativeQuery = true)
+	@Query(value = "SELECT * FROM projects, user_projects" + " WHERE projects.id = user_projects.project_id " + "AND" + " user_id = ?1 group by projects.id", nativeQuery = true)
 	Page<Project> findAllPaginatedProjectsByUserId(Long id, Pageable pageable);
 	
 	@Query(value = "SELECT * FROM projects WHERE user_id = ?1", nativeQuery = true)
-	List<Project> getAllProjectsByUserId(Long id);
-
-	@Query(value = "SELECT * FROM projects WHERE id = ?1 AND user_id = ?2", nativeQuery = true)
-	Project findByIdAndUserId(Long projectId, Long userId);
-	
+	List<Project> getAllProjectsByUserId(Long id);	
 	
 }

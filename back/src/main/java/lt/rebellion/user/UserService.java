@@ -113,7 +113,6 @@ public class UserService {
 
 	}
 
-
 	public String getCurrentUserEmail() {
 		return getCurrentUser().getEmail();
 	}
@@ -121,18 +120,27 @@ public class UserService {
 	public Long getCurrentUserId() {
 		return getCurrentUser().getId();
 	}
-	
+
 	// GET Current User
 	public User getCurrentUser() {
-		
+
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		String username = "";
 		if (principal instanceof UserDetails) {
 			username = ((UserDetails) principal).getUsername();
 		}
-		if(username.isBlank()) {
+		if (username.isBlank()) {
 			throw new NotFoundException("Current User Not Found");
 		}
 		return userRepository.findByEmail(username).get();
+	}
+
+	// need to add validation
+	public User getUserById(Long id) {
+		return userRepository.findById(id).get();
+	}
+	
+	public UserDTO userToDTO(User user) {
+		return new UserDTO(user.getId(), user.getEmail());
 	}
 }
