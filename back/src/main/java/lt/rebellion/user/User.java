@@ -16,6 +16,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lt.rebellion.baseEntity.BaseEntity;
+import lt.rebellion.project.Project;
 import lt.rebellion.role.Role;
 
 @Entity
@@ -24,29 +25,33 @@ import lt.rebellion.role.Role;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "users")
-public class User extends BaseEntity{
+public class User extends BaseEntity {
 
+	@Column(name = "first_name")
+	private String firstName;
 	
-//	@Column(name = "first_name")
-//	private String firstName;
-//	
-//	@Column(name = "last_name")
-//	private String lastName;
-	
+	@Column(name = "last_name")
+	private String lastName;
+
 	@Column(name = "email")
 	private String email;
-	
+
 	@Column(name = "password")
 	private String password;
-	
+
 	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "user_roles", 
-			joinColumns = @JoinColumn(name = "user_id"), 
-			inverseJoinColumns = @JoinColumn(name = "role_id"))
+	@JoinTable(name = "user_roles",
+			joinColumns = @JoinColumn(name = "user_id"),
+				inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private Set<Role> roles = new HashSet<>();
 
-	public User(String email, String password) {
+	@ManyToMany
+	private Set<Project> projects = new HashSet<>();
+
+	public User(String firstName, String lastName, String email, String password) {
 		super();
+		this.firstName = firstName;
+		this.lastName = lastName;
 		this.email = email;
 		this.password = password;
 	}

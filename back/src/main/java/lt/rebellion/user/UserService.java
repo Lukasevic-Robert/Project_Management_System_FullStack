@@ -13,6 +13,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -28,46 +30,41 @@ import lt.rebellion.role.RoleRepository;
 import lt.rebellion.security.JwtTokenProvider;
 import lt.rebellion.service.UserDetailsImpl;
 
-
 @Service
 @AllArgsConstructor
 public class UserService {
-	
-	
+
 	private final AuthenticationManager authenticationManager;
 	private JwtTokenProvider jwtTokenProvider;
 	private UserRepository userRepository;
 	private RoleRepository roleRepository;
 	private PasswordEncoder encoder;
-	
-	
+
 	// Handles authenticate request
 
-	public ResponseEntity<?> authenticate(LoginRequest request){
+	public ResponseEntity<?> authenticate(LoginRequest request) {
 		try {
 			Authentication authentication = authenticationManager
-					.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));		
-	
+					.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+
 			String token = jwtTokenProvider.createToken(request.getEmail());
 			UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-			
+
 			List<String> roles = userDetails.getAuthorities().stream().map(item -> item.getAuthority())
 					.collect(Collectors.toList());
-			
+
 			Map<String, Object> response = new HashMap<>();
 			response.put("id", userDetails.getId());
 			response.put("email", request.getEmail());
 			response.put("token", token);
 			response.put("roles", roles);
 			return ResponseEntity.ok(response);
-			
+
 		} catch (AuthenticationException e) {
 			return new ResponseEntity<>("Invalid email/password combination", HttpStatus.FORBIDDEN);
 		}
 	}
-	
-	
-	
+
 	// Handles register request
 
 	public ResponseEntity<?> registerUser(SignupRequest signUpRequest) {
@@ -77,7 +74,7 @@ public class UserService {
 		}
 
 		// Create new user's account
-		User user = new User(signUpRequest.getEmail(), encoder.encode(signUpRequest.getPassword()));
+		User user = new User(signUpRequest.getFirstName(), signUpRequest.getLastName(), signUpRequest.getEmail(), encoder.encode(signUpRequest.getPassword()));
 
 		Set<String> strRoles = signUpRequest.getRole();
 		Set<Role> roles = new HashSet<>();
@@ -114,5 +111,36 @@ public class UserService {
 
 		return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
 
+	}
+
+	public String getCurrentUserEmail() {
+		return getCurrentUser().getEmail();
+	}
+
+	public Long getCurrentUserId() {
+		return getCurrentUser().getId();
+	}
+
+	// GET Current User
+	public User getCurrentUser() {
+
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		String username = "";
+		if (principal instanceof UserDetails) {
+			username = ((UserDetails) principal).getUsername();
+		}
+		if (username.isBlank()) {
+			throw new NotFoundException("Current User Not Found");
+		}
+		return userRepository.findByEmail(username).get();
+	}
+
+	// need to add validation
+	public User getUserById(Long id) {
+		return userRepository.findById(id).get();
+	}
+	
+	public UserDTO userToDTO(User user) {
+		return new UserDTO(user.getId(), user.getEmail());
 	}
 }
