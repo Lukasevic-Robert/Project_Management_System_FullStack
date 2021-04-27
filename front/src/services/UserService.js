@@ -21,6 +21,15 @@ class UserService {
     getAdminBoard() {
         return axios.get(TEST_URL + 'admin', { headers: authHeader() });
     }
+
+    getProjects(pageNr,sizeNr) {
+        return axios.get(API_BASE_URL + '/v1/projects/page',{params: {page:pageNr, size:sizeNr}}, { headers: authHeader() });
+    }
+
+    deleteProject(projectId){
+        return axios.delete(API_BASE_URL + '/v1/projects' + projectId, { headers: authHeader() });
+    }
+
 }
 
 export default new UserService();

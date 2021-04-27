@@ -57,6 +57,7 @@ export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [errUnauthorized, setErrUnauthorized] = useState("");
 
 
   const handleEmailChange = (e) => {
@@ -73,7 +74,9 @@ export default function SignIn() {
     setMessage("");
     AuthService.login(email, password).then(
       () => {
-        history.push("/profile");
+                // changed to /projects, initial version: history.push("/profile");
+
+        history.push("/api/v1/projects");
         window.location.reload();
       }, error => {
         const resMessage =
@@ -83,6 +86,9 @@ export default function SignIn() {
           error.message ||
           error.toString();
         setMessage(resMessage);
+        console.log("*****"+error.getStatusCode)
+        setErrUnauthorized(resMessage.substring(resMessage.length-3,resMessage.length));
+
       }
     ).catch(() => { });
   };
@@ -99,7 +105,8 @@ export default function SignIn() {
         </Typography>
 
         <ValidatorForm className={classes.form} onSubmit={handleSubmit}>
-        {message.length>0&&<div className="alert alert-danger" role="alert"> Please double-check the email and password you entered and try again.</div>}
+        {(errUnauthorized==403||errUnauthorized==401)&&<div className="alert alert-danger" role="alert"> Please double-check the email and password you entered and try again.</div>}
+
           <TextValidator
             variant="outlined"
             margin="normal"
@@ -109,7 +116,7 @@ export default function SignIn() {
             label="Email Address"
             name="email"
             value={email}
-            autoComplete="email"
+            // autoComplete="email"
             validators={['required', 'isEmail']}
             errorMessages={['this field is required', 'email is not valid']}
             onChange={handleEmailChange}
@@ -125,10 +132,10 @@ export default function SignIn() {
             type="password"
             id="password"
             value={password}
-            validators={['required','matchRegexp:(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])']}
-            errorMessages={['this field is required','Password must contain at least one number digit, one uppercase letter and one lowercase letter']}
+            validators={['required']}
+            errorMessages={['this field is required']}
             onChange={handlePasswordChange}
-            autoComplete="current-password"
+            // autoComplete="current-password"
           />
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
