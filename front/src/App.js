@@ -94,9 +94,9 @@ function App() {
             <Route path="/api/v1/test/user" component={BoardUser} />
             <Route path="/api/v1/test/admin" component={BoardAdmin} />
             <Route path="/profile" component={Profile} />
-            <Route path="/api/v1/projects" component={ProjectList} />
-            <Route path="/projects/:id" component={CreateProject}></Route>
-              <Route path="/tasks/:id" component={ViewProjectTasks}></Route>
+            <Route exact path="/api/v1/projects" component={ProjectList} />
+            <Route path="/api/v1/projects/:id" component={CreateProject}></Route>
+              <Route path="/api/v1/tasks/:id" component={ViewProjectTasks}></Route>
           </Switch>
          
         </div>

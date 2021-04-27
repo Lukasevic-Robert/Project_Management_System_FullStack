@@ -27,9 +27,20 @@ class UserService {
     }
 
     deleteProject(projectId){
-        return axios.delete(API_BASE_URL + '/v1/projects' + projectId, { headers: authHeader() });
+        return axios.delete(API_BASE_URL + '/v1/projects/' + projectId, { headers: authHeader() });
     }
 
+    getProjectById(projectId){
+        return axios.get(API_BASE_URL + '/v1/projects/' + projectId, { headers: authHeader() });
+    }
+
+    createProject(project) {
+        return axios.post(API_BASE_URL+ '/v1/projects/createProject', project, { headers: authHeader() });
+    }
+    
+    updateProject(project, projectId){
+        return axios.put(API_BASE_URL+ '/v1/projects/'+projectId,project, { headers: authHeader() });
+    }
 }
 
 export default new UserService();

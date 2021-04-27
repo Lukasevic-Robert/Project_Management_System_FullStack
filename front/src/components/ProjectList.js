@@ -19,6 +19,8 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';  
 import authHeader from '../services/authHeader';
+import CreateProject from './CreateProject';
+import { Link } from "react-router-dom";
 
 
 
@@ -36,7 +38,7 @@ export default function ProjectList() {
     const [errorsFromBack, setErrorsFromBack] = useState([]);
 
     const [projects, setProjects] = useState([
-        {id:1,
+        {id:2,
         name:"P1",
     description:"descr",
 status:"done",
@@ -62,29 +64,15 @@ unfinishedTasks:2}
     //     );
     // }, [])
 
+
+
     // delete a project
 const deleteProject = async (id) => {
  const response= await UserService.deleteProject(id);
  response.status===200 ?  setProjects(projects.filter((project) => project.id !== id))  : alert('Error Deleting This Project')
  handleClose();
- setProjects(projects.filter((project) => project.id !== id))  ;
+// setProjects(projects.filter((project) => project.id !== id))  ;
 }
-
-    // view a project
-    const viewProject = (rowId) => {
-        console.log('viewing' + rowId)
-    }
-
-    // edit a project
-    const editProject = (rowId) => {
-        console.log('editing' + rowId)
-    }
-
-    // add a project
-    const onAdd = (e) => {
-        e.preventDefault()
-        console.log('adding project');
-    }
 
     // paging
     const handleChangePage = (event, newPage) => {
@@ -130,7 +118,10 @@ const deleteProject = async (id) => {
   <Fab color="primary" className={classes.fab}>
     <AddIcon />
   </Fab> */}
-                        <button className="btn btn-success btn-sm" onClick={onAdd}>Add new</button>
+
+   <Link to={`/api/v1/projects/-1`}>
+                        <button className="btn btn-success btn-sm">Add new</button>
+                        </Link>
                     </div>
                     <Table className={classes.table} size="small" aria-label="a dense table">
                         <TableHead>
@@ -155,11 +146,13 @@ const deleteProject = async (id) => {
                                         <TableCell align="right">{row.totalTasks}</TableCell>
                                         <TableCell align="right">{row.unfinishedTasks}</TableCell>
                                         <TableCell align="right">
-                                            
-                                                <BsFillEyeFill size={20} style={{ color: 'green', cursor: 'ponter' }} onClick={() => viewProject(row.id)} />
+
+                                        <Link to={`/api/v1/tasks/${row.id}`}>
+                                                <BsFillEyeFill size={20} style={{ color: 'green', cursor: 'ponter' }} />
+                                                </Link>
+
                                                 <BsTrash size={20} style={{ color: 'red', cursor: 'ponter' }} onClick={() =>handleClickOpen(row.id, row.name)} />
-                                                {/* handleClickOpen(row.id, row.name) 
-                                                deleteProject(row.id)*/}
+                                        
                                                 <Dialog
                                                     open={open}
                                                     onClose={handleClose}
@@ -178,8 +171,9 @@ const deleteProject = async (id) => {
                                                     </DialogActions>
                                                 </Dialog>
 
-                                                <BsPencil size={20} style={{ color: 'blue', cursor: 'ponter' }} onClick={() => editProject(row.id)} />
-                                            
+                                                <Link to={`/api/v1/projects/${row.id}`}>
+                                                <BsPencil size={20} style={{ color: 'blue', cursor: 'ponter' }} />
+                                            </Link>
                                         </TableCell>
                                     </TableRow>
                                 ))}

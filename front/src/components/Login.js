@@ -86,7 +86,6 @@ export default function SignIn() {
           error.message ||
           error.toString();
         setMessage(resMessage);
-        console.log("*****"+error.getStatusCode)
         setErrUnauthorized(resMessage.substring(resMessage.length-3,resMessage.length));
 
       }
