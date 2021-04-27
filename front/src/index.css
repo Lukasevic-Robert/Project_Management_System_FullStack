@@ -44,3 +44,9 @@ body, html, .App, #root, .auth-wrapper {
   font-weight: 400;
 }
 
+.projectHeadingStyle {
+  display: flex;
+justify-content: space-between;
+align-items: center;
+margin-bottom: 20px;
+}

@@ -5,6 +5,7 @@ import javax.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/projects")
+@CrossOrigin(origins = "http://localhost:3000")
 public class ProjectController {
 
 	private final ProjectService projectService;
@@ -56,6 +58,13 @@ public class ProjectController {
 	public ResponseEntity<ProjectDTO> updateProjectById(@PathVariable Long id, @Valid @RequestBody ProjectRequestDTO projectRequestDTO){
 		return projectService.updateProject(id, projectRequestDTO);
 	}
+	
+//	@GetMapping()
+//	@PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+// public String findAllProjects() {
+//     return "returning projects";
+// }
+
 	
 	// DELETE project by id
 	@DeleteMapping("/{id}")

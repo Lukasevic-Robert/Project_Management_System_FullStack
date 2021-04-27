@@ -7,6 +7,9 @@ import BoardUser from './components/BoardUser.js';
 import BoardAdmin from './components/BoardAdmin.js';
 import Profile from './components/Profile.js';
 import AuthService from "./services/authService.js";
+import ProjectList from './components/ProjectList.js';
+import AddNewProject from './components/AddNewProject.js';
+import ViewProjectTasks from './components/ViewProjectTasks.js';
 
 
 function App() {
@@ -91,6 +94,9 @@ function App() {
             <Route path="/api/v1/test/user" component={BoardUser} />
             <Route path="/api/v1/test/admin" component={BoardAdmin} />
             <Route path="/profile" component={Profile} />
+            <Route path="/api/v1/projects" component={ProjectList} />
+            <Route path="/projects/:id" component={AddNewProject}></Route>
+              <Route path="/tasks/:id" component={ViewProjectTasks}></Route>
           </Switch>
         </div>
       </div>
