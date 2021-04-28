@@ -21,6 +21,7 @@ import axios from 'axios';
 import authHeader from '../services/authHeader';
 import CreateProject from './CreateProject';
 import { Link } from "react-router-dom";
+import swal from 'sweetalert';
 
 
 
@@ -38,7 +39,7 @@ export default function ProjectList() {
     const [errorsFromBack, setErrorsFromBack] = useState([]);
 
     const [projects, setProjects] = useState([
-        {id:2,
+        {id:4,
         name:"P1",
     description:"descr",
 status:"done",
@@ -67,12 +68,38 @@ unfinishedTasks:2}
 
 
     // delete a project
-const deleteProject = async (id) => {
- const response= await UserService.deleteProject(id);
- response.status===200 ?  setProjects(projects.filter((project) => project.id !== id))  : alert('Error Deleting This Project')
+const deleteProject = (id) => {
+ UserService.deleteProject(id).then(res => {
+    getSuccessMessage("deleted");
+        setProjects(projects.filter((project) => project.id !== id))
+    })
+        .catch((error) => {
+            getErrorMessage();
+        }
+        );
+
  handleClose();
-// setProjects(projects.filter((project) => project.id !== id))  ;
 }
+
+const getErrorMessage=()=> {
+    const errorMessage = swal({
+        text: "Something went wrong! ",
+        button: "Go back to project list",
+        icon: "warning",
+        dangerMode: true,
+    });
+    return errorMessage;
+}
+
+const getSuccessMessage=(status)=> {
+    const successMessage= swal({
+         title: "Request successful",
+         text: `The project has been ${status}`,
+         icon: "success",
+         button: "Go back to project list",
+     });
+     return successMessage;
+ }
 
     // paging
     const handleChangePage = (event, newPage) => {

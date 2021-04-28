@@ -1,5 +1,4 @@
 import React from 'react'
-import { BsTypeH1 } from 'react-icons/bs';
 import { Link } from "react-router-dom";
 
 
