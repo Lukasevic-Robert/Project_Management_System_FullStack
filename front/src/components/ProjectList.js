@@ -199,7 +199,7 @@ const getSuccessMessage=(status)=> {
                                                     <DialogTitle id="alert-dialog-title">{`Are you sure you want to delete project: ${deleteName}?`}</DialogTitle>
 
                                                     <DialogActions>
-                                                        <Button onClick={handleClose} color="primary"></Button>
+                                                        <Button onClick={handleClose} color="primary">CANCEL</Button>
                                                         <Button onClick={() => deleteProject(deleteId)} color="primary" autoFocus>OK</Button>
                                                     </DialogActions>
                                                 </Dialog>
