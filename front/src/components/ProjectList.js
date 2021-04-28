@@ -8,17 +8,14 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import TablePagination from '@material-ui/core/TablePagination';
-import { BsFillEyeFill, BsTrash, BsTools, BsPencil, BsPencilSquare } from "react-icons/bs";
+import { BsFillEyeFill, BsTrash, BsPencil } from "react-icons/bs";
 import { useState, useEffect } from 'react'
 import UserService from "../services/UserService";
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
-import axios from 'axios';  
-import authHeader from '../services/authHeader';
+
 
 
 
@@ -29,78 +26,95 @@ const useStyles = makeStyles({
 });
 
 export default function ProjectList() {
-    const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(5);
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(5);
     const classes = useStyles();
-    // const [projects, setProjects] = useState([]);
+    const [projects, setProjects] = useState([]);
+    const [responseData, setResponseData] = useState([]);
+    const [elementCount, setElementCount] = useState(1);
     const [errorsFromBack, setErrorsFromBack] = useState([]);
 
-    const [projects, setProjects] = useState([
-        {id:1,
-        name:"P1",
-    description:"descr",
-status:"done",
-totalTasks:5,
-unfinishedTasks:2}
-    ]);
 
 
-    // get projects from database
-    // useEffect(() => {
-    //     UserService.getProjects().then(
-    //         response => {
-    //             console.log("***"+response.data+"***");
-    //        //     setProjects(response.data)
-    //         },
-    //         error => {
-    //             setErrorsFromBack((error.response &&
-    //                 error.response.data &&
-    //                 error.response.data.message) ||
-    //                 error.message ||
-    //                 error.toString())
-    //         }
-    //     );
-    // }, [])
+    //     const [projects, setProjects] = useState([
+    //         {id:1,
+    //         name:"P1",
+    //     description:"descr",
+    // status:"done",
+    // totalTasks:5,
+    // unfinishedTasks:2}
+    //     ]);
 
-    // delete a project
-const deleteProject = async (id) => {
- const response= await UserService.deleteProject(id);
- response.status===200 ?  setProjects(projects.filter((project) => project.id !== id))  : alert('Error Deleting This Project')
- handleClose();
- setProjects(projects.filter((project) => project.id !== id))  ;
-}
 
-    // view a project
+
+
+    // GET PROJECTS from database ==========================>
+    useEffect(() => {
+        getProjects();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [page, rowsPerPage])
+
+
+    const getProjects = async () => {
+
+        await UserService.getProjects(page, rowsPerPage).then(
+            response => {
+
+                setResponseData(response.data);
+                setProjects(response.data.content);
+                setElementCount(response.data.totalElements);
+
+            },
+            error => {
+                setErrorsFromBack((error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                    error.message ||
+                    error.toString())
+            }
+        );
+    }
+
+    // DELETE a project ==================================>
+    const deleteProject = async (id) => {
+        const response = await UserService.deleteProject(id);
+        response.status === 200 ? setProjects(projects.filter((project) => project.id !== id)) : alert('Error Deleting This Project')
+        handleClose();
+        setProjects(projects.filter((project) => project.id !== id));
+    }
+
+    // VIEW a project ====================================>
     const viewProject = (rowId) => {
         console.log('viewing' + rowId)
     }
 
-    // edit a project
+
+    // UPDATE a project ===================================>
     const editProject = (rowId) => {
         console.log('editing' + rowId)
     }
 
-    // add a project
+    // ADD a project ======================================>
     const onAdd = (e) => {
         e.preventDefault()
         console.log('adding project');
     }
 
-    // paging
+    // PAGINATION =========================================>
     const handleChangePage = (event, newPage) => {
-        setPage(newPage);
-        console.log(newPage);
+        setPage(newPage)
     };
 
     const handleChangeRowsPerPage = event => {
-        setRowsPerPage(+event.target.value);
+        setRowsPerPage(event.target.value);
         setPage(0);
     };
 
-    const emptyRows = rowsPerPage - Math.min(rowsPerPage, projects.length - page * rowsPerPage);
-// end paging
 
-        // project delete confirmation dialog
+    // const emptyRows = rowsPerPage - Math.min(rowsPerPage, projects.length - page * rowsPerPage);
+    // end paging
+
+    // project delete confirmation dialog
 
     const [open, setOpen] = React.useState(false);
     const [deleteId, setDeleteId] = React.useState(0);
@@ -116,7 +130,7 @@ const deleteProject = async (id) => {
         setOpen(false);
     };
 
-// end project delete confirmation dialog
+    // end project delete confirmation dialog
 
     return (
         <div>
@@ -145,41 +159,32 @@ const deleteProject = async (id) => {
                         </TableHead>
                         <TableBody>
                             {
-                                projects.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
+                                (projects.slice(0, rowsPerPage)).map((row) => (
+
                                     <TableRow key={row.id}>
-                                        <TableCell component="th" scope="row">
-                                            {row.name}
-                                        </TableCell>
+                                        <TableCell component="th" scope="row">{row.name}</TableCell>
                                         <TableCell align="right">{row.description}</TableCell>
                                         <TableCell align="right">{row.status}</TableCell>
-                                        <TableCell align="right">{row.totalTasks}</TableCell>
-                                        <TableCell align="right">{row.unfinishedTasks}</TableCell>
+                                        <TableCell align="right">{row.taskCount}</TableCell>
+                                        <TableCell align="right">{row.undoneTaskCount}</TableCell>
                                         <TableCell align="right">
-                                            
-                                                <BsFillEyeFill size={20} style={{ color: 'green', cursor: 'ponter' }} onClick={() => viewProject(row.id)} />
-                                                <BsTrash size={20} style={{ color: 'red', cursor: 'ponter' }} onClick={() =>handleClickOpen(row.id, row.name)} />
-                                                {/* handleClickOpen(row.id, row.name) 
+
+                                            <BsFillEyeFill size={20} style={{ color: 'green', cursor: 'pointer' }} onClick={() => viewProject(row.id)} />
+                                            <BsTrash size={20} style={{ color: 'red', cursor: 'pointer' }} onClick={() => handleClickOpen(row.id, row.name)} />
+                                            {/* handleClickOpen(row.id, row.name) 
                                                 deleteProject(row.id)*/}
-                                                <Dialog
-                                                    open={open}
-                                                    onClose={handleClose}
-                                                    aria-labelledby="alert-dialog-title"
-                                                    aria-describedby="alert-dialog-description"
-                                                >
-                                                    <DialogTitle id="alert-dialog-title">{`Are you sure you want to delete project: ${deleteName}?`}</DialogTitle>
-
-                                                    <DialogActions>
-                                                        <Button onClick={handleClose} color="primary">
-                                                            Cancel
-          </Button>
-                                                        <Button onClick={() => deleteProject(deleteId)} color="primary" autoFocus>
-                                                            OK
-          </Button>
-                                                    </DialogActions>
-                                                </Dialog>
-
-                                                <BsPencil size={20} style={{ color: 'blue', cursor: 'ponter' }} onClick={() => editProject(row.id)} />
-                                            
+                                            <Dialog
+                                                open={open}
+                                                onClose={handleClose}
+                                                aria-labelledby="alert-dialog-title"
+                                                aria-describedby="alert-dialog-description">
+                                                <DialogTitle id="alert-dialog-title">{`Are you sure you want to delete project: ${deleteName}?`}</DialogTitle>
+                                                <DialogActions>
+                                                    <Button onClick={handleClose} color="primary">Cancel</Button>
+                                                    <Button onClick={() => deleteProject(deleteId)} color="primary" autoFocus>OK</Button>
+                                                </DialogActions>
+                                            </Dialog>
+                                            <BsPencil size={20} style={{ color: 'blue', cursor: 'pointer' }} onClick={() => editProject(row.id)} />
                                         </TableCell>
                                     </TableRow>
                                 ))}
@@ -189,7 +194,7 @@ const deleteProject = async (id) => {
                 <TablePagination
                     rowsPerPageOptions={[5, 10, 25]}
                     component="div"
-                    count={projects.length}
+                    count={elementCount}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onChangePage={handleChangePage}

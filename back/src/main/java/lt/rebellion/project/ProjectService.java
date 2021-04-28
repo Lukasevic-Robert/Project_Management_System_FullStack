@@ -30,7 +30,7 @@ public class ProjectService implements ResponseService<ProjectDTO> {
 	private final UserService userService;
 	private final TaskRepository taskRepository;
 	
-	
+
 
 
 	// GET ALL projects paginated
@@ -38,10 +38,10 @@ public class ProjectService implements ResponseService<ProjectDTO> {
 	public ResponseEntity<Page<ProjectDTO>> findPaginated(int page, int size) {
 
 		Sort.Order order = new Sort.Order(Sort.Direction.ASC, "id");
-		Pageable pageable = PageRequest.of(page - 1, size, Sort.by(order));
+		Pageable pageable = PageRequest.of(page -1, size, Sort.by(order));
 		Page<Project> allProjects = projectRepository.findAll(pageable);
 		List<ProjectDTO> allProjectDTOs = allProjects.stream().map(p -> toProjectDTO(p)).collect(Collectors.toList());
-		Page<ProjectDTO> backToPage = new PageImpl<ProjectDTO>(allProjectDTOs);
+		Page<ProjectDTO> backToPage = new PageImpl<ProjectDTO>(allProjectDTOs, pageable, allProjects.getTotalElements());
 
 		return new ResponseEntity<>(backToPage, HttpStatus.OK);
 	}
@@ -51,11 +51,11 @@ public class ProjectService implements ResponseService<ProjectDTO> {
 	public ResponseEntity<Page<ProjectDTO>> findPaginatedByUserId(int page, int size) {
 
 		Sort.Order order = new Sort.Order(Sort.Direction.ASC, "project_id");
-		Pageable pageable = PageRequest.of(page - 1, size, Sort.by(order));
+		Pageable pageable = PageRequest.of(page -1, size, Sort.by(order));
 		Page<Project> allProjects = projectRepository.findAllPaginatedProjectsByUserId(userService.getCurrentUserId(), pageable);
 		List<ProjectDTO> allProjectDTOs = allProjects.stream().map(p -> toProjectDTO(p)).collect(Collectors.toList());
-		Page<ProjectDTO> backToPage = new PageImpl<ProjectDTO>(allProjectDTOs);
-
+		Page<ProjectDTO> backToPage = new PageImpl<ProjectDTO>(allProjectDTOs, pageable, allProjects.getTotalElements());
+		
 		return new ResponseEntity<>(backToPage, HttpStatus.OK);
 	}
 	
@@ -86,7 +86,7 @@ public class ProjectService implements ResponseService<ProjectDTO> {
 	public ResponseEntity<ProjectDTO> updateProject(Long id, ProjectRequestDTO projectRequestDTO){
 		
 		if(validateRequestedProject(id)) {
-			
+
 			Project project = projectRepository.findById(id).get();
 			project.setName(projectRequestDTO.getName());
 			project.setDescription(projectRequestDTO.getDescription());
