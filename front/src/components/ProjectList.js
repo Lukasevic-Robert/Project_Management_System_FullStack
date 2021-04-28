@@ -15,6 +15,11 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
+import axios from 'axios';  
+import authHeader from '../services/authHeader';
+import CreateProject from './CreateProject';
+import { Link } from "react-router-dom";
+import swal from 'sweetalert';
 
 
 
@@ -33,7 +38,6 @@ export default function ProjectList() {
     const [responseData, setResponseData] = useState([]);
     const [elementCount, setElementCount] = useState(1);
     const [errorsFromBack, setErrorsFromBack] = useState([]);
-
 
 
     //     const [projects, setProjects] = useState([
@@ -74,31 +78,40 @@ export default function ProjectList() {
             }
         );
     }
+    
+      // DELETE a project ==================================>
+const deleteProject = (id) => {
+ UserService.deleteProject(id).then(res => {
+    getSuccessMessage("deleted");
+        setProjects(projects.filter((project) => project.id !== id))
+    })
+        .catch((error) => {
+            getErrorMessage();
+        }
+        );
 
-    // DELETE a project ==================================>
-    const deleteProject = async (id) => {
-        const response = await UserService.deleteProject(id);
-        response.status === 200 ? setProjects(projects.filter((project) => project.id !== id)) : alert('Error Deleting This Project')
-        handleClose();
-        setProjects(projects.filter((project) => project.id !== id));
-    }
+ handleClose();
+}
 
-    // VIEW a project ====================================>
-    const viewProject = (rowId) => {
-        console.log('viewing' + rowId)
-    }
+const getErrorMessage=()=> {
+    const errorMessage = swal({
+        text: "Something went wrong! ",
+        button: "Go back to project list",
+        icon: "warning",
+        dangerMode: true,
+    });
+    return errorMessage;
+}
 
-
-    // UPDATE a project ===================================>
-    const editProject = (rowId) => {
-        console.log('editing' + rowId)
-    }
-
-    // ADD a project ======================================>
-    const onAdd = (e) => {
-        e.preventDefault()
-        console.log('adding project');
-    }
+const getSuccessMessage=(status)=> {
+    const successMessage= swal({
+         title: "Request successful",
+         text: `The project has been ${status}`,
+         icon: "success",
+         button: "Go back to project list",
+     });
+     return successMessage;
+   }
 
     // PAGINATION =========================================>
     const handleChangePage = (event, newPage) => {
@@ -144,7 +157,10 @@ export default function ProjectList() {
   <Fab color="primary" className={classes.fab}>
     <AddIcon />
   </Fab> */}
-                        <button className="btn btn-success btn-sm" onClick={onAdd}>Add new</button>
+
+   <Link to={`/api/v1/projects/-1`}>
+                        <button className="btn btn-success btn-sm">Add new</button>
+                        </Link>
                     </div>
                     <Table className={classes.table} size="small" aria-label="a dense table">
                         <TableHead>
@@ -169,22 +185,29 @@ export default function ProjectList() {
                                         <TableCell align="right">{row.undoneTaskCount}</TableCell>
                                         <TableCell align="right">
 
-                                            <BsFillEyeFill size={20} style={{ color: 'green', cursor: 'pointer' }} onClick={() => viewProject(row.id)} />
-                                            <BsTrash size={20} style={{ color: 'red', cursor: 'pointer' }} onClick={() => handleClickOpen(row.id, row.name)} />
-                                            {/* handleClickOpen(row.id, row.name) 
-                                                deleteProject(row.id)*/}
-                                            <Dialog
-                                                open={open}
-                                                onClose={handleClose}
-                                                aria-labelledby="alert-dialog-title"
-                                                aria-describedby="alert-dialog-description">
-                                                <DialogTitle id="alert-dialog-title">{`Are you sure you want to delete project: ${deleteName}?`}</DialogTitle>
-                                                <DialogActions>
-                                                    <Button onClick={handleClose} color="primary">Cancel</Button>
-                                                    <Button onClick={() => deleteProject(deleteId)} color="primary" autoFocus>OK</Button>
-                                                </DialogActions>
-                                            </Dialog>
-                                            <BsPencil size={20} style={{ color: 'blue', cursor: 'pointer' }} onClick={() => editProject(row.id)} />
+                                        <Link to={`/api/v1/tasks/${row.id}`}>
+                                                <BsFillEyeFill size={20} style={{ color: 'green', cursor: 'pointer' }} />
+                                                </Link>
+
+                                                <BsTrash size={20} style={{ color: 'red', cursor: 'pointer' }} onClick={() =>handleClickOpen(row.id, row.name)} />
+                                        
+                                                <Dialog
+                                                    open={open}
+                                                    onClose={handleClose}
+                                                    aria-labelledby="alert-dialog-title"
+                                                    aria-describedby="alert-dialog-description">
+                                                    <DialogTitle id="alert-dialog-title">{`Are you sure you want to delete project: ${deleteName}?`}</DialogTitle>
+
+                                                    <DialogActions>
+                                                        <Button onClick={handleClose} color="primary">
+                                                        <Button onClick={() => deleteProject(deleteId)} color="primary" autoFocus>OK</Button>
+                                                    </DialogActions>
+                                                </Dialog>
+
+                                                <Link to={`/api/v1/projects/${row.id}`}>
+                                                <BsPencil size={20} style={{ color: 'blue', cursor: 'pointer' }} />
+                                            </Link>
+
                                         </TableCell>
                                     </TableRow>
                                 ))}
