@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -18,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import lt.rebellion.exception.NotFoundException;
+import lt.rebellion.model.EStatus;
 import lt.rebellion.service.ResponseService;
 import lt.rebellion.task.TaskRepository;
 import lt.rebellion.user.User;
@@ -31,12 +30,6 @@ public class ProjectService implements ResponseService<ProjectDTO> {
 	private final ProjectRepository projectRepository;
 	private final UserService userService;
 	private final TaskRepository taskRepository;
-	
-	
-	private static final Logger log = LoggerFactory.getLogger(ProjectService.class);
-
-	
-
 
 
 	// GET ALL projects paginated
@@ -79,7 +72,6 @@ public class ProjectService implements ResponseService<ProjectDTO> {
 	// CREATE new Project
 	public ResponseEntity<ProjectDTO> createProject(ProjectRequestDTO projectRequestDTO) {
 		
-		log.warn("name " + projectRequestDTO.getName());
 		Set<User> users = new HashSet<>();
 		users.add(userService.getCurrentUser());
 		Project project = new Project(projectRequestDTO.getName(), projectRequestDTO.getDescription(), users);
@@ -98,6 +90,7 @@ public class ProjectService implements ResponseService<ProjectDTO> {
 			Project project = projectRepository.findById(id).get();
 			project.setName(projectRequestDTO.getName());
 			project.setDescription(projectRequestDTO.getDescription());
+			project.setStatus(EStatus.valueOf(projectRequestDTO.getStatus()));
 			Set<User> userSet = new HashSet<>(projectRequestDTO.getUsersId().stream().map(u -> userService.getUserById(u)).collect(Collectors.toList()));
 			project.setUsers(userSet);
 			projectRepository.save(project);

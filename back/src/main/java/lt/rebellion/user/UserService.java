@@ -136,11 +136,28 @@ public class UserService {
 	}
 
 	// need to add validation
+
+	
+	public UserDTO userToDTO(User user) {
+		return new UserDTO(user.getId(), user.getEmail());
+	}
+	
+	// GET All Users
+	public ResponseEntity<List<User>> getAllUsers(){
+		List<User> users = userRepository.findAll();
+		return new ResponseEntity<List<User>>(users, HttpStatus.OK);
+	}
+	
+	// GET User By Id
 	public User getUserById(Long id) {
 		return userRepository.findById(id).get();
 	}
 	
-	public UserDTO userToDTO(User user) {
-		return new UserDTO(user.getId(), user.getEmail());
+	public ResponseEntity<User> getResponseUserById(Long id){
+		User user = getUserById(id);
+		if(user == null) {
+			throw new NotFoundException("User Not Found with id: " + id);
+		}
+		return new ResponseEntity<User>(user, HttpStatus.OK);
 	}
 }

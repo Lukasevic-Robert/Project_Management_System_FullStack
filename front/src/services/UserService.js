@@ -22,6 +22,10 @@ class UserService {
         return axios.get(TEST_URL + 'admin', { headers: authHeader() });
     }
 
+    getUsers() {
+        return axios.get(API_BASE_URL + '/v1/users', { headers: authHeader() });
+    }
+
     getProjects(pageNr, sizeNr) {
         let config = {
             headers: authHeader(),

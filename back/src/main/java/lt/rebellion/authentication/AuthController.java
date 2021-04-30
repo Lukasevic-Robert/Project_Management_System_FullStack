@@ -21,7 +21,7 @@ public class AuthController {
 
 	private UserService userService;
 	
-	public AuthController(lt.rebellion.user.UserService userService) {
+	public AuthController(UserService userService) {
 		super();
 		this.userService = userService;
 	}
