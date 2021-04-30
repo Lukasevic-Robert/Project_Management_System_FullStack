@@ -14,6 +14,23 @@ import Container from '@material-ui/core/Container';
 import AuthService from '../services/authService';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import { FormControlLabel } from '@material-ui/core';
+import { createMuiTheme } from '@material-ui/core/styles';
+import { ThemeProvider } from '@material-ui/styles';
+
+
+const theme = createMuiTheme({
+    palette: {
+        primary: {
+            main: '#7eb8da',
+
+        },
+        secondary: {
+            light: '#92ddea',
+            main: '#ffa5d8',
+            backgroundColor: '#fff',
+        },
+    },
+});
 
 
 function Copyright() {
@@ -29,7 +46,7 @@ function Copyright() {
   );
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles({
   paper: {
     marginTop: theme.spacing(8),
     display: 'flex',
@@ -47,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
-}));
+});
 
 
 export default function SignIn() {
@@ -93,10 +110,11 @@ export default function SignIn() {
   };
 
   return (
+    <ThemeProvider theme={theme}>
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
+        <Avatar color="secondary" className={classes.avatar}>
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
@@ -147,7 +165,7 @@ export default function SignIn() {
             color="primary"
             className={classes.submit}
           >
-            Sign In
+            <span id="icon">Sign In</span>
           </Button>
           <Grid container>
             {/* <Grid item xs>
@@ -168,5 +186,6 @@ export default function SignIn() {
         <Copyright />
       </Box>
     </Container>
+    </ThemeProvider>
   );
 }
