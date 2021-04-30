@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -30,6 +32,10 @@ public class ProjectService implements ResponseService<ProjectDTO> {
 	private final UserService userService;
 	private final TaskRepository taskRepository;
 	
+	
+	private static final Logger log = LoggerFactory.getLogger(ProjectService.class);
+
+	
 
 
 
@@ -37,7 +43,7 @@ public class ProjectService implements ResponseService<ProjectDTO> {
 	@Override
 	public ResponseEntity<Page<ProjectDTO>> findPaginated(int page, int size) {
 
-		Sort.Order order = new Sort.Order(Sort.Direction.ASC, "id");
+		Sort.Order order = new Sort.Order(Sort.Direction.DESC, "id");
 		Pageable pageable = PageRequest.of(page -1, size, Sort.by(order));
 		Page<Project> allProjects = projectRepository.findAll(pageable);
 		List<ProjectDTO> allProjectDTOs = allProjects.stream().map(p -> toProjectDTO(p)).collect(Collectors.toList());
@@ -72,6 +78,8 @@ public class ProjectService implements ResponseService<ProjectDTO> {
 	
 	// CREATE new Project
 	public ResponseEntity<ProjectDTO> createProject(ProjectRequestDTO projectRequestDTO) {
+		
+		log.warn("name " + projectRequestDTO.getName());
 		Set<User> users = new HashSet<>();
 		users.add(userService.getCurrentUser());
 		Project project = new Project(projectRequestDTO.getName(), projectRequestDTO.getDescription(), users);

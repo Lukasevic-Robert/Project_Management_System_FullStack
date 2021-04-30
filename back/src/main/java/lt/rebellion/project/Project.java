@@ -35,6 +35,7 @@ import lt.rebellion.user.User;
 @Table(name = "projects")
 public class Project extends BaseEntity {
 
+
 	@Column(name = "name")
 	private String name;
 
@@ -43,7 +44,7 @@ public class Project extends BaseEntity {
 	
 	@Enumerated(EnumType.STRING)
 	@Column(name = "status")
-	private EStatus status = EStatus.IN_PROGRESS;
+	private EStatus status = EStatus.ACTIVE;
 
 	@OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Task> tasks = new ArrayList<>();

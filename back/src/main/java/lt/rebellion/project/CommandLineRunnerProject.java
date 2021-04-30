@@ -36,10 +36,10 @@ public class CommandLineRunnerProject implements CommandLineRunner {
 
 		// Creating projects for Admin and Moderator
 		for (int i = 1; i < 6; i++) {
-			projectRepository.save(new Project("Project" + i, "Project " + i + " description", new HashSet<User>(Arrays.asList(adminAndModerator.get(0)))));
+			projectRepository.save(new Project("Project " + i, "Project " + i + " description", new HashSet<User>(Arrays.asList(adminAndModerator.get(0)))));
 		}
 		for (int i = 6; i < 11; i++) {
-			projectRepository.save(new Project("Project" + i, "Project " + i + " description", new HashSet<User>(Arrays.asList(adminAndModerator.get(1)))));
+			projectRepository.save(new Project("Project " + i, "Project " + i + " description", new HashSet<User>(Arrays.asList(adminAndModerator.get(1)))));
 		}
 	}
 }

@@ -1,0 +1,19 @@
+#delete-button{
+    background-color: #92ddea;
+}
+
+#delete-button:hover{
+    background-color: #7eb8da;
+}
+
+#icon{
+    color:white;
+}
+#table-head{
+    height:50px; 
+}
+
+#table-cell{
+    font-weight: 600;
+    color: #7eb8da;
+}
