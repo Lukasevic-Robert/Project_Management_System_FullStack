@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
-import { BrowserRouter as Router, Switch, Route, Link, useHistory } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import Login from "./components/Login.js";
 import BoardUser from './components/BoardUser.js';
 import BoardAdmin from './components/BoardAdmin.js';
@@ -76,7 +76,7 @@ function App() {
             <MenuIcon color="white"/>
           </IconButton>
           <Typography variant="h6" className={classes.title}>
-            <Link style={{ color: 'white', fontSize: 20 }} className="nav-link" to={"/api/auth/signin"}>Pro-Man</Link>
+            <Link style={{ color: 'white', fontSize: 20 }} className="nav-link" to={currentUser ? "/api/v1/projects" : "/api/auth/signin"}>Pro-Man</Link>
           </Typography>
 
           {/* {showAdminBoard && (
@@ -112,7 +112,7 @@ function App() {
           <Route path="/api/v1/test/admin" component={BoardAdmin} />
           <Route path="/profile" component={Profile} />
           <Route exact path="/api/v1/projects" component={ProjectList} />
-          <Route path="/api/v1/projects/:id" component={CreateProject}></Route>
+          <Route path="/api/v1/projects/:id" component={CreateProject} />
           <Route path="/api/v1/tasks/:id" component={ViewProjectTasks}></Route>
         </Switch>
 

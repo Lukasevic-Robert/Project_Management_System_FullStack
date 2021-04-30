@@ -1,24 +1,15 @@
-import { render } from '@testing-library/react';
+
 import React, { Component } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import { Link } from "react-router-dom";
 import UserService from "../services/UserService";
 import swal from 'sweetalert';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
-import { FormControlLabel } from '@material-ui/core';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
-import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Checkbox from '@material-ui/core/Checkbox';
-
-import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
-import AuthService from '../services/authService';
+
 
 
 
@@ -30,7 +21,7 @@ const theme = createMuiTheme({
         },
         secondary: {
             light: '#92ddea',
-            main: '#ffa5d8',
+            main: '#be9ddf',
             backgroundColor: '#fff',
         },
     },
@@ -54,8 +45,6 @@ class CreateProject extends Component {
         this.changeStatus = this.changeStatus.bind(this);
         this.changeContent = this.changeContent.bind(this);
     }
-
-    
 
     componentDidMount() {
         if (this.state.id == -1) {
@@ -160,30 +149,46 @@ class CreateProject extends Component {
         return (
             <ThemeProvider theme={theme}>
                 <Container component="main" maxWidth="xs">
-                    <CssBaseline />
 
-                    <form onSubmit={this.handleSubmit} className="black">                   
-                        <Typography component="h1" variant="h5">{this.getTitle()}</Typography>
-                        <div className="input-field">
-                            <div>
-                                <label htmlFor="title">Title</label>
-                            </div>
-                            <input className="projectDescribtion" placeholder="Project name" type="text" id="title" value={this.state.title} onChange={this.changeTitle} />
-                        </div>
-                        <div className="input-field">
-                            <div>
-                                <br />
-                                <label htmlFor="content">Project Content</label>
-                            </div>
-                            <textarea cols="40" rows="6" placeholder="Describe your project here" id="content" className="
-            projectDescription" value={this.state.content} onChange={this.changeContent}></textarea>
-                        </div>
-                        <div className="input-field">
-                            <button className="button projectDescription lighten-1 z-depth-0" onClick={this.saveOrUpdateProject} style={{ marginRight: '10px' }}>Submit</button>
-                            <button className="cancelbtn projectDescription lighten-1 z-depth-0" ><Link to={'/api/v1/projects'} style={{ color: 'black', textDecoration: 'none' }}>Cancel</Link></button>
-                        </div>
-                    </form>
+                    <ValidatorForm onSubmit={this.saveOrUpdateProject}>
 
+                        <Typography color="secondary" component="h1" variant="h5">{this.getTitle()}</Typography>
+
+                        <TextValidator
+                            variant="outlined"
+                            margin="normal"
+                            required
+                            fullWidth
+                            id="project"
+                            label="Project name"
+                            name="project"
+                            value={this.state.title}
+                            // autoComplete="email"
+                            validators={['required']}
+                            errorMessages={['this field is required']}
+                            onChange={this.changeTitle}
+                            autoFocus
+                        />
+
+                        <TextValidator
+                            variant="outlined"
+                            margin="normal"
+                            required
+                            fullWidth
+                            id="filled-textarea"
+                            label="Description"
+                            name="description"
+                            value={this.state.content}
+                            // autoComplete="email"
+                            validators={['required']}
+                            errorMessages={['this field is required']}
+                            onChange={this.changeContent}
+                            
+                        />
+                        <Button id="icon" variant="contained" color="primary" type="submit" style={{ marginRight: '10px' }}>Submit</Button>
+                        <Link to={'/api/v1/projects'} style={{ textDecoration: 'none' }}><Button id="icon" variant="contained" color="secondary">Cancel</Button></Link>
+
+                    </ValidatorForm>
                 </Container>
             </ThemeProvider>
         )
