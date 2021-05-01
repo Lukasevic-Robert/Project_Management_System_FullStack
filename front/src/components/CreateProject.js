@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom";
 import UserService from "../services/UserService";
+import ProjectService from "../services/ProjectService";
 import swal from 'sweetalert';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import { createMuiTheme } from '@material-ui/core/styles';
@@ -93,7 +94,7 @@ class CreateProject extends Component {
             return;
         } else {
 
-            UserService.getProjectById(this.state.id).then((res) => {
+            ProjectService.getProjectById(this.state.id).then((res) => {
                 let project = res.data;
                 let users = [];
                 let userId = [];
@@ -129,7 +130,7 @@ class CreateProject extends Component {
         let project = { name: this.state.title, status: this.state.status, description: this.state.content, usersId: userId };
         //  console.log('project=>' + JSON.stringify(project));
         if (this.state.id == -1) {
-            UserService.createProject(project).then(res => {
+            ProjectService.createProject(project).then(res => {
                 this.getSuccessMessage("added");
                 this.props.history.push('/api/v1/projects');
             })
@@ -139,7 +140,7 @@ class CreateProject extends Component {
                 }
                 );
         } else {
-            UserService.updateProject(project, this.state.id).then(res => {
+            ProjectService.updateProject(project, this.state.id).then(res => {
                 this.getSuccessMessage("updated");
                 this.props.history.push('/api/v1/projects');
             })
