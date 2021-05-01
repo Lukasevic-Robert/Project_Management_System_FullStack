@@ -23,31 +23,31 @@ public class TaskController {
 
 	private final TaskService taskService;
 
-	// GET all tasks
+	// GET all tasks ====================================================>
 	@GetMapping
 	public ResponseEntity<List<Task>> getAllTasks() {
 		return taskService.getAllTasks();
 	}
 
-	// GET task by id
+	// GET task by id ===================================================>
 	@GetMapping("/{id}")
 	public ResponseEntity<Task> getTaskById(Long id) {
 		return taskService.getTaskById(id);
 	}
 
-	// DELETE task by id
+	// DELETE task by id ================================================>
 	@DeleteMapping("/{id}")
 	public ResponseEntity<String> deleteTaskById(@PathVariable Long id) {
 		return taskService.deleteTaskById(id);
 	}
 
-	// CREATE task
+	// CREATE task ======================================================>
 	@PostMapping
 	public ResponseEntity<Task> createTaskByProjectId(@RequestBody TaskCreateRequestDTO taskRequestDTO) {
 		return taskService.createTask(taskRequestDTO);
 	}
 
-	// UPDATE task by id
+	// UPDATE task by id ================================================>
 	@PutMapping("/{id}")
 	public ResponseEntity<Task> updateTaskById(@PathVariable Long id, @RequestBody TaskUpdateRequestDTO TaskUpdateRequestDTO) {
 		return taskService.updateTaskById(id, TaskUpdateRequestDTO);

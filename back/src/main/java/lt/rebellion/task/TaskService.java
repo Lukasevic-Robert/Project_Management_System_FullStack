@@ -29,13 +29,13 @@ public class TaskService {
 	private final UserService userService;
 	private final RoleRepository roleRepository;
 
-	// GET all tasks
+	// GET all tasks ====================================================>
 	public ResponseEntity<List<Task>> getAllTasks() {
 		List<Task> tasks = taskRepository.findAll();
 		return new ResponseEntity<>(tasks, HttpStatus.OK);
 	}
 
-	// GET task by id
+	// GET task by id ===================================================>
 	public ResponseEntity<Task> getTaskById(Long id) {
 
 		validateTaskId(id);
@@ -44,7 +44,7 @@ public class TaskService {
 		return new ResponseEntity<Task>(task, HttpStatus.OK);
 	}
 
-	// DELETE task by id
+	// DELETE task by id ================================================>
 	public ResponseEntity<String> deleteTaskById(Long id) {
 
 		validateTaskId(id);
@@ -59,7 +59,7 @@ public class TaskService {
 		return new ResponseEntity<>("Task deleted", HttpStatus.OK);
 	}
 
-	// CREATE task
+	// CREATE task ======================================================>
 	public ResponseEntity<Task> createTask(TaskCreateRequestDTO taskRequestDTO) {
 
 		Project project = projectRepository.findById(taskRequestDTO.getProjectId()).get();
@@ -74,7 +74,7 @@ public class TaskService {
 		return new ResponseEntity<Task>(task, HttpStatus.CREATED);
 	}
 
-	// UPDATE task by id
+	// UPDATE task by id ================================================>
 	public ResponseEntity<Task> updateTaskById(Long id, TaskUpdateRequestDTO taskUpdateRequestDTO) {
 
 		validateTaskId(id);
@@ -96,6 +96,7 @@ public class TaskService {
 		return new ResponseEntity<Task>(task, HttpStatus.OK);
 	}
 
+	// CHECK Authorization ==============================================>
 	public boolean checkAuthorization(Project project) {
 
 		if(project.getStatus().equals(EStatus.DONE)) {
@@ -115,6 +116,7 @@ public class TaskService {
 		return false;
 	}
 
+	// VALIDATE Task by id ==============================================>
 	public boolean validateTaskId(Long id) {
 		if (id == null) {
 			throw new NullPointerException();

@@ -32,7 +32,7 @@ public class ProjectService implements ResponseService<ProjectDTO> {
 	private final TaskRepository taskRepository;
 
 
-	// GET ALL projects paginated
+	// GET ALL Projects paginated =============================================>
 	@Override
 	public ResponseEntity<Page<ProjectDTO>> findPaginated(int page, int size) {
 
@@ -45,7 +45,7 @@ public class ProjectService implements ResponseService<ProjectDTO> {
 		return new ResponseEntity<>(backToPage, HttpStatus.OK);
 	}
 	
-	// GET ALL projects paginated by User
+	// GET ALL projects paginated by User =====================================>
 	@Override
 	public ResponseEntity<Page<ProjectDTO>> findPaginatedByUserId(int page, int size) {
 
@@ -58,7 +58,7 @@ public class ProjectService implements ResponseService<ProjectDTO> {
 		return new ResponseEntity<>(backToPage, HttpStatus.OK);
 	}
 	
-	// GET Project by Id
+	// GET Project by Id ======================================================>
 	public ResponseEntity<Project> getProjectById(Long id) {
 
 		if (validateRequestedProject(id)) {
@@ -69,7 +69,7 @@ public class ProjectService implements ResponseService<ProjectDTO> {
 		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	}
 	
-	// CREATE new Project
+	// CREATE new Project =====================================================>
 	public ResponseEntity<ProjectDTO> createProject(ProjectRequestDTO projectRequestDTO) {
 		
 		Set<User> users = new HashSet<>();
@@ -82,7 +82,7 @@ public class ProjectService implements ResponseService<ProjectDTO> {
 		return new ResponseEntity<>(projectDTO, HttpStatus.OK);
 	}
 	
-	// UPDATE project by id
+	// UPDATE project by id ===================================================>
 	public ResponseEntity<ProjectDTO> updateProject(Long id, ProjectRequestDTO projectRequestDTO){
 		
 		if(validateRequestedProject(id)) {
@@ -100,7 +100,7 @@ public class ProjectService implements ResponseService<ProjectDTO> {
 		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	}
 	
-	// DELETE Project by Id
+	// DELETE Project by Id ===================================================>
 	public ResponseEntity<String> deleteProjectById(Long id) {
 		
 		if (validateRequestedProject(id)) {
@@ -111,7 +111,7 @@ public class ProjectService implements ResponseService<ProjectDTO> {
 
 	}
 
-	// Project to DTO
+	// Project to DTO =========================================================>
 	public ProjectDTO toProjectDTO(Project project) {
 		Long id = project.getId();
 		List<UserDTO> usersDTO = project.getUsers().stream().map(u -> userService.userToDTO(u)).collect(Collectors.toList());
