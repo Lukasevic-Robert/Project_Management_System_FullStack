@@ -9,6 +9,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
+import lt.rebellion.model.EStatus;
 import lt.rebellion.project.Project;
 import lt.rebellion.project.ProjectRepository;
 
@@ -31,6 +32,11 @@ public class CommandLineRunnerTask implements CommandLineRunner {
 		}
 		List<Task> tasks = taskRepository.findAll();
 		for (int i = 0; i < tasks.size(); i++) {
+			
+			if (i % 3 == 0) {
+				tasks.get(i).setStatus(EStatus.TODO);
+			}
+
 			tasks.get(i).setDescription(
 					new ArrayList<String>(Arrays.asList("description 1" + " of task: " + tasks.get(i).getName(),
 							"description 2" + " of task: " + tasks.get(i).getName(),

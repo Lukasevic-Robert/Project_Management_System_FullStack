@@ -14,6 +14,7 @@ import lt.rebellion.model.EPriority;
 import lt.rebellion.model.EStatus;
 import lt.rebellion.project.Project;
 import lt.rebellion.project.ProjectRepository;
+import lt.rebellion.project.ProjectService;
 import lt.rebellion.role.ERole;
 import lt.rebellion.role.Role;
 import lt.rebellion.role.RoleRepository;
@@ -26,6 +27,7 @@ public class TaskService {
 
 	private final TaskRepository taskRepository;
 	private final ProjectRepository projectRepository;
+	private final ProjectService projectService;
 	private final UserService userService;
 	private final RoleRepository roleRepository;
 
@@ -42,6 +44,22 @@ public class TaskService {
 		validateTaskId(id);
 		Task task = taskRepository.findById(id).get();
 		return new ResponseEntity<Task>(task, HttpStatus.OK);
+	}
+	
+	// GET backlog tasks ================================================>
+	public ResponseEntity<List<Task>> getBacklogTasks(Long id) {
+		
+		projectService.validateRequestedProject(id);
+		List<Task> tasks = taskRepository.findBacklogTasks(id);
+		return new ResponseEntity<>(tasks, HttpStatus.OK);
+	}
+	
+	// GET active-board tasks ===========================================>
+	public ResponseEntity<List<Task>> getActiveTasks(Long id) {
+		
+		projectService.validateRequestedProject(id);
+		List<Task> tasks = taskRepository.findActiveTasks(id);
+		return new ResponseEntity<>(tasks, HttpStatus.OK);
 	}
 
 	// DELETE task by id ================================================>
