@@ -28,26 +28,26 @@ public class ProjectController {
 	private final ProjectService projectService;
 
 	
-	// GET Pagignated Projects
+	// GET Paginated Projects
 	@GetMapping("/page")
 	public ResponseEntity<Page<ProjectDTO>> getAllProjects(@RequestParam("page") int page, @RequestParam("size") int size){
 		return projectService.findPaginated(page, size);
 	}
 	
-	// GET Pagignated Projects By User
+	// GET Paginated Projects By User
 	@GetMapping("/pageByUser")
 	public ResponseEntity<Page<ProjectDTO>> getAllProjectsByUserId(@RequestParam("page") int page, @RequestParam("size") int size){
 		return projectService.findPaginatedByUserId(page, size);
 	}
 	
-	//GET project by id
+	// GET project by id
 	@GetMapping("/{id}")
 	public ResponseEntity<Project> getProjectById(@PathVariable Long id){
 		return projectService.getProjectById(id);
 	}
 	
 	// CREATE new Project
-	@PostMapping("/createProject")
+	@PostMapping
 	@PreAuthorize("hasRole('ROLE_MODERATOR') or hasRole('ROLE_ADMIN')")
 	public ResponseEntity<ProjectDTO> createProject(@Valid @RequestBody ProjectRequestDTO projectRequestDTO){
 		return projectService.createProject(projectRequestDTO);

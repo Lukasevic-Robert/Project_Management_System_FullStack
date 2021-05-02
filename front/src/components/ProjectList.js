@@ -4,6 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination, Button, DialogTitle, DialogActions, Dialog, Fab } from '@material-ui/core';
 import { useState, useEffect } from 'react';
 import UserService from "../services/UserService";
+import ProjectService from "../services/ProjectService";
 import { Link, useHistory } from "react-router-dom";
 import swal from 'sweetalert';
 import EditIcon from '@material-ui/icons/Edit';
@@ -72,7 +73,7 @@ function ProjectList() {
 
     const getProjects = async () => {
 
-        await UserService.getProjects(page, rowsPerPage).then(
+        await ProjectService.getProjects(page, rowsPerPage).then(
             response => {
 
                 setResponseData(response.data);
@@ -92,7 +93,7 @@ function ProjectList() {
 
     // DELETE a project ==================================>
     const deleteProject = (id) => {
-        UserService.deleteProject(id).then(res => {
+        ProjectService.deleteProject(id).then(res => {
             getSuccessMessage("deleted");
             setProjects(projects.filter((project) => project.id !== id));
             setRefresh(!refresh);

@@ -30,7 +30,7 @@ public class CommandLineRunnerUser implements CommandLineRunner {
 		roleRepository.save(new Role(ERole.ROLE_ADMIN));
 		roleRepository.save(new Role(ERole.ROLE_USER));
 
-		// CREATE ADMIN ===============================
+		// CREATE ADMIN ===============================>
 		Set<Role> rolesForAdmin = new HashSet<>();
 		rolesForAdmin.add(roleRepository.findByName(ERole.ROLE_ADMIN).get());
 
@@ -42,9 +42,9 @@ public class CommandLineRunnerUser implements CommandLineRunner {
 		admin.setRoles(rolesForAdmin);
 
 		userRepository.save(admin);
-		//=============================================
+		//=============================================/
 
-		// CREATE USER ================================
+		// CREATE USER ================================>
 		Set<Role> rolesForUser = new HashSet<>();
 		rolesForUser.add(roleRepository.findByName(ERole.ROLE_USER).get());
 
@@ -56,9 +56,9 @@ public class CommandLineRunnerUser implements CommandLineRunner {
 		user.setRoles(rolesForUser);
 
 		userRepository.save(user);
-		//=============================================
+		//=============================================/
 		
-		// CREATE MODERATOR ===========================
+		// CREATE MODERATOR ===========================>
 		Set<Role> rolesForModerator = new HashSet<>();
 		rolesForModerator.add(roleRepository.findByName(ERole.ROLE_MODERATOR).get());
 		
@@ -70,6 +70,6 @@ public class CommandLineRunnerUser implements CommandLineRunner {
 		moderator.setRoles(rolesForModerator);
 		
 		userRepository.save(moderator);
-		//=============================================
+		//=============================================/
 	}
 }

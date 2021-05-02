@@ -25,34 +25,6 @@ class UserService {
     getUsers() {
         return axios.get(API_BASE_URL + '/v1/users', { headers: authHeader() });
     }
-
-    getProjects(pageNr, sizeNr) {
-        let config = {
-            headers: authHeader(),
-            params: {
-                page:`${pageNr+1}`, size:sizeNr
-            },
-          }
-          console.log(config)
-        return axios.get(API_BASE_URL + '/v1/projects/page', config);
-    }
-
-    deleteProject(projectId){
-        return axios.delete(API_BASE_URL + '/v1/projects/' + projectId, { headers: authHeader() });
-    }
-
-
-    getProjectById(projectId){
-        return axios.get(API_BASE_URL + '/v1/projects/' + projectId, { headers: authHeader() });
-    }
-
-    createProject(project) {
-        return axios.post(API_BASE_URL+ '/v1/projects/createProject', project, { headers: authHeader() });
-    }
-    
-    updateProject(project, projectId){
-        return axios.put(API_BASE_URL+ '/v1/projects/'+projectId,project, { headers: authHeader() });
-    }
 }
 
 export default new UserService();
