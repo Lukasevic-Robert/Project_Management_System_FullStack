@@ -14,5 +14,6 @@ public class ProjectRequestDTO {
 
 	private String name;
 	private String description;
+	private String status;
 	private List<Long> usersId = new ArrayList<>();
 }
