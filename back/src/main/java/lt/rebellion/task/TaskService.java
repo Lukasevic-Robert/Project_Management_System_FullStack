@@ -29,6 +29,7 @@ public class TaskService {
 	private final UserService userService;
 	private final RoleRepository roleRepository;
 
+	
 	// GET all tasks ====================================================>
 	public ResponseEntity<List<Task>> getAllTasks() {
 		List<Task> tasks = taskRepository.findAll();
@@ -40,7 +41,6 @@ public class TaskService {
 
 		validateTaskId(id);
 		Task task = taskRepository.findById(id).get();
-
 		return new ResponseEntity<Task>(task, HttpStatus.OK);
 	}
 
@@ -48,14 +48,12 @@ public class TaskService {
 	public ResponseEntity<String> deleteTaskById(Long id) {
 
 		validateTaskId(id);
-
 		Project project = taskRepository.findById(id).get().getProject();
-
+		
 		if (!checkAuthorization(project)) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
 		taskRepository.deleteById(id);
-
 		return new ResponseEntity<>("Task deleted", HttpStatus.OK);
 	}
 
@@ -68,7 +66,6 @@ public class TaskService {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
 		Task task = new Task(taskRequestDTO.getName(), project);
-
 		taskRepository.save(task);
 
 		return new ResponseEntity<Task>(task, HttpStatus.CREATED);
@@ -84,7 +81,6 @@ public class TaskService {
 		if (!checkAuthorization(project)) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
-
 		Task task = taskRepository.findById(id).get();
 
 		task.setName(taskUpdateRequestDTO.getName());
@@ -99,6 +95,9 @@ public class TaskService {
 	// CHECK Authorization ==============================================>
 	public boolean checkAuthorization(Project project) {
 
+		if (project == null) {
+			throw new NullPointerException();
+		}
 		if(project.getStatus().equals(EStatus.DONE)) {
 			return false;
 		}

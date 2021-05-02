@@ -31,33 +31,35 @@ public class ProjectService implements ResponseService<ProjectDTO> {
 	private final UserService userService;
 	private final TaskRepository taskRepository;
 
-
 	// GET ALL Projects paginated =============================================>
 	@Override
 	public ResponseEntity<Page<ProjectDTO>> findPaginated(int page, int size) {
 
 		Sort.Order order = new Sort.Order(Sort.Direction.DESC, "id");
-		Pageable pageable = PageRequest.of(page -1, size, Sort.by(order));
+		Pageable pageable = PageRequest.of(page - 1, size, Sort.by(order));
 		Page<Project> allProjects = projectRepository.findAll(pageable);
 		List<ProjectDTO> allProjectDTOs = allProjects.stream().map(p -> toProjectDTO(p)).collect(Collectors.toList());
-		Page<ProjectDTO> backToPage = new PageImpl<ProjectDTO>(allProjectDTOs, pageable, allProjects.getTotalElements());
+		Page<ProjectDTO> backToPage = new PageImpl<ProjectDTO>(allProjectDTOs, pageable,
+				allProjects.getTotalElements());
 
 		return new ResponseEntity<>(backToPage, HttpStatus.OK);
 	}
-	
+
 	// GET ALL projects paginated by User =====================================>
 	@Override
 	public ResponseEntity<Page<ProjectDTO>> findPaginatedByUserId(int page, int size) {
 
 		Sort.Order order = new Sort.Order(Sort.Direction.ASC, "project_id");
-		Pageable pageable = PageRequest.of(page -1, size, Sort.by(order));
-		Page<Project> allProjects = projectRepository.findAllPaginatedProjectsByUserId(userService.getCurrentUserId(), pageable);
+		Pageable pageable = PageRequest.of(page - 1, size, Sort.by(order));
+		Page<Project> allProjects = projectRepository.findAllPaginatedProjectsByUserId(userService.getCurrentUserId(),
+				pageable);
 		List<ProjectDTO> allProjectDTOs = allProjects.stream().map(p -> toProjectDTO(p)).collect(Collectors.toList());
-		Page<ProjectDTO> backToPage = new PageImpl<ProjectDTO>(allProjectDTOs, pageable, allProjects.getTotalElements());
-		
+		Page<ProjectDTO> backToPage = new PageImpl<ProjectDTO>(allProjectDTOs, pageable,
+				allProjects.getTotalElements());
+
 		return new ResponseEntity<>(backToPage, HttpStatus.OK);
 	}
-	
+
 	// GET Project by Id ======================================================>
 	public ResponseEntity<Project> getProjectById(Long id) {
 
@@ -68,30 +70,32 @@ public class ProjectService implements ResponseService<ProjectDTO> {
 
 		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	}
-	
+
 	// CREATE new Project =====================================================>
 	public ResponseEntity<ProjectDTO> createProject(ProjectRequestDTO projectRequestDTO) {
-		
+
 		Set<User> users = new HashSet<>();
 		users.add(userService.getCurrentUser());
 		Project project = new Project(projectRequestDTO.getName(), projectRequestDTO.getDescription(), users);
-		Set<User> userSet = new HashSet<>(projectRequestDTO.getUsersId().stream().map(u -> userService.getUserById(u)).collect(Collectors.toList()));
+		Set<User> userSet = new HashSet<>(projectRequestDTO.getUsersId().stream().map(u -> userService.getUserById(u))
+				.collect(Collectors.toList()));
 		project.setUsers(userSet);
 		projectRepository.save(project);
 		ProjectDTO projectDTO = toProjectDTO(project);
 		return new ResponseEntity<>(projectDTO, HttpStatus.OK);
 	}
-	
+
 	// UPDATE project by id ===================================================>
-	public ResponseEntity<ProjectDTO> updateProject(Long id, ProjectRequestDTO projectRequestDTO){
-		
-		if(validateRequestedProject(id)) {
+	public ResponseEntity<ProjectDTO> updateProject(Long id, ProjectRequestDTO projectRequestDTO) {
+
+		if (validateRequestedProject(id)) {
 
 			Project project = projectRepository.findById(id).get();
 			project.setName(projectRequestDTO.getName());
 			project.setDescription(projectRequestDTO.getDescription());
 			project.setStatus(EStatus.valueOf(projectRequestDTO.getStatus()));
-			Set<User> userSet = new HashSet<>(projectRequestDTO.getUsersId().stream().map(u -> userService.getUserById(u)).collect(Collectors.toList()));
+			Set<User> userSet = new HashSet<>(projectRequestDTO.getUsersId().stream()
+					.map(u -> userService.getUserById(u)).collect(Collectors.toList()));
 			project.setUsers(userSet);
 			projectRepository.save(project);
 			ProjectDTO projectDTO = toProjectDTO(project);
@@ -99,10 +103,10 @@ public class ProjectService implements ResponseService<ProjectDTO> {
 		}
 		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	}
-	
+
 	// DELETE Project by Id ===================================================>
 	public ResponseEntity<String> deleteProjectById(Long id) {
-		
+
 		if (validateRequestedProject(id)) {
 			projectRepository.deleteById(id);
 			return new ResponseEntity<String>(HttpStatus.OK);
@@ -114,11 +118,11 @@ public class ProjectService implements ResponseService<ProjectDTO> {
 	// Project to DTO =========================================================>
 	public ProjectDTO toProjectDTO(Project project) {
 		Long id = project.getId();
-		List<UserDTO> usersDTO = project.getUsers().stream().map(u -> userService.userToDTO(u)).collect(Collectors.toList());
+		List<UserDTO> usersDTO = project.getUsers().stream().map(u -> userService.userToDTO(u))
+				.collect(Collectors.toList());
 		int allTasks = taskRepository.getAllTaskCount(id);
 		int allUndoneTasks = taskRepository.getAllUndoneTaskCount(id);
-		return new ProjectDTO(id,
-				project.getName(),
+		return new ProjectDTO(id, project.getName(),
 				project.getDescription(),
 				project.getStatus().name(),
 				allTasks, allUndoneTasks, usersDTO,
@@ -127,14 +131,14 @@ public class ProjectService implements ResponseService<ProjectDTO> {
 	}
 
 	public Boolean validateRequestedProject(Long id) {
-		if(id == null) {
+		if (id == null) {
 			throw new NullPointerException("validateRequestedProject method was called - id Param = " + id);
 		}
 		Project project = projectRepository.findById(id).get();
 		if (project == null) {
 			throw new NotFoundException("Project Not Found");
 		}
-		
+
 		return true;
 	}
 }
