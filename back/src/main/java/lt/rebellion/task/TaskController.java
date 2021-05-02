@@ -18,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/projects/tasks")
+@RequestMapping("/api/v1/tasks")
 public class TaskController {
 
 	private final TaskService taskService;

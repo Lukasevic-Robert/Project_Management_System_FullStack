@@ -7,6 +7,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -74,7 +77,8 @@ public class UserService {
 		}
 
 		// Create new user's account
-		User user = new User(signUpRequest.getFirstName(), signUpRequest.getLastName(), signUpRequest.getEmail(), encoder.encode(signUpRequest.getPassword()));
+		User user = new User(signUpRequest.getFirstName(), signUpRequest.getLastName(), signUpRequest.getEmail(),
+				encoder.encode(signUpRequest.getPassword()));
 
 		Set<String> strRoles = signUpRequest.getRole();
 		Set<Role> roles = new HashSet<>();
@@ -113,15 +117,7 @@ public class UserService {
 
 	}
 
-	public String getCurrentUserEmail() {
-		return getCurrentUser().getEmail();
-	}
-
-	public Long getCurrentUserId() {
-		return getCurrentUser().getId();
-	}
-
-	// GET Current User
+	// GET Current User ====================================================>
 	public User getCurrentUser() {
 
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -135,27 +131,64 @@ public class UserService {
 		return userRepository.findByEmail(username).get();
 	}
 
-	// need to add validation
-
-	
-	public UserDTO userToDTO(User user) {
-		return new UserDTO(user.getId(), user.getEmail());
+	public String getCurrentUserEmail() {
+		return getCurrentUser().getEmail();
 	}
-	
-	// GET All Users
-	public ResponseEntity<List<User>> getAllUsers(){
+
+	public Long getCurrentUserId() {
+		return getCurrentUser().getId();
+	}
+
+	// GET all users =======================================================>
+	public ResponseEntity<List<User>> getAllUsers() {
 		List<User> users = userRepository.findAll();
 		return new ResponseEntity<List<User>>(users, HttpStatus.OK);
 	}
-	
-	// GET User By Id
+
+	// GET Paginated Users==================================================>
+	public ResponseEntity<Page<UserResponseDTO>> getAllPaginatedUsers(Pageable pageable) {
+
+		Page<User> allUsers = userRepository.findAll(pageable);
+		List<UserResponseDTO> allUsersDTOs = allUsers.stream().map(u -> toUserResponseDTO(u))
+				.collect(Collectors.toList());
+		Page<UserResponseDTO> backToPage = new PageImpl<UserResponseDTO>(allUsersDTOs, pageable,
+				allUsers.getTotalElements());
+
+		return new ResponseEntity<Page<UserResponseDTO>>(backToPage, HttpStatus.OK);
+	}
+
+	// GET Paginated Users By Keyword ======================================>
+	public ResponseEntity<Page<UserResponseDTO>> getPaginatedUsersByKeyword(Pageable pageable, String keyword) {
+
+		Page<User> allUsers = userRepository.findPaginatedUsersByKeyword(pageable, keyword);
+		List<UserResponseDTO> allUsersDTOs = allUsers.stream().map(u -> toUserResponseDTO(u))
+				.collect(Collectors.toList());
+		Page<UserResponseDTO> backToPage = new PageImpl<UserResponseDTO>(allUsersDTOs, pageable,
+				allUsers.getTotalElements());
+
+		return new ResponseEntity<Page<UserResponseDTO>>(backToPage, HttpStatus.OK);
+	}
+
+	// GET User By Id ======================================================>
 	public User getUserById(Long id) {
 		return userRepository.findById(id).get();
 	}
-	
-	public ResponseEntity<User> getResponseUserById(Long id){
+
+	// CONVERT to UserDTO
+	public UserDTO userToDTO(User user) {
+		return new UserDTO(user.getId(), user.getEmail());
+	}
+
+	// CONVERT to UserResponseDTO
+	public UserResponseDTO toUserResponseDTO(User user) {
+		UserResponseDTO userResponseDTO = new UserResponseDTO(user.getId(), user.getFirstName(), user.getLastName(),
+				user.getEmail(), user.getRoles());
+		return userResponseDTO;
+	}
+
+	public ResponseEntity<User> getResponseUserById(Long id) {
 		User user = getUserById(id);
-		if(user == null) {
+		if (user == null) {
 			throw new NotFoundException("User Not Found with id: " + id);
 		}
 		return new ResponseEntity<User>(user, HttpStatus.OK);
