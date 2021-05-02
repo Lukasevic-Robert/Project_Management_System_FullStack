@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { isValidElement, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -86,7 +86,6 @@ export default function SignIn() {
 
 
   const handleSubmit = (event) => {
-
     event.preventDefault();
     setMessage("");
     AuthService.login(email, password).then(
@@ -103,11 +102,11 @@ export default function SignIn() {
           error.message ||
           error.toString();
         setMessage(resMessage);
-        setErrUnauthorized(resMessage.substring(resMessage.length-3,resMessage.length));
-
+        setErrUnauthorized(error.response.status);
       }
     ).catch(() => { });
   };
+
 
   return (
     <ThemeProvider theme={theme}>
@@ -127,7 +126,7 @@ export default function SignIn() {
           <TextValidator
             variant="outlined"
             margin="normal"
-            required
+            // required
             fullWidth
             id="email"
             label="Email Address"
@@ -135,14 +134,14 @@ export default function SignIn() {
             value={email}
             // autoComplete="email"
             validators={['required', 'isEmail']}
-            errorMessages={['this field is required', 'email is not valid']}
+            errorMessages={['This field is required', 'Email is not valid']}
             onChange={handleEmailChange}
             autoFocus
           />
           <TextValidator
             variant="outlined"
             margin="normal"
-            required
+            // required
             fullWidth
             name="password"
             label="Password"
@@ -150,7 +149,7 @@ export default function SignIn() {
             id="password"
             value={password}
             validators={['required']}
-            errorMessages={['this field is required']}
+            errorMessages={['This field is required']}
             onChange={handlePasswordChange}
             // autoComplete="current-password"
           />
