@@ -63,4 +63,12 @@ public class Task extends BaseEntity {
 		this.name = name;
 		this.project = project;
 	}
+
+	public Task(String name, List<String> description, EPriority priority, Project project) {
+		super();
+		this.name = name;
+		this.description = description;
+		this.priority = priority;
+		this.project = project;
+	}
 }

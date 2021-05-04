@@ -81,11 +81,12 @@ public class TaskService {
 	public ResponseEntity<Task> createTask(TaskCreateRequestDTO taskRequestDTO) {
 
 		Project project = projectRepository.findById(taskRequestDTO.getProjectId()).get();
+		
 
 		if (!checkAuthorization(project)) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
-		Task task = new Task(taskRequestDTO.getName(), project);
+		Task task = new Task(taskRequestDTO.getName(), taskRequestDTO.getDescription(), EPriority.valueOf(taskRequestDTO.getPriority()), project);
 		taskRepository.save(task);
 
 		return new ResponseEntity<Task>(task, HttpStatus.CREATED);
