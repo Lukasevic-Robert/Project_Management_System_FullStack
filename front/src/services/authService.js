@@ -1,10 +1,12 @@
 import axios from "axios";
+import React, { useContext } from "react"
+import { UserContext } from "./UserContext";
 
 const API_URL = "http://localhost:8080/api/auth/";
 
 class authService {
   login(email, password) {
-    console.log("authService - login method" + email + " : " + password);
+    console.log("authService - login method " + email + " : " + password);
     return axios
       .post(API_URL + "signin", {
         email,

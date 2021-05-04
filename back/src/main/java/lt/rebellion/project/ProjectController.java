@@ -1,9 +1,13 @@
 package lt.rebellion.project;
 
+
+
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 
 import org.springframework.data.domain.Page;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,7 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
@@ -28,42 +32,42 @@ public class ProjectController {
 	private final ProjectService projectService;
 
 	
-	// GET Pagignated Projects
+	@ResponseStatus(HttpStatus.OK)
 	@GetMapping("/page")
-	public ResponseEntity<Page<ProjectDTO>> getAllProjects(@RequestParam("page") int page, @RequestParam("size") int size){
-		return projectService.findPaginated(page, size);
+	public Page<ProjectDTO> getPaginatedProjects(Pageable pageable){
+		return projectService.findPaginated(pageable);
 	}
 	
-	// GET Pagignated Projects By User
+	@ResponseStatus(HttpStatus.OK)
 	@GetMapping("/pageByUser")
-	public ResponseEntity<Page<ProjectDTO>> getAllProjectsByUserId(@RequestParam("page") int page, @RequestParam("size") int size){
-		return projectService.findPaginatedByUserId(page, size);
+	public Page<ProjectDTO> getPaginatedProjects_ByLoggedInUser(Pageable pageable){
+		return projectService.getPaginatedProjectsByUserId(pageable);
 	}
 	
-	//GET project by id
+	@ResponseStatus(HttpStatus.OK)
 	@GetMapping("/{id}")
-	public ResponseEntity<Project> getProjectById(@PathVariable Long id){
+	public Project getProjectById(@PathVariable @NotBlank Long id){
 		return projectService.getProjectById(id);
 	}
 	
-	// CREATE new Project
-	@PostMapping("/createProject")
+	@ResponseStatus(HttpStatus.CREATED)
+	@PostMapping
 	@PreAuthorize("hasRole('ROLE_MODERATOR') or hasRole('ROLE_ADMIN')")
-	public ResponseEntity<ProjectDTO> createProject(@Valid @RequestBody ProjectRequestDTO projectRequestDTO){
+	public ProjectDTO createProject(@Valid @RequestBody ProjectRequestDTO projectRequestDTO){
 		return projectService.createProject(projectRequestDTO);
 	}
 	
-	// UPDATE project by id
+	@ResponseStatus(HttpStatus.OK)
 	@PutMapping("/{id}")
 	@PreAuthorize("hasRole('ROLE_MODERATOR') or hasRole('ROLE_ADMIN')")
-	public ResponseEntity<ProjectDTO> updateProjectById(@PathVariable Long id, @Valid @RequestBody ProjectRequestDTO projectRequestDTO){
+	public ProjectDTO updateProjectById(@PathVariable @NotBlank Long id, @Valid @RequestBody ProjectRequestDTO projectRequestDTO){
 		return projectService.updateProject(id, projectRequestDTO);
 	}
 	
-	// DELETE project by id
+	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@DeleteMapping("/{id}")
 	@PreAuthorize("hasRole('ROLE_MODERATOR') or hasRole('ROLE_ADMIN')")
-	public ResponseEntity<String> deleteProjectById(@PathVariable Long id){
-		return projectService.deleteProjectById(id);
+	public void deleteProjectById(@PathVariable @NotBlank Long id){
+		 projectService.deleteProjectById(id);
 	}
 }

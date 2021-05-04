@@ -1,7 +1,10 @@
 package lt.rebellion.user;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
@@ -30,7 +33,7 @@ public class CommandLineRunnerUser implements CommandLineRunner {
 		roleRepository.save(new Role(ERole.ROLE_ADMIN));
 		roleRepository.save(new Role(ERole.ROLE_USER));
 
-		// CREATE ADMIN ===============================
+		// CREATE ADMIN ===============================>
 		Set<Role> rolesForAdmin = new HashSet<>();
 		rolesForAdmin.add(roleRepository.findByName(ERole.ROLE_ADMIN).get());
 
@@ -42,9 +45,9 @@ public class CommandLineRunnerUser implements CommandLineRunner {
 		admin.setRoles(rolesForAdmin);
 
 		userRepository.save(admin);
-		//=============================================
+		// =============================================/
 
-		// CREATE USER ================================
+		// CREATE USER ================================>
 		Set<Role> rolesForUser = new HashSet<>();
 		rolesForUser.add(roleRepository.findByName(ERole.ROLE_USER).get());
 
@@ -56,20 +59,41 @@ public class CommandLineRunnerUser implements CommandLineRunner {
 		user.setRoles(rolesForUser);
 
 		userRepository.save(user);
-		//=============================================
-		
-		// CREATE MODERATOR ===========================
+		// =============================================/
+
+		// CREATE MODERATOR ===========================>
 		Set<Role> rolesForModerator = new HashSet<>();
 		rolesForModerator.add(roleRepository.findByName(ERole.ROLE_MODERATOR).get());
-		
+
 		User moderator = new User();
 		moderator.setFirstName("Moderator");
 		moderator.setLastName("Moderatovich");
 		moderator.setEmail("moderator@mail.com");
 		moderator.setPassword(encoder.encode("Moderator1"));
 		moderator.setRoles(rolesForModerator);
-		
+
 		userRepository.save(moderator);
-		//=============================================
+		// =============================================/
+
+		
+		// CREATE MORE USERS ==========================>
+		Map<String, String> userNames = Stream.of(new String[][] { { "Dedrick", "Kiehn" }, { "Toney", "Hessel" },
+				{ "Isobel", "Veum" }, { "Margot", "Baumbach" }, { "Jettie", "Yost" }, { "Chanel", "Schumm" },
+				{ "Audreanne", "Wisozk" }, { "Magali", "Zemlak" }, { "Nyah", "McKenzie" },
+				{ "Rossie", "Heathcote" } }).collect(Collectors.toMap(data -> data[0], data -> data[1]));
+
+		int i = 0;
+		for (Map.Entry<String, String> entry : userNames.entrySet()) {
+			i++;
+			User dummy = new User();
+			dummy.setFirstName(entry.getKey());
+			dummy.setLastName(entry.getValue());
+			dummy.setEmail("user" + i + "@mail.com");
+			dummy.setPassword(encoder.encode("User1"));
+			dummy.setRoles(rolesForUser);
+
+			userRepository.save(dummy);
+		}
+
 	}
 }
