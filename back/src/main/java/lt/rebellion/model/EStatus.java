@@ -5,5 +5,7 @@ public enum EStatus {
 	TODO,
 	IN_PROGRESS,
 	DONE,
-	ACTIVE
+	ACTIVE,
+	BACKLOG,
+	HISTORY
 }

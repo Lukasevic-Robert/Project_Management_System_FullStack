@@ -47,11 +47,11 @@ public class Task extends BaseEntity {
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "priority")
-	private EPriority priority = EPriority.MEDIUM;
+	private EPriority priority = EPriority.LOW;
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "status")
-	private EStatus status = EStatus.TODO;
+	private EStatus status = EStatus.BACKLOG;
 
 	@ManyToOne
 	@JoinColumn(name = "project_id")
