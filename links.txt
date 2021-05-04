@@ -1,0 +1,12 @@
+https://onaircode.com/react-drag-drop-components-web-mobile-apps/
+https://javascript.plainenglish.io/build-a-drag-and-drop-dnd-layout-builder-with-react-and-immutablejs-78a0797259a6
+https://github.com/isaacHagoel/react-dnd-action
+https://github.com/zalmoxisus/social-expert
+https://github.com/zroyer/juggle-and-drop
+https://github.com/peterh32/react-drag-drop-container
+https://github.com/kutlugsahin/smooth-dnd-demo
+https://medium.com/@RethnaGanesh/developing-a-kanban-board-using-react-dnd-and-react-hooks-1cae2e11ea99
+https://www.youtube.com/watch?v=Vqa9NMzF3wc
+https://www.youtube.com/watch?v=QBKyDX7P7Tk
+https://www.youtube.com/watch?v=QBKyDX7P7Tk
+https://www.youtube.com/watch?v=Taelw1_PuGs

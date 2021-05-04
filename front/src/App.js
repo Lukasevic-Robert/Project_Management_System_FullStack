@@ -19,6 +19,7 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
+import ViewTask from './Dashboard/ViewTask';
 
 
 const theme = createMuiTheme({
@@ -113,7 +114,8 @@ function App() {
           <Route path="/profile" component={Profile} />
           <Route exact path="/api/v1/projects" component={ProjectList} />
           <Route path="/api/v1/projects/:id" component={CreateProject} />
-          <Route path="/api/v1/tasks/:id" component={ViewProjectTasks}></Route>
+          <Route exact path="/api/v1/tasks/:id" component={ViewProjectTasks}></Route>
+          <Route path="/api/v1/tasks/:id/:taskid" component={ViewTask}></Route>
         </Switch>
 
       </div>
