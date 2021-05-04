@@ -55,10 +55,18 @@ public class Project extends BaseEntity {
 		inverseJoinColumns = @JoinColumn(name = "user_id"))
 	private Set<User> users = new HashSet<>();
 
+	
+	
 	public Project(String name, String description, Set<User> users) {
 		super();
 		this.name = name;
 		this.description = description;
 		this.users = users;
 	}
+
+	public Project(String name, String description) {
+		super();
+		this.name = name;
+		this.description = description;
+	}	
 }

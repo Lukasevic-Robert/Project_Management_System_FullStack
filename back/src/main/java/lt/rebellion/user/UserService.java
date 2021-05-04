@@ -139,13 +139,11 @@ public class UserService {
 		return getCurrentUser().getId();
 	}
 
-	// GET all users =======================================================>
 	public ResponseEntity<List<User>> getAllUsers() {
 		List<User> users = userRepository.findAll();
 		return new ResponseEntity<List<User>>(users, HttpStatus.OK);
 	}
 
-	// GET Paginated Users==================================================>
 	public ResponseEntity<Page<UserResponseDTO>> getAllPaginatedUsers(Pageable pageable) {
 
 		Page<User> allUsers = userRepository.findAll(pageable);
