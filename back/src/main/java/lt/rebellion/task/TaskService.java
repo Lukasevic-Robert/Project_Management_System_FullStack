@@ -6,6 +6,7 @@ import java.util.Set;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import lt.rebellion.exception.NotFoundException;
@@ -23,6 +24,7 @@ import lt.rebellion.user.UserService;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class TaskService {
 
 	private final TaskRepository taskRepository;

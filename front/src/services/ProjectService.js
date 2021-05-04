@@ -11,7 +11,7 @@ class ProjectService{
         let config = {
             headers: authHeader(),
             params: {
-                page:`${pageNr+1}`, size:sizeNr
+                page:pageNr, size:sizeNr, sort:`id,desc`
             },
           }
           console.log(config)
