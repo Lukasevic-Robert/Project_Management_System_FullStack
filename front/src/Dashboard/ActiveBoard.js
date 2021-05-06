@@ -4,11 +4,15 @@ import _ from "lodash";
 import { Link } from "react-router-dom";
 import CancelIcon from '@material-ui/icons/Cancel';
 import TaskService from "../services/TaskService.js"
+import ViewTask from "./ViewTask"
+import swal from 'sweetalert';
+import { useHistory } from 'react-router';
 
 const ActiveBoard = ({ match }) => {
     const activeProjectID = match.params.id;
     const [activeTasks, setActiveTasks] = useState([]);
     const [errors, setErrors] = useState([]);
+    const history = useHistory();
     const [state, setState] = useState({
         "TODO": {
             title: "To do",
@@ -24,23 +28,28 @@ const ActiveBoard = ({ match }) => {
         }
     })
 
-
     useEffect(() => {
-        let isMounted = true; 
+        let isMounted = true;
         const fetchData = async () => {
             await TaskService.getActiveTasks(activeProjectID).then(
-                
+
                 response => {
-                    if (isMounted) { setActiveTasks(response.data);
+                    if (isMounted) {
+                        setActiveTasks(response.data);
                         mapByStatus(response.data);
-                        console.log(response)}
-                   
+                        //  console.log(response)
+                    }
                 })
-                .catch((error) => console.log(error));
+                .catch((error) => {
+                    getErrorMessage();
+                    history.push('/api/v1/projects');
+                }
+                );
         };
         fetchData();
         return () => { isMounted = false };
     }, [activeProjectID]);
+
 
     // map tasks by status
     const mapByStatus = (activeTasks) => {
@@ -76,8 +85,28 @@ const ActiveBoard = ({ match }) => {
                 })
             }
         }
+
+        setState(state => {
+            state = { ...state }
+            state.TODO.items.sort((a, b) => {
+                return new Date(b.updated) - new Date(a.updated)
+            });
+
+            state.IN_PROGRESS.items.sort((a, b) => {
+                return new Date(b.updated) - new Date(a.updated)
+            });
+
+            state.DONE.items.sort((a, b) => {
+                return new Date(b.updated) - new Date(a.updated)
+            });
+            return state
+        })
     }
+
+
     // end maping tasks  
+
+
 
     const handleDragEnd = ({ destination, source, draggableId }) => {
         // console.log("from",source)
@@ -102,14 +131,23 @@ const ActiveBoard = ({ match }) => {
         let taskToUpdate = activeTasks.find(item => item.id === taskId);
         taskToUpdate.status = newStatus;
         TaskService.updateTask(taskToUpdate, taskId).then(res => {
-            console.log(res);
-            return res.status;
+          //  console.log(res);
         })
             .catch((error) => {
-                console.log(error);
-                return error
+                getErrorMessage();
+                history.push('/api/v1/projects');
             }
             );
+    }
+
+    const getErrorMessage = () => {
+        const errorMessage = swal({
+            text: "Something went wrong! ",
+            button: "Go back to project list",
+            icon: "warning",
+            dangerMode: true,
+        });
+        return errorMessage;
     }
 
     return (
@@ -148,10 +186,10 @@ const ActiveBoard = ({ match }) => {
                                                                     >
 
                                                                         {/* <CancelIcon id="icon" fontSize="small" onClick={() => sendToBacklog(el.id, el.status)} style={{marginRight:"15px", cursor: 'pointer'}}></CancelIcon> */}
-
-                                                                        <Link to={`/api/v1/tasks/${activeProjectID}/${el.id}`} style={{ color: 'black', textDecoration: 'none', textAlign: 'center' }}>
+                                                                        <ViewTask name={el.name} description={el.description} />
+                                                                        {/* <Link to={`/api/v1/tasks/${activeProjectID}/${el.id}`} style={{ color: 'black', textDecoration: 'none', textAlign: 'center' }}>
                                                                             {el.name}
-                                                                        </Link>
+                                                                        </Link> */}
                                                                     </div>
                                                                 )
                                                             }}
