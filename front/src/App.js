@@ -9,7 +9,7 @@ import Profile from './components/Profile.js';
 import AuthService from "./services/authService.js";
 import ProjectList from './components/ProjectList.js';
 import CreateProject from './components/CreateProject.js';
-import ViewProjectTasks from './components/ViewProjectTasks.js';
+import ActiveBoard from './Dashboard/ActiveBoard.js';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 import { makeStyles } from '@material-ui/core/styles';
@@ -19,7 +19,7 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import ViewTask from './Dashboard/ViewTask';
+import ViewTask from './Dashboard/ViewTask.js';
 import { UserContext } from './services/UserContext.js';
 
 const theme = createMuiTheme({
@@ -119,7 +119,7 @@ function App() {
             <Route path="/profile" component={Profile} />
             <Route exact path="/api/v1/projects" component={ProjectList} />
             <Route path="/api/v1/projects/:id" component={CreateProject} />
-            <Route exact path="/api/v1/tasks/:id" component={ViewProjectTasks} />
+            <Route exact path="/api/v1/tasks/:id" component={ActiveBoard} />
             <Route path="/api/v1/tasks/:id/:taskid" component={ViewTask}></Route>
           </Switch>
           </UserContext.Provider>
