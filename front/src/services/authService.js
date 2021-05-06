@@ -1,6 +1,5 @@
 import axios from "axios";
-import React, { useContext } from "react"
-import { UserContext } from "./UserContext";
+
 
 const API_URL = "http://localhost:8080/api/auth/";
 

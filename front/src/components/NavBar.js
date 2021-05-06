@@ -73,7 +73,7 @@ export default function NavBar() {
             {isAuthenticated() ? (
               <>
                 <Link to={"/profile"} className="nav-link"><Button style={{ color: 'white' }}>{authUser.email}</Button></Link>
-                <a href="/api/auth/signin" onClick={() => logout()} className="nav-link"><Button color="secondary">LogOut</Button></a>
+                <Button onClick={() => logout()} color="secondary">LogOut</Button>
               </>
             ) : (
               <>

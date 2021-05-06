@@ -95,15 +95,13 @@ export default function SignIn() {
 
     event.preventDefault();
     setMessage("");
-
     axios.post(API_URL + "signin", {email, password})
     .then(response => {
       if (response.data.token) {
         setAuthState(response.data);
-      }}).then(() => {     
         history.push("/api/v1/projects");
-        window.location.reload();
-      }, error => {
+        
+      }}).catch( error => {
         const resMessage =
           (error.response &&
             error.response.data &&
@@ -112,9 +110,7 @@ export default function SignIn() {
           error.toString();
         setMessage(resMessage);
         setErrUnauthorized(error.response.status);
-      }
-    ).catch(() => { });
-  };
+      })};
 
 
   return (

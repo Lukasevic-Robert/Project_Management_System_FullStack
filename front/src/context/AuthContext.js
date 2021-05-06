@@ -20,7 +20,7 @@ const AuthProvider = ({ children }) => {
     const logout = () => {
         localStorage.removeItem('user');
         setAuthState({});
-    //     history.push('/api/auth/signin');
+        history.push('/api/auth/signin');
     };
 
     const isAuthenticated = () => {
