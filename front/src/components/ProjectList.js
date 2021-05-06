@@ -52,20 +52,10 @@ function ProjectList() {
     const [refresh, setRefresh] = useState(false);
 
 
-    //     const [projects, setProjects] = useState([
-    //         {id:1,
-    //         name:"P1",
-    //     description:"descr",
-    // status:"done",
-    // totalTasks:5,
-    // unfinishedTasks:2}
-    //     ]);
-
-
-
 
     // GET PROJECTS from database ==========================>
     useEffect(() => {
+        
         getProjects();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [page, rowsPerPage, refresh])
@@ -94,8 +84,7 @@ function ProjectList() {
     // DELETE a project ==================================>
     const deleteProject = (id) => {
         ProjectService.deleteProject(id).then(res => {
-            getSuccessMessage("deleted");
-            setProjects(projects.filter((project) => project.id !== id));
+            getSuccessMessage("deleted");   
             setRefresh(!refresh);
         })
             .catch((error) => {
@@ -104,26 +93,6 @@ function ProjectList() {
             );
 
         handleClose();
-    }
-
-    const getErrorMessage = () => {
-        const errorMessage = swal({
-            text: "Something went wrong! ",
-            button: "Go back to project list",
-            icon: "warning",
-            dangerMode: true,
-        });
-        return errorMessage;
-    }
-
-    const getSuccessMessage = (status) => {
-        const successMessage = swal({
-            title: "Request successful",
-            text: `The project has been ${status}`,
-            icon: "success",
-            button: "Go back to project list",
-        });
-        return successMessage;
     }
 
     // PAGINATION =========================================>
@@ -161,6 +130,26 @@ function ProjectList() {
     }
 
     // end project delete confirmation dialog
+
+    const getErrorMessage = () => {
+        const errorMessage = swal({
+            text: "Something went wrong! ",
+            button: "Go back to project list",
+            icon: "warning",
+            dangerMode: true,
+        });
+        return errorMessage;
+    }
+
+    const getSuccessMessage = (status) => {
+        const successMessage = swal({
+            title: "Request successful",
+            text: `The project has been ${status}`,
+            icon: "success",
+            button: "Go back to project list",
+        });
+        return successMessage;
+    }
 
     return (
         <div>

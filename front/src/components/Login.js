@@ -1,4 +1,4 @@
-import React, { isValidElement, useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -11,11 +11,13 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import AuthService from '../services/authService';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import { FormControlLabel } from '@material-ui/core';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
+import axios from "axios";
+import {AuthContext} from '../context/AuthContext.js';
+
 
 
 const theme = createMuiTheme({
@@ -66,8 +68,12 @@ const useStyles = makeStyles({
   },
 });
 
+const API_URL = "http://localhost:8080/api/auth/";
+
 
 export default function SignIn() {
+
+  const {setAuthState} = useContext(AuthContext);
   const history = useHistory();
   const classes = useStyles();
 
@@ -86,12 +92,15 @@ export default function SignIn() {
 
 
   const handleSubmit = (event) => {
+
     event.preventDefault();
     setMessage("");
-    AuthService.login(email, password).then(
-      () => {
-                // changed to /projects, initial version: history.push("/profile");
 
+    axios.post(API_URL + "signin", {email, password})
+    .then(response => {
+      if (response.data.token) {
+        setAuthState(response.data);
+      }}).then(() => {     
         history.push("/api/v1/projects");
         window.location.reload();
       }, error => {
