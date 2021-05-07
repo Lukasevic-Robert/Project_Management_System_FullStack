@@ -2,17 +2,47 @@ import React, { useState, useEffect } from 'react';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import _ from "lodash";
 import { Link } from "react-router-dom";
-import CancelIcon from '@material-ui/icons/Cancel';
 import TaskService from "../services/TaskService.js"
 import ViewTask from "./ViewTask"
 import swal from 'sweetalert';
 import { useHistory } from 'react-router';
+import UserService from "../services/UserService";
+import ProjectService from "../services/ProjectService";
+import { Avatar } from "@material-ui/core"
+import { createMuiTheme } from '@material-ui/core/styles';
+import { ThemeProvider } from '@material-ui/styles';
+import { makeStyles } from '@material-ui/core/styles';
+
+
+const theme = createMuiTheme({
+    palette: {
+        primary: {
+            main: '#be9ddf',
+        },
+        secondary: {
+            main: '#ffa5d8',
+        },
+    },
+});
+
+const useStyles = makeStyles({
+    purple:{
+        backgroundColor: 'purple',
+        width:'25px',
+        height:'25px',
+        fontSize: '12px',
+        marginRight: '2px'
+            }
+}
+);
 
 const ActiveBoard = ({ match }) => {
     const activeProjectID = match.params.id;
+    const classes = useStyles();
     const [activeTasks, setActiveTasks] = useState([]);
     const [errors, setErrors] = useState([]);
     const history = useHistory();
+    const [initials, setInitials] = useState(['AZ']);
     const [state, setState] = useState({
         "TODO": {
             title: "To do",
@@ -32,12 +62,13 @@ const ActiveBoard = ({ match }) => {
         let isMounted = true;
         const fetchData = async () => {
             await TaskService.getActiveTasks(activeProjectID).then(
-
                 response => {
                     if (isMounted) {
                         setActiveTasks(response.data);
                         mapByStatus(response.data);
-                        //  console.log(response)
+                        //   console.log(response);
+                       // getUsers();
+                     //   console.log(initials)
                     }
                 })
                 .catch((error) => {
@@ -135,7 +166,7 @@ const ActiveBoard = ({ match }) => {
         })
             .catch((error) => {
                 getErrorMessage();
-                history.push('/api/v1/projects');
+              //  history.push('/api/v1/projects');
             }
             );
     }
@@ -143,20 +174,43 @@ const ActiveBoard = ({ match }) => {
     const getErrorMessage = () => {
         const errorMessage = swal({
             text: "Something went wrong! ",
-            button: "Go back to project list",
+            button: "Go back to backlog",
             icon: "warning",
             dangerMode: true,
         });
         return errorMessage;
     }
 
+   
+
+const getUsers = () =>{
+    
+    setInitials([]);
+    console.log("reset initials:" +initials);
+    ProjectService.getProjectById(activeProjectID).then((res) => {
+        let project = res.data;
+       
+
+        // let users = [];
+        // let userId = [];
+        project.users.map((user) => {
+          let userInitials= user.firstName.charAt(0)+user.lastName.charAt(0)
+            setInitials([...initials,userInitials])
+            console.log("***"+initials);
+        })
+        // this.setState({ title: project.name, status: project.status, content: project.description, personName: users, userListId: userId });
+    })
+        .catch((error) => {
+            this.getErrorMessage();
+            // this.props.history.push('/api/v1/projects');
+        });
+}
+
     return (
-        <div>
-            <div className="projectHeadingStyle">
+        <div className="activeBoard">
+            <div  className="projectHeadingStyle">
                 <div>
-                    <Link to={`/api/v1/projects`}>
-                        <button className="btn btn-info btn">Go back</button>
-                    </Link>
+                   Project nr. {match.params.id}
                 </div>
             </div>
             <div className={"dndContainer"}>
@@ -184,12 +238,21 @@ const ActiveBoard = ({ match }) => {
                                                                         {...provided.draggableProps}
                                                                         {...provided.dragHandleProps}
                                                                     >
+                                                                        <div>
+                                                                        <ViewTask task={el} />
+                                                                        </div>
+                                                                        
+                                                                       <div> 
+                                                                       {
+     initials.map((item,index) => (
+        <Avatar className={classes.purple} key={index}>{item}</Avatar>
+        
+     ))
+     }                              
+                                                                           
+                                                                           
+                                                                           </div>   
 
-                                                                        {/* <CancelIcon id="icon" fontSize="small" onClick={() => sendToBacklog(el.id, el.status)} style={{marginRight:"15px", cursor: 'pointer'}}></CancelIcon> */}
-                                                                        <ViewTask name={el.name} description={el.description} />
-                                                                        {/* <Link to={`/api/v1/tasks/${activeProjectID}/${el.id}`} style={{ color: 'black', textDecoration: 'none', textAlign: 'center' }}>
-                                                                            {el.name}
-                                                                        </Link> */}
                                                                     </div>
                                                                 )
                                                             }}

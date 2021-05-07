@@ -64,74 +64,96 @@ padding: 2%;
 }
 
 .dndContainer .column{
-  width: 33%;
+  width: 31%;
   background-color: #f7f4f4;
+  box-shadow: 2px 20px 20px rgba(27, 28, 43, 0.2);
+
 }
 
 .dndContainer h3{
-  background-color: #adaaaa;
-  text-align: center;
+  /* background-color: #adaaaa; */
+  text-align: left;
+  padding: 1%;
+  margin-left: 2%;
   vertical-align: middle;
   font-variant-caps: all-small-caps;
 }
 
 .droppable-col {
   width: 100%;
+
   /* background-color: #cccccc; */
   padding: 10px 10px 0 10px;
   /* border-radius: 7px; */
   display: flex;
   flex-direction: column;
   min-height: 300px;
-  border: 1px solid rgb(180, 179, 179);
+  /* border: 1px solid rgb(180, 179, 179); */
 }
 
 .item{
   margin-bottom: 10px;
+  background-color: rgba(191, 195, 214, 0.1);
+  box-shadow: 1px 2px 3px rgba(27, 28, 43, 0.2);
+
   /* color:rgb(59, 57, 57); */
   /* border: 1px solid rgb(27, 26, 26); */
   padding: 10px;
-  border-radius: 7px;
-  min-height: 60px;
+  border-radius: 1px;
+  min-height: 50px;
   display: flex;
-  justify-content:flex-start;
-align-items: center;
+  justify-content:left;
+  flex-direction: column;
+/* align-items: center; */
 color: black;
 text-decoration: none;
 }
-
+.item div{
+  padding: 1%;
+}
+.item :nth-child(2){
+  display:flex;
+  justify-content:left;
+}
 .item.dragging.medium{
-  background-color:rgb(255, 255, 0, 0.5);
+  background-color:rgb(255, 255, 0, 0.2);
 }
 .item.dragging.low{
-  background-color:rgb(0, 128, 0, 0.5);
+  background-color:rgb(0, 128, 0, 0.2);
 }
 .item.dragging.high{
-  background-color:rgb(255, 0, 0, 0.5);
+  background-color:rgb(255, 0, 0, 0.2);
 }
 
 .item.medium{
   /* background-color: yellow; */
-  border-right: 15px solid yellow;
-  border-top: 1px solid yellow;
+  border-right: 10px solid rgb(255, 255, 0, 0.7);
+  /* border-top: 1px solid yellow;
   border-bottom: 1px solid yellow;
-  border-left: 1px solid yellow;
+  border-left: 1px solid yellow; */
 
 }
 
 .item.high{
   /* background-color: red; */
-  border-right: 15px solid red;
-  border-top: 1px solid red;
+  border-right: 10px solid rgb(255, 0, 0, 0.7);
+  /* border-top: 1px solid red;
   border-bottom: 1px solid red;
-  border-left: 1px solid red;
+  border-left: 1px solid red; */
 }
 
 .item.low{
   /* background-color: green; */
-  border-right: 15px solid green;
-  border-top: 1px solid green;
+  border-right: 10px solid rgb(0, 128, 0, 0.7);
+  /* border-top: 1px solid green;
   border-bottom: 1px solid green;
-  border-left: 1px solid green;
+  border-left: 1px solid green; */
 
+}
+
+.activeBoard{
+  margin-top:-50px;
+background-color: rgb(225, 231, 238);
+height: 100vh;
+width: 100%;
 }
