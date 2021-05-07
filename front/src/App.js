@@ -1,12 +1,11 @@
 import React, { useEffect, useState, useContext } from 'react';
 
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Link, Redirect, useParams } from "react-router-dom";
 import Login from "./components/Login.js";
 import BoardUser from './components/BoardUser.js';
 import BoardAdmin from './components/BoardAdmin.js';
 import Profile from './components/Profile.js';
-import AuthService from "./services/authService.js";
 import ProjectList from './components/ProjectList.js';
 import CreateProject from './components/CreateProject.js';
 import ViewProjectTasks from './components/ViewProjectTasks.js';
@@ -30,7 +29,47 @@ const theme = createMuiTheme({
 });
 
 
+const AdminRoute = ({ children, ...rest }) => {
+  const value = useContext(AuthContext);
+  return (
+    <Route {...rest} render={() =>
+      value.isAuthenticated() && value.isAdmin() ? (
+        <>{children}</>
+      ) : (
+        <Redirect to="/" />
+      )
+    }
+    ></Route>
+  );
+};
 
+const ModeratorRoute = ({component: Component, ...rest }) => {
+  const value = useContext(AuthContext);
+  return (
+    <Route {...rest} render={(props) =>{
+      value.isAuthenticated() && (value.isModerator() || value.isAdmin()) ? (
+        <><Component {...props} /></>
+      ) : (
+        <Redirect to="/" />
+      )
+    }
+  }></Route>
+  );
+};
+
+const AuthenticatedRoute = ({ children, ...rest }) => {
+  const value = useContext(AuthContext);
+  return (
+    <Route {...rest} render={() =>
+      value.isAuthenticated() ? (
+        <>{children}</>
+      ) : (
+        <Redirect to="/signin" />
+      )
+    }
+    ></Route>
+  );
+};
 
 function App() {
 
@@ -41,14 +80,32 @@ function App() {
         <div className="auth-wrapper">
           <div className="auth-inner">
             <Switch>
+
               <Route exact path='/' component={Login} />
-              <Route path="/api/auth/signin" component={Login} />
-              <Route path="/api/v1/test/user" component={BoardUser} />
-              <Route path="/api/v1/test/admin" component={BoardAdmin} />
-              <Route path="/profile" component={Profile} />
-              <Route exact path="/api/v1/projects" component={ProjectList} />
-              <Route path="/api/v1/projects/:id" component={CreateProject} />
-              <Route path="/api/v1/tasks/:id" component={ViewProjectTasks} />
+              <Route path="/signin" component={Login} />
+
+              <AuthenticatedRoute path="/user">
+                <BoardUser />
+              </AuthenticatedRoute>
+
+              <AdminRoute path="/admin">
+                <BoardAdmin />
+              </AdminRoute>
+
+              <AuthenticatedRoute path="/profile">
+                <Profile />
+              </AuthenticatedRoute>
+
+              <AuthenticatedRoute exact path="/projects">
+                <ProjectList />
+              </AuthenticatedRoute>
+
+              <ModeratorRoute path="/projects/:id" component ={CreateProject}/>
+
+              <AuthenticatedRoute path="/tasks/:id">
+                <ViewProjectTasks />
+              </AuthenticatedRoute>
+              
             </Switch>
           </div>
         </div>

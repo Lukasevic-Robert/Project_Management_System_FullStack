@@ -3,7 +3,6 @@ import '../Projects.css'
 import { makeStyles } from '@material-ui/core/styles';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination, Button, DialogTitle, DialogActions, Dialog, Fab } from '@material-ui/core';
 import { useState, useEffect } from 'react';
-import UserService from "../services/UserService";
 import ProjectService from "../services/ProjectService";
 import { Link, useHistory } from "react-router-dom";
 import swal from 'sweetalert';
@@ -126,7 +125,7 @@ function ProjectList() {
     };
 
     const handleRedirect = (rowId) => {
-        history.push(`/api/v1/tasks/${rowId}`);
+        history.push(`/tasks/${rowId}`);
     }
 
     // end project delete confirmation dialog
@@ -158,7 +157,7 @@ function ProjectList() {
                 <TableContainer component={Paper}>
                     <div className="projectHeadingStyle">
 
-                        <Link to={`/api/v1/projects/-1`}>
+                        <Link to={`/projects/-1`}>
                             <Fab size="medium" color="primary" className={classes.fab + ' ' + classes.create}>
                                 <AddIcon id="icon"/>
                             </Fab>
@@ -188,11 +187,13 @@ function ProjectList() {
                                         <TableCell align="right">{row.taskCount}</TableCell>
                                         <TableCell align="right">{row.undoneTaskCount}</TableCell>
                                         <TableCell align="right">
-                                            <Link to={`/api/v1/projects/${row.id}`}>
+
+                                            <Link to={`/projects/${row.id}`}>
                                                 <Fab size="small" color="secondary" aria-label="Edit" className={classes.fab}>
                                                     <EditIcon id="icon"></EditIcon>
                                                 </Fab>
                                             </Link>
+
                                             <Fab id="delete-button" size="small" aria-label="Delete" className={classes.fab} onClick={() => handleClickOpen(row.id, row.name)}><DeleteIcon id="icon" /></Fab>
                                             <Dialog
                                                 open={open}

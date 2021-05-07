@@ -42,17 +42,9 @@ const useStyles = makeStyles({
 
 export default function NavBar() {
 
-    const {isAdmin, isAuthenticated, isModerator, authUser, logout} = useContext(AuthContext);
+    const {isAdmin, isAuthenticated, authUser, logout} = useContext(AuthContext);
     const classes = useStyles();
-    const [showAdminBoard, setShowAdminBoard] = useState(false);
-    const [showModeratorBoard, setShowModerator] = useState(false);
   
-  
-  
-    useEffect(() => {
-        setShowAdminBoard(isAdmin());
-        setShowModerator(isModerator());
-    }, [])
   
 
     return (
@@ -64,11 +56,11 @@ export default function NavBar() {
               <MenuIcon color="white" />
             </IconButton>
             <Typography variant="h6" className={classes.title}>
-              <Link style={{ color: 'white', fontSize: 20 }} className="nav-link" to={() => isAuthenticated() ? "/api/v1/projects" : "/api/auth/signin"}>Pro-Man</Link>
+              <Link style={{ color: 'white', fontSize: 20 }} className="nav-link" to={() => isAuthenticated() ? "/projects" : "/signin"}>Pro-Man</Link>
             </Typography>
 
             {isAdmin() && (
-            <Link to={"/api/v1/test/admin"} style={{ color: '#92ddea' }} className="nav-link"><Button style={{ color: 'white' }}>ADMIN BOARD</Button></Link>
+            <Link to={"/admin"} style={{ color: '#92ddea' }} className="nav-link"><Button style={{ color: 'white' }}>ADMIN BOARD</Button></Link>
           )}
             {isAuthenticated() ? (
               <>
@@ -77,7 +69,7 @@ export default function NavBar() {
               </>
             ) : (
               <>
-                <Link className="nav-link" to={"/api/auth/signin"}><Button style={{ color: 'white' }}>LogIn</Button></Link>
+                <Link className="nav-link" to={"/signin"}><Button style={{ color: 'white' }}>LogIn</Button></Link>
                 {/* <li className="nav-item">
                 <Link to={"/register"} className="nav-link">
                   Sign Up
