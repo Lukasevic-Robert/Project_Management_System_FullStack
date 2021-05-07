@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useContext } from 'react';
 
 import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import { Link } from "react-router-dom";
@@ -12,44 +12,52 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
-import {AuthContext} from '../context/AuthContext.js';
+import { AuthContext } from '../context/AuthContext.js';
+import {ProjectContext } from '../context/ProjectContext.js';
 
 
 const theme = createMuiTheme({
-    palette: {
-      primary: {
-        main: '#9579d1',
-  
-      },
-      secondary: {
-        light: '#92ddea',
-        main: '#ffa5d8',
-      },
+  palette: {
+    primary: {
+      main: '#9579d1',
+
     },
-  });
+    secondary: {
+      light: '#92ddea',
+      main: '#ffa5d8',
+    },
+  },
+});
 
 const useStyles = makeStyles({
-    root: {
-      flexGrow: 1,
-    },
-    menuButton: {
-      marginRight: theme.spacing(2),
-    },
-    title: {
-      flexGrow: 1,
-    },
-  });
+  root: {
+    flexGrow: 1,
+  },
+  menuButton: {
+    marginRight: theme.spacing(2),
+  },
+  title: {
+    flexGrow: 1,
+  },
+});
+
 
 export default function NavBar() {
 
-    const {isAdmin, isAuthenticated, authUser, logout} = useContext(AuthContext);
-    const classes = useStyles();
-  
-  
+  const { isAdmin, isAuthenticated, authUser, logout } = useContext(AuthContext);
+  const { refreshContext, setRefreshContext} = useContext(ProjectContext);
+  const classes = useStyles();
 
-    return (
-        <ThemeProvider theme={theme}>
-        <div className={classes.root}>
+
+  const logOut = () => {
+   setRefreshContext(!refreshContext);
+    logout();
+  }
+
+
+  return (
+    <ThemeProvider theme={theme}>
+      <div className={classes.root}>
         <AppBar position="static" style={{ background: '#7eb8da' }}>
           <Toolbar>
             <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
@@ -60,12 +68,12 @@ export default function NavBar() {
             </Typography>
 
             {isAdmin() && (
-            <Link to={"/admin"} style={{ color: '#92ddea' }} className="nav-link"><Button style={{ color: 'white' }}>ADMIN BOARD</Button></Link>
-          )}
+              <Link to={"/admin"} style={{ color: '#92ddea' }} className="nav-link"><Button style={{ color: 'white' }}>ADMIN BOARD</Button></Link>
+            )}
             {isAuthenticated() ? (
               <>
                 <Link to={"/profile"} className="nav-link"><Button style={{ color: 'white' }}>{authUser.email}</Button></Link>
-                <Button onClick={() => logout()} color="secondary">LogOut</Button>
+                <Button onClick={() => logOut()} color="secondary">LogOut</Button>
               </>
             ) : (
               <>
@@ -82,6 +90,6 @@ export default function NavBar() {
           </Toolbar>
         </AppBar>
       </div>
-      </ThemeProvider>
-    )
+    </ThemeProvider>
+  )
 }

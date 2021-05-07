@@ -2,6 +2,8 @@ package lt.rebellion.task;
 
 import java.util.List;
 
+import javax.validation.constraints.NotBlank;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -37,13 +39,13 @@ public class TaskController {
 	
 	// GET backlog tasks by project id ==================================>
 	@GetMapping("{id}/tasks/backlog")
-	public ResponseEntity<List<Task>> getBacklogTasks(@PathVariable Long id){
+	public ResponseEntity<List<Task>> getBacklogTasks(@NotBlank @PathVariable Long id){
 		return taskService.getBacklogTasks(id);
 	}
 	
 	// GET active-board tasks by project id =============================>
 	@GetMapping("{id}/tasks/active")
-	public ResponseEntity<List<Task>> getActiveTasks(@PathVariable Long id){
+	public ResponseEntity<List<Task>> getActiveTasks(@NotBlank @PathVariable Long id){
 		return taskService.getActiveTasks(id);
 	}
 

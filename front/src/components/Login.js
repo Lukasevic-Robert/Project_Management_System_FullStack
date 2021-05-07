@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import { useHistory, Redirect } from 'react-router-dom';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -99,7 +99,6 @@ export default function SignIn() {
         if (response.data.token) {
           value.setAuthState(response.data);
           history.push("/projects");
-
         }
       }).catch(error => {
         const resMessage =

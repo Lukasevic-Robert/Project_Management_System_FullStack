@@ -9,13 +9,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import lt.rebellion.exception.NotAuthorizedException;
 import lt.rebellion.exception.NotFoundException;
 import lt.rebellion.exception.UnprocessableEntityException;
 import lt.rebellion.model.EPriority;
 import lt.rebellion.model.EStatus;
 import lt.rebellion.project.Project;
 import lt.rebellion.project.ProjectRepository;
-import lt.rebellion.project.ProjectService;
 import lt.rebellion.role.ERole;
 import lt.rebellion.role.Role;
 import lt.rebellion.role.RoleRepository;
@@ -29,7 +29,6 @@ public class TaskService {
 
 	private final TaskRepository taskRepository;
 	private final ProjectRepository projectRepository;
-	private final ProjectService projectService;
 	private final UserService userService;
 	private final RoleRepository roleRepository;
 
@@ -51,15 +50,20 @@ public class TaskService {
 	// GET backlog tasks ================================================>
 	public ResponseEntity<List<Task>> getBacklogTasks(Long id) {
 		
-		projectService.validateRequestedProject(id);
+		Project project = projectRepository.findById(id).orElseThrow(() -> new NotFoundException("Project Not Found"));
+		if(!checkAuthorization(project)) {
+			throw new NotAuthorizedException(HttpStatus.UNAUTHORIZED, "Unauthorized request");
+		}
 		List<Task> tasks = taskRepository.findBacklogTasks(id);
 		return new ResponseEntity<>(tasks, HttpStatus.OK);
 	}
 	
 	// GET active-board tasks ===========================================>
 	public ResponseEntity<List<Task>> getActiveTasks(Long id) {
-		
-		projectService.validateRequestedProject(id);
+		Project project = projectRepository.findById(id).orElseThrow(() -> new NotFoundException("Project Not Found"));
+		if(!checkAuthorization(project)) {
+			throw new NotAuthorizedException(HttpStatus.UNAUTHORIZED, "Unauthorized request");
+		}
 		List<Task> tasks = taskRepository.findActiveTasks(id);
 		return new ResponseEntity<>(tasks, HttpStatus.OK);
 	}
@@ -81,8 +85,6 @@ public class TaskService {
 	public ResponseEntity<Task> createTask(TaskCreateRequestDTO taskRequestDTO) {
 
 		Project project = projectRepository.findById(taskRequestDTO.getProjectId()).get();
-		
-
 		if (!checkAuthorization(project)) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}

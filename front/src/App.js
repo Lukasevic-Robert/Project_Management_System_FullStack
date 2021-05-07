@@ -1,7 +1,7 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useContext } from 'react';
 
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
-import { BrowserRouter as Router, Switch, Route, Link, Redirect, useParams } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
 import Login from "./components/Login.js";
 import BoardUser from './components/BoardUser.js';
 import BoardAdmin from './components/BoardAdmin.js';
@@ -13,6 +13,7 @@ import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 import NavBar from './components/NavBar.js';
 import { AuthProvider, AuthContext } from './context/AuthContext';
+import { ProjectContextProvider } from './context/ProjectContext';
 
 
 const theme = createMuiTheme({
@@ -43,26 +44,26 @@ const AdminRoute = ({ children, ...rest }) => {
   );
 };
 
-const ModeratorRoute = ({component: Component, ...rest }) => {
+const ModeratorRoute = ({ component: Component, ...rest }) => {
   const value = useContext(AuthContext);
   return (
     <Route {...rest} render={(props) =>
       value.isAuthenticated() && (value.isModerator() || value.isAdmin()) ? (
-        <> <Component {...props} /></>
+         <Component {...props} />
       ) : (
         <Redirect to="/" />
       )
     }
-  ></Route>
+    ></Route>
   );
 };
 
-const AuthenticatedRoute = ({ children, ...rest }) => {
+const AuthenticatedRoute = ({ component: Component, ...rest }) => {
   const value = useContext(AuthContext);
   return (
-    <Route {...rest} render={() =>
+    <Route {...rest} render={(props) =>
       value.isAuthenticated() ? (
-        <>{children}</>
+        <Component {...props} />
       ) : (
         <Redirect to="/signin" />
       )
@@ -76,39 +77,31 @@ function App() {
   return (<Router>
     <ThemeProvider theme={theme}>
       <AuthProvider>
-        <NavBar />
-        <div className="auth-wrapper">
-          <div className="auth-inner">
-            <Switch>
+        <ProjectContextProvider>
+          <NavBar />
+          <div className="auth-wrapper">
+            <div className="auth-inner">
+              <Switch>
 
-              <Route exact path='/' component={Login} />
-              <Route path="/signin" component={Login} />
+                <Route exact path='/' component={Login} />
+                <Route path="/signin" component={Login} />
 
-              <AuthenticatedRoute path="/user">
-                <BoardUser />
-              </AuthenticatedRoute>
+                <AuthenticatedRoute path="/user" component={BoardUser}/>
 
-              <AdminRoute path="/admin">
-                <BoardAdmin />
-              </AdminRoute>
+                <AdminRoute path="/admin" component={BoardAdmin}/>
 
-              <AuthenticatedRoute path="/profile">
-                <Profile />
-              </AuthenticatedRoute>
+                <AuthenticatedRoute path="/profile" component={Profile}/>
 
-              <AuthenticatedRoute exact path="/projects">
-                <ProjectList />
-              </AuthenticatedRoute>
+                <AuthenticatedRoute exact path="/projects" component={ProjectList}/>          
 
-              <ModeratorRoute path="/projects/:id" component ={CreateProject}/>
+                <ModeratorRoute path="/projects/:id" component={CreateProject} />
 
-              <AuthenticatedRoute path="/tasks/:id">
-                <ViewProjectTasks />
-              </AuthenticatedRoute>
-              
-            </Switch>
+                <AuthenticatedRoute path="/tasks/:id" component={ViewProjectTasks} />
+
+              </Switch>
+            </div>
           </div>
-        </div>
+        </ProjectContextProvider>
       </AuthProvider>
     </ThemeProvider>
   </Router >

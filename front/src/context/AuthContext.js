@@ -21,7 +21,6 @@ const AuthProvider = ({ children }) => {
     const logout = () => {
         localStorage.removeItem('user');
         setAuthState({});
-        history.push('/signin');
     };
 
     const isAuthenticated = () => {
@@ -34,6 +33,12 @@ const AuthProvider = ({ children }) => {
     const isModerator = () => {
         return user && authUser.roles.includes("ROLE_MODERATOR");
     }
+    const isProjectBoss = () => {
+        if(isAdmin() || isModerator()){
+            return true;
+        }
+    }
+
     const getCurrentUser = () => {
         return JSON.parse(localStorage.getItem('user'));
       }
@@ -48,6 +53,7 @@ const AuthProvider = ({ children }) => {
                 isAuthenticated,
                 isAdmin,
                 isModerator,
+                isProjectBoss,
                 getCurrentUser
             }}
         >

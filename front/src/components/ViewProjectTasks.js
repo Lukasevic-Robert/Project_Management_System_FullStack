@@ -10,7 +10,7 @@ const ViewProjectTasks = ({match}) => {
             </h3>
 
             <div>
-            <Link to={`/api/v1/projects`}>
+            <Link to={`/projects`}>
                         <button className="btn btn-info btn">Go back</button>
                         </Link>
         </div>
