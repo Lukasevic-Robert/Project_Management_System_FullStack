@@ -1,35 +1,36 @@
-import React, { useState, useEffect } from 'react'
-import AuthService from "../services/authService.js";
+import React, { useContext } from 'react'
+import { AuthContext } from '../context/AuthContext.js';
 
 function Profile() {
 
-    const [currentUser, setCurrentUser] = useState(AuthService.getCurrentUser());
+ 
+    const {authUser} = useContext(AuthContext);
 
 
     return (
         <div className="container">
             <header className="jumbotron">
                 <h3>
-                    <strong>{currentUser.email}</strong> Profile
+                    <strong>{authUser.email}</strong> Profile
           </h3>
             </header>
             <p>
                 <strong>Token:</strong>{" "}
-                {currentUser.token.substring(0, 20)} ...{" "}
-                {currentUser.token.substr(currentUser.token.length - 20)}
+                {authUser.token.substring(0, 20)} ...{" "}
+                {authUser.token.substr(authUser.token.length - 20)}
             </p>
             <p>
                 <strong>Id:</strong>{" "}
-                {currentUser.id}
+                {authUser.id}
             </p>
             <p>
                 <strong>Email:</strong>{" "}
-                {currentUser.email}
+                {authUser.email}
             </p>
             <strong>Authorities:</strong>
             <ul>
-                {currentUser.roles &&
-                    currentUser.roles.map((role, index) => <li key={index}>{role}</li>)}
+                {authUser.roles &&
+                    authUser.roles.map((role, index) => <li key={index}>{role}</li>)}
             </ul>
         </div>
     );
