@@ -46,14 +46,14 @@ const AdminRoute = ({ children, ...rest }) => {
 const ModeratorRoute = ({component: Component, ...rest }) => {
   const value = useContext(AuthContext);
   return (
-    <Route {...rest} render={(props) =>{
+    <Route {...rest} render={(props) =>
       value.isAuthenticated() && (value.isModerator() || value.isAdmin()) ? (
-        <><Component {...props} /></>
+        <> <Component {...props} /></>
       ) : (
         <Redirect to="/" />
       )
     }
-  }></Route>
+  ></Route>
   );
 };
 
