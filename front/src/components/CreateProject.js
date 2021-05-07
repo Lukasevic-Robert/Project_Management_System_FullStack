@@ -86,7 +86,7 @@ class CreateProject extends Component {
         })
             .catch((error) => {
                 this.getErrorMessage();
-                this.props.history.push('/api/v1/projects');
+                this.props.history.push('/projects');
 
             });
 
@@ -108,7 +108,7 @@ class CreateProject extends Component {
             })
                 .catch((error) => {
                     this.getErrorMessage();
-                    this.props.history.push('/api/v1/projects');
+                    this.props.history.push('/projects');
 
                 });
         }
@@ -132,17 +132,17 @@ class CreateProject extends Component {
         if (this.state.id == -1) {
             ProjectService.createProject(project).then(res => {
                 this.getSuccessMessage("added");
-                this.props.history.push('/api/v1/projects');
+                this.props.history.push('/projects');
             })
                 .catch((error) => {
                     this.getErrorMessage();
-                    this.props.history.push('/api/v1/projects');
+                    this.props.history.push('/projects');
                 }
                 );
         } else {
             ProjectService.updateProject(project, this.state.id).then(res => {
                 this.getSuccessMessage("updated");
-                this.props.history.push('/api/v1/projects');
+                this.props.history.push('/projects');
             })
                 .catch((error) => {
                     this.getErrorMessage();
@@ -283,7 +283,7 @@ class CreateProject extends Component {
                             </Select>
                         </FormControl>
                         <Button id="icon" variant="contained" color="primary" type="submit" style={{ marginRight: '10px' }}>Submit</Button>
-                        <Link to={'/api/v1/projects'} style={{ textDecoration: 'none' }}><Button id="icon" variant="contained" color="secondary">Cancel</Button></Link>
+                        <Link to={'/projects'} style={{ textDecoration: 'none' }}><Button id="icon" variant="contained" color="secondary">Cancel</Button></Link>
 
                     </ValidatorForm>
                 </Container>

@@ -38,6 +38,12 @@ public class GlobalControllerExceptionHandler {
 		return new ApiError(e.getMessage());
 	}
 	
+	@ResponseStatus(HttpStatus.UNAUTHORIZED) // 401
+	@ExceptionHandler(NotAuthorizedException.class)
+	public @ResponseBody ApiError handleNotAuthorizedException(HttpServletRequest request, NotAuthorizedException e) {
+		return new ApiError(e.getMessage());
+	}
+	
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR) // 500
 	@ExceptionHandler(Exception.class)
 	public @ResponseBody ApiError handleAllException(HttpServletRequest request, Exception e) {
