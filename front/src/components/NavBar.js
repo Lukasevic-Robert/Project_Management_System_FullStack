@@ -163,7 +163,7 @@ history.push(path);
               )}
               {isAuthenticated() ? (
                 <>
-                  <Link to={"/profile"} className="nav-link"><Button style={{ color: 'white' }}>{authUser.email}</Button></Link>
+                  <Link to={"/profile"} className={classes.align}><Button style={{ color: 'white' }}>{authUser.email}</Button></Link>
                   <Button onClick={() => logOut()} color="secondary">LogOut</Button>
                 </>
               ) : (
@@ -195,9 +195,9 @@ history.push(path);
           </div>
           <Divider />
           <List>
-            <ListItem button key={1} onClick={() => handleRedirect('/projects')}><ListItemIcon><LayersOutlinedIcon/></ListItemIcon> <ListItemText primary={'Projects'}/></ListItem>
-            <ListItem button key={2} onClick={() => handleRedirect(`/backlog/${activeProject}`)}><ListItemIcon><ViewHeadlineOutlinedIcon/></ListItemIcon> <ListItemText primary={'Backlog'}/></ListItem>
-            <ListItem button key={3} onClick={() => handleRedirect(`/active-board/${activeProject}`)}><ListItemIcon><ViewWeekOutlinedIcon/></ListItemIcon> <ListItemText primary={'Active Board'}/></ListItem>
+            <ListItem button key={1} onClick={() => handleRedirect('/projects')}><ListItemIcon><LayersOutlinedIcon/></ListItemIcon><ListItemText primary={'Projects'}/></ListItem>
+            <ListItem button key={2} onClick={() => handleRedirect(`/backlog/${activeProject}`)}><ListItemIcon><ViewHeadlineOutlinedIcon/></ListItemIcon><ListItemText primary={'Backlog'}/></ListItem>
+            <ListItem button key={3} onClick={() => handleRedirect(`/active-board/${activeProject}`)}><ListItemIcon><ViewWeekOutlinedIcon/></ListItemIcon><ListItemText primary={'Active Board'}/></ListItem>
 
           </List>
           <Divider />
