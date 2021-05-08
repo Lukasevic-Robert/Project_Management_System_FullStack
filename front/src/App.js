@@ -7,15 +7,14 @@ import BoardAdmin from './components/BoardAdmin.js';
 import Profile from './components/Profile.js';
 import ProjectList from './components/ProjectList.js';
 import CreateProject from './components/CreateProject.js';
+import ViewProjectTasks from './components/ViewProjectTasks';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 import NavBar from './components/NavBar.js';
 import { AuthProvider, AuthContext } from './context/AuthContext';
 import { ProjectContextProvider } from './context/ProjectContext';
-import ViewTask from './Dashboard/ViewTask.js';
-import ActiveBoard from './Dashboard/ActiveBoard.js';
-import ViewProjectTasks from './components/ViewProjectTasks';
-
+import ViewTask from './components/dashboard/ViewTask.js';
+import ActiveBoard from './components/dashboard/ActiveBoard'
 
 const theme = createMuiTheme({
   palette: {
@@ -100,12 +99,15 @@ function App() {
 
                 <AuthenticatedRoute path="/tasks/:id" component={ViewProjectTasks} />
 
+                <AuthenticatedRoute exact path="/api/v1/tasks/:id/active" component={ActiveBoard} />
+
+            <AuthenticatedRoute path="/api/v1/tasks/:id/:taskid" component={ViewTask} /> 
+
               </Switch>
             </div>
           </div>
         </ProjectContextProvider>
       </AuthProvider>
-
     </ThemeProvider>
   </Router >
   );

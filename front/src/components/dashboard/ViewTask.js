@@ -7,9 +7,8 @@ import EditIcon from '@material-ui/icons/Edit';
 import { ThemeProvider } from '@material-ui/styles';
 import { Fab } from '@material-ui/core';
 import { Link, useHistory } from "react-router-dom";
-import CancelIcon from '@material-ui/icons/Cancel';
 import { createMuiTheme } from '@material-ui/core/styles';
-import TaskService from "../services/TaskService.js"
+import TaskService from "../../services/TaskService.js"
 import swal from 'sweetalert';
 
 const theme = createMuiTheme({
@@ -31,9 +30,12 @@ const useStyles = makeStyles((theme) => ({
   },
   paper: {
     backgroundColor: theme.palette.background.paper,
-    border: '2px solid #000',
+    // border: '1px solid #000',
+    backgroundColor:'rgb(255, 255, 255)',
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
+    width: '70%',
+    height: '70%'
   },
 }));
 

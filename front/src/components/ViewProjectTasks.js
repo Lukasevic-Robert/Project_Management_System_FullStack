@@ -7,10 +7,10 @@ const ViewProjectTasks = ({match}) => {
             <h3>
             Viewing project tasks of project nr: {match.params.id}
             </h3>
-
+          {/* //  /api/v1/tasks/:{match.params.id}/active */}
             <div>
-            <Link to={`/projects`}>
-                        <button className="btn btn-info btn">Go back</button>
+            <Link to={`/api/v1/tasks/${match.params.id}/active`}>
+                        <button className="btn btn-info btn">Go to active board</button>
                         </Link>
         </div>
         </div>

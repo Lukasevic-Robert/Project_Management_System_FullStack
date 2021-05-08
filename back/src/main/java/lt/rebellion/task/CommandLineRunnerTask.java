@@ -48,17 +48,26 @@ public class CommandLineRunnerTask implements CommandLineRunner {
 				if (i % 2 == 0) {
 					tasks.get(i).setPriority(EPriority.HIGH);					
 				}
+				else if (i % 3 == 0) {
+					tasks.get(i).setPriority(EPriority.MEDIUM);
+				}
 
 			} else if (i >= tasks.size()/4 && i < tasks.size()/4*2) {
 				tasks.get(i).setStatus(EStatus.IN_PROGRESS);
 				if (i % 2 == 0) {
-					tasks.get(i).setPriority(EPriority.LOW);
+					tasks.get(i).setPriority(EPriority.HIGH);
+				}
+				else if (i % 3 == 0) {
+					tasks.get(i).setPriority(EPriority.MEDIUM);
 				}
 
 			} else if (i >= tasks.size()/4*2 && i < tasks.size()/4*3) {
 				tasks.get(i).setStatus(EStatus.DONE);
 				if (i % 2 == 0) {
 					tasks.get(i).setPriority(EPriority.MEDIUM);
+				}
+				else if (i % 3 == 0) {
+					tasks.get(i).setPriority(EPriority.HIGH);
 				}
 			}
 			
