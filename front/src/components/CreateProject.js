@@ -76,7 +76,7 @@ class CreateProject extends Component {
         UserService.getUsers().then((res) => {
             let users = res.data;
             let userInfo = [];
-            users.map((user) => {
+            users.forEach((user) => {
                 let fullname = user.firstName + ` ` + user.lastName;
                 userInfo.push(fullname);
             })
@@ -90,7 +90,7 @@ class CreateProject extends Component {
 
             });
 
-        if (this.state.id == -1) {
+        if (this.state.id === '-1') {
             return;
         } else {
 
@@ -98,7 +98,7 @@ class CreateProject extends Component {
                 let project = res.data;
                 let users = [];
                 let userId = [];
-                project.users.map((user) => {
+                project.users.forEach((user) => {
                     users.push(user.firstName + ` ` + user.lastName);
                     userId.push(user.id);
                 })
@@ -118,7 +118,7 @@ class CreateProject extends Component {
     saveOrUpdateProject = (e) => {
         e.preventDefault();
         let userId = [];
-        this.state.userData.map((user) => {
+        this.state.userData.forEach((user) => {
             let username = user.firstName + ` ` + user.lastName;
             if (this.state.personName.includes(username)) {
                 userId.push(user.id);
@@ -129,7 +129,7 @@ class CreateProject extends Component {
 
         let project = { name: this.state.title, status: this.state.status, description: this.state.content, usersId: userId };
         //  console.log('project=>' + JSON.stringify(project));
-        if (this.state.id == -1) {
+        if (this.state.id === '-1') {
             ProjectService.createProject(project).then(res => {
                 this.getSuccessMessage("added");
                 this.props.history.push('/projects');
@@ -172,7 +172,7 @@ class CreateProject extends Component {
     }
 
     getTitle() {
-        if (this.state.id == -1) {
+        if (this.state.id === '-1') {
             return <h3 className="text-center">Add a new project</h3>
         }
         else {
@@ -249,7 +249,7 @@ class CreateProject extends Component {
                             errorMessages={['this field is required']}
                             onChange={this.changeContent}
 
-                        />{this.state.id != -1 ? <FormControl required id="form-control">
+                        />{this.state.id !== '-1' ? <FormControl required id="form-control">
                             <InputLabel id="demo-simple-select-label">Status</InputLabel>
                             <Select
                                 labelId="demo-simple-select-label"

@@ -1,9 +1,9 @@
 import React, { useContext } from 'react';
 import '../Projects.css'
 import { makeStyles } from '@material-ui/core/styles';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination, Button, DialogTitle, DialogActions, Dialog, Fab, TableFooter } from '@material-ui/core';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination, Button, DialogTitle, DialogActions, Dialog, Fab } from '@material-ui/core';
 import { useState, useEffect } from 'react';
-import ProjectService from "../services/ProjectService";
+import ProjectService from "../services/ProjectService.js";
 import { Link, useHistory } from "react-router-dom";
 import swal from 'sweetalert';
 import EditIcon from '@material-ui/icons/Edit';
@@ -48,7 +48,7 @@ function ProjectList() {
 
     let history = useHistory();
 
-    const { rowsPerPage, setRowsPerPage, page, setPage } = useContext(ProjectContext);
+    const { rowsPerPage, setRowsPerPage, page, setPage, setActiveProject } = useContext(ProjectContext);
     const value = useContext(AuthContext);
 
     const [projectBoss, setProjectBoss] = useState(false);
@@ -65,6 +65,7 @@ function ProjectList() {
     useEffect(() => {
 
         getProjects();
+        setActiveProject('');
         checkAuthorization();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [page, rowsPerPage, refresh])

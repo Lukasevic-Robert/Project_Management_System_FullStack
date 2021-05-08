@@ -1,13 +1,14 @@
 import React, { createContext, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory } from "react-router-dom";
 
 const AuthContext = createContext();
 const { Provider } = AuthContext;
 
 const AuthProvider = ({ children }) => {
-    const history = useHistory();
+
     const user = localStorage.getItem('user');
     const url = "http://localhost:8080/api/";
+    let history = useHistory();
 
     const [authUser, setAuthState] = useState(
         user ? JSON.parse(user) : {}  
@@ -21,6 +22,7 @@ const AuthProvider = ({ children }) => {
     const logout = () => {
         localStorage.removeItem('user');
         setAuthState({});
+        history.push('/signin');
     };
 
     const isAuthenticated = () => {
