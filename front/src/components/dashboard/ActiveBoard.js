@@ -37,7 +37,8 @@ const ActiveBoard = ({ match }) => {
     const [activeTasks, setActiveTasks] = useState([]);
     const history = useHistory();
     const [initials, setInitials] = useState([]);
-    let randomColor = Math.floor(Math.random() * 16777215).toString(16); const [state, setState] = useState({
+    let randomColor = Math.floor(Math.random() * 16777215).toString(16); 
+    const [state, setState] = useState({
         "TODO": {
             title: "To do",
             items: []
@@ -63,11 +64,12 @@ const ActiveBoard = ({ match }) => {
                         setActiveTasks(response.data);
                         mapByStatus(response.data);
                         getUsers();
+                        console.log(response.data)
                     }
                 })
                 .catch((error) => {
                     getErrorMessage();
-                    history.push('/api/v1/projects');
+                    history.push('/projects');
                 }
                 );
         };
@@ -200,7 +202,10 @@ const ActiveBoard = ({ match }) => {
     }
 
     const addTask = () => {
-        console.log("click click")
+        // history.push({
+            
+        // }
+        //     `/tasks/:activeProjectID/-1`);
     }
 
     // SEND TASK to backlog, update database and board    
@@ -264,7 +269,7 @@ const ActiveBoard = ({ match }) => {
                                                                             {...provided.dragHandleProps}
                                                                         >
                                                                             <div className="boardTask">
-                                                                                <ViewTask task={el} />
+                                                                                <ViewTask task={el} projectId={activeProjectID} add={false}/>
                                                                                 <Tooltip title="Move back to backlog">
                                                                                     <ReplyIcon onClick={() => sendToBacklog(el)} style={{ marginBottom: "px", cursor: 'pointer', fontSize: 'medium', color: 'rgba(27, 28, 43, 0.3' }}></ReplyIcon>
                                                                                 </Tooltip>
@@ -290,7 +295,8 @@ const ActiveBoard = ({ match }) => {
                                         }}
                                     </Droppable>
                                 </div>
-                                <div className="addTask" onClick={() => addTask()} style={{ cursor: 'pointer' }} >Add new task <AddIcon style={{ fontSize: 'medium' }}></AddIcon></div>
+                                
+                                <div className="addTask" style={{ cursor: 'pointer' }} > <ViewTask task={{}} projectId={activeProjectID} add={true}/> <AddIcon style={{ fontSize: 'medium', verticalAlign: 'bottom', height:'100%' }}></AddIcon></div>
 
                             </div>
                         )

@@ -81,11 +81,13 @@ vertical-align: bottom;
 
 }
 .addTask{
+  display: flex;
+  justify-content: center;
   color:rgba(104, 98, 98, 0.5);
-  text-align: center;
+  /* text-align: center; */
   margin-bottom: 2%;
   font-size: small;
-  vertical-align: bottom;
+  /* vertical-align: bottom; */
 }
 .dndContainer{
   display:flex;

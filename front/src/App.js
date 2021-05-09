@@ -14,8 +14,8 @@ import NavBar from './components/NavBar.js';
 import { AuthProvider, AuthContext } from './context/AuthContext';
 import { ProjectContextProvider } from './context/ProjectContext';
 import ViewTask from './components/dashboard/ViewTask.js';
-import ActiveBoard from './components/dashboard/ActiveBoard'
-
+import ActiveBoard from './components/dashboard/ActiveBoard';
+import CreateTask from './components/tasks/CreateTask';
 const theme = createMuiTheme({
   palette: {
     primary: {
@@ -97,11 +97,11 @@ function App() {
 
                 <ModeratorRoute path="/projects/:id" component={CreateProject} />
 
-                <AuthenticatedRoute path="/tasks/:id" component={ViewProjectTasks} />
+                <AuthenticatedRoute exact path="/tasks/:id" component={ViewProjectTasks} />
 
-                <AuthenticatedRoute exact path="/api/v1/tasks/:id/active" component={ActiveBoard} />
+                <AuthenticatedRoute exact path="/:id/tasks/active" component={ActiveBoard} />
 
-            <AuthenticatedRoute path="/api/v1/tasks/:id/:taskid" component={ViewTask} /> 
+            <AuthenticatedRoute path="/tasks/:id/:taskid" component={CreateTask} /> 
 
               </Switch>
             </div>

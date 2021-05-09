@@ -31,12 +31,16 @@ class TaskService{
         return axios.get(API_BASE_URL + 'tasks', { headers: authHeader() });
     }
 
-    // createProject(project) {
-    //     return axios.post(API_BASE_URL+ '/v1/projects', project, { headers: authHeader() });
-    // }
+    createTask(task) {
+        return axios.post(API_BASE_URL+ 'tasks', task, { headers: authHeader() });
+    }
     
     updateTask(task, taskId){
         return axios.put(API_BASE_URL+ 'tasks/'+taskId,task, { headers: authHeader() });
+    }
+
+    getTaskById(taskId){
+        return axios.get(API_BASE_URL+ 'tasks/'+taskId, { headers: authHeader() });
     }
 }
 export default new TaskService()
