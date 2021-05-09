@@ -183,10 +183,10 @@ function ProjectList() {
                         <TableHead>
                             <TableRow id="table-head" >
                                 <TableCell id="table-cell" >NAME</TableCell>
-                                <TableCell id="table-cell" align="right">DESCRIPTION</TableCell>
-                                <TableCell id="table-cell" align="right">STATUS</TableCell>
-                                <TableCell id="table-cell" align="right">TOTAL TASKS</TableCell>
-                                <TableCell id="table-cell" align="right">TODO TASKS</TableCell>
+                                <TableCell id="table-cell" align="center">DESCRIPTION</TableCell>
+                                <TableCell id="table-cell" align="center">STATUS</TableCell>
+                                <TableCell id="table-cell" align="center">TOTAL TASKS</TableCell>
+                                <TableCell id="table-cell" align="center">TODO TASKS</TableCell>
                                 {projectBoss && (
                                     <TableCell id="table-cell" align="right">ACTIONS</TableCell>)}
                             </TableRow>
@@ -199,10 +199,10 @@ function ProjectList() {
 
                                         <TableCell onClick={() => handleRedirect(row.id)} style={{ cursor: 'pointer' }}><span>{row.name}</span></TableCell>
 
-                                        <TableCell align="right">{row.description}</TableCell>
-                                        <TableCell align="right"><span style={{ color: row.status === 'ACTIVE' ? '#cf932b' : '#63cf7f' }}>{row.status}</span></TableCell>
-                                        <TableCell align="right">{row.taskCount}</TableCell>
-                                        <TableCell align="right">{row.undoneTaskCount}</TableCell>
+                                        <TableCell align="center">{row.description}</TableCell>
+                                        <TableCell align="center"><span style={{ color: row.status === 'ACTIVE' ? '#cf932b' : '#63cf7f' }}>{row.status}</span></TableCell>
+                                        <TableCell align="center">{row.taskCount}</TableCell>
+                                        <TableCell align="center">{row.undoneTaskCount}</TableCell>
                                         {projectBoss && (
                                             <TableCell align="right">
 
