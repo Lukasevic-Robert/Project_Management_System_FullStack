@@ -1,8 +1,7 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect  } from 'react';
 import '../Projects.css'
 import { makeStyles } from '@material-ui/core/styles';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination, Button, DialogTitle, DialogActions, Dialog, Fab } from '@material-ui/core';
-import { useState, useEffect } from 'react';
 import ProjectService from "../services/ProjectService.js";
 import { Link, useHistory } from "react-router-dom";
 import swal from 'sweetalert';
@@ -207,10 +206,8 @@ function ProjectList() {
                                         {projectBoss && (
                                             <TableCell align="right">
 
-                                                <Fab size="small" color="secondary" aria-label="Edit" className={classes.fab}>
-                                                    <Link to={`/projects/${row.id}`}>
-                                                        <EditIcon id="icon"></EditIcon>
-                                                    </Link>
+                                                <Fab size="small" color="secondary" onClick={() =>history.push(`/projects/${row.id}`)} aria-label="Edit" className={classes.fab}>
+                                                        <EditIcon id="icon"></EditIcon>                       
                                                 </Fab>
 
 
