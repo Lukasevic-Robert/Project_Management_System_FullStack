@@ -258,8 +258,8 @@ function CreateProject({ match }) {
                             value={status}
                             onChange={changeStatus}
                         >
-                            <MenuItem value={`ACTIVE`}>ACTIVE</MenuItem>
-                            <MenuItem value={`DONE`}>DONE</MenuItem>
+                            <MenuItem style={{color : '#cf932b', backgroundColor : 'transparent'}} value={`ACTIVE`}><span style={{color : '#cf932b'}}>ACTIVE</span></MenuItem>
+                            <MenuItem style={{color : '#63cf7f', backgroundColor : 'transparent'}} value={`DONE`}><span style={{color : '#63cf7f'}}>DONE</span></MenuItem>
 
                         </Select>
                     </FormControl> : ''}
