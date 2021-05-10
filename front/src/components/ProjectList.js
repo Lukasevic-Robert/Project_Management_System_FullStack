@@ -94,6 +94,9 @@ function ProjectList() {
     const deleteProject = (id) => {
         ProjectService.deleteProject(id).then(res => {
             getSuccessMessage("deleted");
+            if(projects.length === 1  && page > 0){
+                setPage(page - 1);
+            }
             setRefresh(!refresh);
         })
             .catch((error) => {
