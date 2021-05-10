@@ -33,7 +33,7 @@ public class TaskController {
 
 	// GET task by id ===================================================>
 	@GetMapping("/tasks/{id}")
-	public ResponseEntity<Task> getTaskById(Long id) {
+	public ResponseEntity<Task> getTaskById(@NotBlank @PathVariable Long id) {
 		return taskService.getTaskById(id);
 	}
 	
