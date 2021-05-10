@@ -4,7 +4,7 @@ import { ProjectContext } from "../context/ProjectContext";
 
 
 const ViewProjectTasks = ({ match }) => {
-    const { setActiveProject } = useContext(ProjectContext);
+    const { setActiveProject} = useContext(ProjectContext);
 
     useEffect(() => {
         setActiveProject(match.params.id)

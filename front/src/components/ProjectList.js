@@ -47,7 +47,7 @@ function ProjectList() {
 
     let history = useHistory();
 
-    const { rowsPerPage, setRowsPerPage, page, setPage, setActiveProject } = useContext(ProjectContext);
+    const { rowsPerPage, setRowsPerPage, page, setPage, setActiveProject, setProjectName } = useContext(ProjectContext);
     const value = useContext(AuthContext);
 
     const [projectBoss, setProjectBoss] = useState(false);
@@ -137,7 +137,8 @@ function ProjectList() {
         setOpen(false);
     };
 
-    const handleRedirect = (rowId) => {
+    const handleRedirect = (rowId, rowName) => {
+        setProjectName(rowName);
         history.push(`/tasks/${rowId}`);
     }
 
@@ -200,7 +201,7 @@ function ProjectList() {
 
                                     <TableRow key={row.id} className={classes.tableRow}>
 
-                                        <TableCell onClick={() => handleRedirect(row.id)} style={{ cursor: 'pointer' }}><span>{row.name}</span></TableCell>
+                                        <TableCell onClick={() => handleRedirect(row.id, row.name)} style={{ cursor: 'pointer' }}><span>{row.name}</span></TableCell>
 
                                         <TableCell align="center">{row.description}</TableCell>
                                         <TableCell align="center"><span style={{ color: row.status === 'ACTIVE' ? '#cf932b' : '#63cf7f' }}>{row.status}</span></TableCell>

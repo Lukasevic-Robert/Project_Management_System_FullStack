@@ -239,6 +239,7 @@ function CreateProject({ match }) {
                     <TextValidator
                         variant="outlined"
                         margin="normal"
+                        multiline
                         required
                         fullWidth
                         id="filled-textarea"
