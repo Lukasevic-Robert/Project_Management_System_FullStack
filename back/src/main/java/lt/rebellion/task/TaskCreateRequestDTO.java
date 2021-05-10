@@ -1,7 +1,5 @@
 package lt.rebellion.task;
 
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,6 +13,7 @@ public class TaskCreateRequestDTO {
 
 	private String name;
 	private Long projectId;
-	private List<String> description;
+	private String description;
 	private String priority;
+	private String status;
 }

@@ -1,7 +1,5 @@
 package lt.rebellion.task;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.boot.CommandLineRunner;
@@ -38,9 +36,9 @@ public class CommandLineRunnerTask implements CommandLineRunner {
 			}
 
 			tasks.get(i).setDescription(
-					new ArrayList<String>(Arrays.asList("description 1" + " of task: " + tasks.get(i).getName(),
-							"description 2" + " of task: " + tasks.get(i).getName(),
-							"description 3" + " of task: " + tasks.get(i).getName())));
+					"description 1" + " of task: " + tasks.get(i).getName() + "\n" + 
+							"description 2" + " of task: " + tasks.get(i).getName() + "\n" +
+							"description 3" + " of task: " + tasks.get(i).getName());
 			taskRepository.save(tasks.get(i));
 		}
 	}

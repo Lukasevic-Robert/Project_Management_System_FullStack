@@ -1,8 +1,5 @@
 package lt.rebellion.task;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -11,11 +8,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.vladmihalcea.hibernate.type.json.JsonStringType;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,10 +21,6 @@ import lt.rebellion.project.Project;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@TypeDef(
-	    name = "json",
-	    typeClass = JsonStringType.class
-	)
 @Entity
 @Getter
 @Setter
@@ -41,9 +30,8 @@ public class Task extends BaseEntity {
 	@Column(name = "name")
 	private String name;
 	
-	@Type(type = "json")
-	@Column(name = "description", columnDefinition = "NVARCHAR")
-	private List<String> description = new ArrayList<String>();
+	@Column(name = "description")
+	private String description;
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "priority")
@@ -64,7 +52,7 @@ public class Task extends BaseEntity {
 		this.project = project;
 	}
 
-	public Task(String name, List<String> description, EPriority priority, Project project) {
+	public Task(String name, String description, EPriority priority, Project project) {
 		super();
 		this.name = name;
 		this.description = description;
