@@ -21,6 +21,15 @@ const ViewProjectTasks = ({ match }) => {
                     <button className="btn btn-info btn">Go back</button>
                 </Link>
             </div>
+
+            <div>
+                <br/>
+            <Link to={`/active-board/${match.params.id}`}>
+                        <button className="btn btn-info btn">Go to active board</button>
+                        </Link>
+                        
+        </div>
+
         </div>
     )
 }

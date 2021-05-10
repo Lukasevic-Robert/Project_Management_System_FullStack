@@ -28,7 +28,7 @@ import LayersOutlinedIcon from '@material-ui/icons/LayersOutlined';
 import ViewWeekOutlinedIcon from '@material-ui/icons/ViewWeekOutlined';
 import ViewHeadlineOutlinedIcon from '@material-ui/icons/ViewHeadlineOutlined';
 import logo from '../images/jawbreaker.png';
-import teamlogo from '../images/teamwork.png';
+// import teamlogo from '../images/teamwork.png';
 
 const drawerWidth = 240;
 

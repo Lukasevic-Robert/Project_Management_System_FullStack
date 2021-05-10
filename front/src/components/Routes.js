@@ -10,7 +10,8 @@ import ProjectList from './ProjectList.js';
 import CreateProject from './CreateProject.js';
 import ViewProjectTasks from './ViewProjectTasks.js';
 import { AuthContext } from '../context/AuthContext';
-
+import ActiveBoard from './dashboard/ActiveBoard';
+import CreateTask from './tasks/CreateTask';
 
 const AdminRoute = ({ component: Component, ...rest }) => {
     const value = useContext(AuthContext);
@@ -75,6 +76,11 @@ function Routes() {
                     <ModeratorRoute path="/projects/:id" component={CreateProject} />
 
                     <AuthenticatedRoute path="/tasks/:id" component={ViewProjectTasks} />
+
+                    <AuthenticatedRoute exact path="/active-board/:id" component={ActiveBoard} />
+
+                    <AuthenticatedRoute path="/tasks/:id/:taskid" component={CreateTask} />
+
 
                 </Switch>
             </div>
