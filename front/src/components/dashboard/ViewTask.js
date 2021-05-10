@@ -10,7 +10,7 @@ import { Link, useHistory } from "react-router-dom";
 import { createMuiTheme } from '@material-ui/core/styles';
 import TaskService from "../../services/TaskService.js"
 import swal from 'sweetalert';
-import CreateTask from "../tasks/CreateTask.js"
+import CreateTask from "../Tasks/CreateTask.js"
 import CloseIcon from '@material-ui/icons/Close';
 
 

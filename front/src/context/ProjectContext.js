@@ -9,6 +9,7 @@ const ProjectContextProvider = ({ children }) => {
     const [page, setPage] = useState(0);
     const [refreshContext, setRefreshContext] = useState(false);
     const [activeProject,setActiveProject] = useState();
+    const [projectName, setProjectName] = useState();
 
     useEffect(() => {
         setRowsPerPage(5);
