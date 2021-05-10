@@ -1,8 +1,7 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import '../Projects.css'
 import { makeStyles } from '@material-ui/core/styles';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination, Button, DialogTitle, DialogActions, Dialog, Fab } from '@material-ui/core';
-import { useState, useEffect } from 'react';
 import ProjectService from "../services/ProjectService.js";
 import { Link, useHistory } from "react-router-dom";
 import swal from 'sweetalert';
@@ -184,10 +183,10 @@ function ProjectList() {
                         <TableHead>
                             <TableRow id="table-head" >
                                 <TableCell id="table-cell" >NAME</TableCell>
-                                <TableCell id="table-cell" align="right">DESCRIPTION</TableCell>
-                                <TableCell id="table-cell" align="right">STATUS</TableCell>
-                                <TableCell id="table-cell" align="right">TOTAL TASKS</TableCell>
-                                <TableCell id="table-cell" align="right">TODO TASKS</TableCell>
+                                <TableCell id="table-cell" align="center">DESCRIPTION</TableCell>
+                                <TableCell id="table-cell" align="center">STATUS</TableCell>
+                                <TableCell id="table-cell" align="center">TOTAL TASKS</TableCell>
+                                <TableCell id="table-cell" align="center">TODO TASKS</TableCell>
                                 {projectBoss && (
                                     <TableCell id="table-cell" align="right">ACTIONS</TableCell>)}
                             </TableRow>
@@ -198,19 +197,17 @@ function ProjectList() {
 
                                     <TableRow key={row.id} className={classes.tableRow}>
 
-                                        <TableCell onClick={() => handleRedirect(row.id)} style={{ cursor: 'pointer' }}>{row.name}</TableCell>
+                                        <TableCell onClick={() => handleRedirect(row.id)} style={{ cursor: 'pointer' }}><span>{row.name}</span></TableCell>
 
-                                        <TableCell align="right">{row.description}</TableCell>
-                                        <TableCell align="right">{row.status}</TableCell>
-                                        <TableCell align="right">{row.taskCount}</TableCell>
-                                        <TableCell align="right">{row.undoneTaskCount}</TableCell>
+                                        <TableCell align="center">{row.description}</TableCell>
+                                        <TableCell align="center"><span style={{ color: row.status === 'ACTIVE' ? '#cf932b' : '#63cf7f' }}>{row.status}</span></TableCell>
+                                        <TableCell align="center">{row.taskCount}</TableCell>
+                                        <TableCell align="center">{row.undoneTaskCount}</TableCell>
                                         {projectBoss && (
                                             <TableCell align="right">
 
-                                                <Fab size="small" color="secondary" aria-label="Edit" className={classes.fab}>
-                                                    <Link to={`/projects/${row.id}`}>
-                                                        <EditIcon id="icon"></EditIcon>
-                                                    </Link>
+                                                <Fab size="small" color="secondary" onClick={() => history.push(`/projects/${row.id}`)} aria-label="Edit" className={classes.fab}>
+                                                    <EditIcon id="icon"></EditIcon>
                                                 </Fab>
 
 

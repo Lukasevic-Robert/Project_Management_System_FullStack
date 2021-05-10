@@ -27,6 +27,8 @@ import ListItemText from '@material-ui/core/ListItemText';
 import LayersOutlinedIcon from '@material-ui/icons/LayersOutlined';
 import ViewWeekOutlinedIcon from '@material-ui/icons/ViewWeekOutlined';
 import ViewHeadlineOutlinedIcon from '@material-ui/icons/ViewHeadlineOutlined';
+import logo from '../images/jawbreaker.png';
+import teamlogo from '../images/teamwork.png';
 
 const drawerWidth = 240;
 
@@ -48,6 +50,11 @@ const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
     flexGrow: 1,
+  },
+  title: {
+    '&:hover': {
+     fontWeight: 800
+    },
   },
   appBar: {
     transition: theme.transitions.create(['margin', 'width'], {
@@ -130,7 +137,7 @@ export default function NavBar() {
   }
 
   const handleRedirect = (path) => {
-history.push(path);
+    history.push(path);
   }
 
 
@@ -145,38 +152,38 @@ history.push(path);
           })} style={{ background: '#7eb8da' }}>
           <Toolbar>
             {isAuthenticated() && (
-            <IconButton
-              color="inherit"
-              aria-label="open drawer"
-              onClick={handleDrawerOpen}
-              edge="start"
-              className={clsx(classes.menuButton, open && classes.hide)}
-            >
-              <MenuIcon />
-            </IconButton>)}
+              <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                onClick={handleDrawerOpen}
+                edge="start"
+                className={clsx(classes.menuButton, open && classes.hide)}
+              >
+                <MenuIcon />
+              </IconButton>)}
             <Typography variant="h6" className={classes.title}>
-              <Link style={{ color: 'white', fontSize: 20 }} className="nav-link" to={() => isAuthenticated() ? "/projects" : "/signin"}>Pro-Man</Link>
+              <Link style={{ color: 'white', fontSize: 20, fontFamily: 'Righteous' }} className="nav-link" to={() => isAuthenticated() ? "/projects" : "/signin"}><img style={{ width: 30 }} src={logo} alt="logo"></img> JawBreaker</Link>
             </Typography>
-           
-              {isAdmin() && (
-                <Link to={"/admin"} style={{ color: '#92ddea' }} className={classes.align}><Button style={{ color: 'white' }}>ADMIN BOARD</Button></Link>
-              )}
-              {isAuthenticated() ? (
-                <>
-                  <Link to={"/profile"} className={classes.align}><Button style={{ color: 'white' }}>{authUser.email}</Button></Link>
-                  <Button onClick={() => logOut()} color="secondary">LogOut</Button>
-                </>
-              ) : (
-                <>
-                  <Link className={classes.align} to={"/signin"}><Button style={{ color: 'white' }}>LogIn</Button></Link>
-                  {/* <li className="nav-item">
+
+            {isAdmin() && (
+              <Link to={"/admin"} style={{ color: '#92ddea' }} className={classes.align}><Button style={{ color: 'white' }}>ADMIN BOARD</Button></Link>
+            )}
+            {isAuthenticated() ? (
+              <>
+                <Link to={"/profile"} className={classes.align}><Button style={{ color: 'white' }}>{authUser.email}</Button></Link>
+                <Button onClick={() => logOut()} color="secondary">LogOut</Button>
+              </>
+            ) : (
+              <>
+                <Link className={classes.align} to={"/signin"}><Button style={{ color: 'white' }}>LogIn</Button></Link>
+                {/* <li className="nav-item">
                 <Link to={"/register"} className="nav-link">
                   Sign Up
                 </Link>
               </li> */}
-                </>
-              )}
-      
+              </>
+            )}
+
           </Toolbar>
         </AppBar>
         <Drawer
@@ -195,9 +202,9 @@ history.push(path);
           </div>
           <Divider />
           <List>
-            <ListItem button key={1} onClick={() => handleRedirect('/projects')}><ListItemIcon><LayersOutlinedIcon/></ListItemIcon><ListItemText primary={'Projects'}/></ListItem>
-            <ListItem button key={2} onClick={() => handleRedirect(`/backlog/${activeProject}`)}><ListItemIcon><ViewHeadlineOutlinedIcon/></ListItemIcon><ListItemText primary={'Backlog'}/></ListItem>
-            <ListItem button key={3} onClick={() => handleRedirect(`/active-board/${activeProject}`)}><ListItemIcon><ViewWeekOutlinedIcon/></ListItemIcon><ListItemText primary={'Active Board'}/></ListItem>
+            <ListItem button key={1} onClick={() => handleRedirect('/projects')}><ListItemIcon><LayersOutlinedIcon /></ListItemIcon><ListItemText primary={'Projects'} /></ListItem>
+            <ListItem button key={2} onClick={() => handleRedirect(`/backlog/${activeProject}`)}><ListItemIcon><ViewHeadlineOutlinedIcon /></ListItemIcon><ListItemText primary={'Backlog'} /></ListItem>
+            <ListItem button key={3} onClick={() => handleRedirect(`/active-board/${activeProject}`)}><ListItemIcon><ViewWeekOutlinedIcon /></ListItemIcon><ListItemText primary={'Active Board'} /></ListItem>
 
           </List>
           <Divider />
