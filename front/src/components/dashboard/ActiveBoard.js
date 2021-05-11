@@ -64,7 +64,7 @@ const ActiveBoard = ({ match }) => {
                         setActiveTasks(response.data);
                         mapByStatus(response.data);
                         getUsers();
-                        console.log(response.data)
+                     //   console.log(response.data)
                     }
                 })
                 .catch((error) => {

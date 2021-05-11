@@ -93,7 +93,7 @@ const ViewTask = ({ task, projectId, add }) => {
               {/* <div> <CloseIcon id="icon" onClick={() => handleClose()} style={{textAlign:"right", cursor: 'pointer'}}></CloseIcon></div> */}
 <div>
 
-  <CreateTask taskId={task.id} projectId={projectId} add={add}></CreateTask>
+  <CreateTask taskId={task.id} paramProjectId={projectId} add={add}></CreateTask>
             {/* <Link to={`/api/v1/projects/${task.id}`}>
                                                 <Fab size="small" color="secondary" aria-label="Edit" className={classes.fab}>
                                                     <EditIcon id="icon"></EditIcon>

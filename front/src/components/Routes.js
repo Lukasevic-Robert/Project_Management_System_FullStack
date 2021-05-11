@@ -12,6 +12,8 @@ import ViewProjectTasks from './ViewProjectTasks.js';
 import { AuthContext } from '../context/AuthContext';
 import ActiveBoard from './dashboard/ActiveBoard';
 import CreateTask from './tasks/CreateTask';
+import BacklogTasks from './backlog/BacklogTasks';
+
 
 const AdminRoute = ({ component: Component, ...rest }) => {
     const value = useContext(AuthContext);
@@ -81,6 +83,7 @@ function Routes() {
 
                     <AuthenticatedRoute path="/tasks/:id/:taskid" component={CreateTask} />
 
+                    <AuthenticatedRoute path="/backlog/:id" component={BacklogTasks} />
 
                 </Switch>
             </div>
