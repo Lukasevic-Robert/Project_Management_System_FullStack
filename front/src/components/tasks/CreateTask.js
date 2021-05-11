@@ -294,7 +294,7 @@ const fetchUsers= async() =>{
                          //   errorMessages={['this field is required']}
                             onChange={changeContent}
 
-                        />{add != true ? <FormControl required id="form-control-task-status">
+                        />{add != true ? <FormControl required id="form-control">
                             <InputLabel id="demo-simple-select-label">Status</InputLabel>
                             <Select
                                 labelId="demo-simple-select-label"
@@ -310,7 +310,7 @@ const fetchUsers= async() =>{
                             </Select>
                         </FormControl> : ''}
 
-                        <FormControl required id="form-control-task-priority">
+                        <FormControl required id="form-control">
                             <InputLabel id="demo-simple-select-label">Priority</InputLabel>
                             <Select
                                 labelId="demo-simple-select-label"
