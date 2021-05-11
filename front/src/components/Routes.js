@@ -11,7 +11,7 @@ import CreateProject from './CreateProject.js';
 import ViewProjectTasks from './ViewProjectTasks.js';
 import { AuthContext } from '../context/AuthContext';
 import ActiveBoard from './dashboard/ActiveBoard';
-import CreateTask from './Tasks/CreateTask';
+import CreateTask from './tasks/CreateTask';
 
 const AdminRoute = ({ component: Component, ...rest }) => {
     const value = useContext(AuthContext);

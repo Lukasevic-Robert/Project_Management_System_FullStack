@@ -29,8 +29,11 @@ const CustomAutocomplete = withStyles({
         variant: "outlined",
         position: "relative",
         border: "1px solid #be9ddf",
-    },  
-        
+        width: "100%",
+        display: "flex",
+        justifyContent: "space-between",
+    },
+
 })(Autocomplete);
 
 
@@ -38,15 +41,15 @@ const theme = createMuiTheme({
 
     overrides: {
         MuiChip: {
-          deleteIcon: {
-            color: '#be9ddf',
+            deleteIcon: {
+                color: '#be9ddf',
                 "&:hover": {
-                  color: '#8d6dad'
+                    color: '#8d6dad'
                 }
-              
-          }
-        }
-      },
+
+            }
+        },
+    },
     palette: {
         primary: {
             main: '#7eb8da',
@@ -239,6 +242,7 @@ function CreateProject({ match }) {
                     <TextValidator
                         variant="outlined"
                         margin="normal"
+                        multiline
                         required
                         fullWidth
                         id="filled-textarea"
@@ -258,8 +262,8 @@ function CreateProject({ match }) {
                             value={status}
                             onChange={changeStatus}
                         >
-                            <MenuItem style={{color : '#cf932b', backgroundColor : 'transparent'}} value={`ACTIVE`}><span style={{color : '#cf932b'}}>ACTIVE</span></MenuItem>
-                            <MenuItem style={{color : '#63cf7f', backgroundColor : 'transparent'}} value={`DONE`}><span style={{color : '#63cf7f'}}>DONE</span></MenuItem>
+                            <MenuItem style={{ color: '#cf932b', backgroundColor: 'transparent' }} value={`ACTIVE`}><span style={{ color: '#cf932b' }}>ACTIVE</span></MenuItem>
+                            <MenuItem style={{ color: '#63cf7f', backgroundColor: 'transparent' }} value={`DONE`}><span style={{ color: '#63cf7f' }}>DONE</span></MenuItem>
 
                         </Select>
                     </FormControl> : ''}

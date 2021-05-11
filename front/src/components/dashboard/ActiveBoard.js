@@ -296,7 +296,7 @@ const ActiveBoard = ({ match }) => {
                                     </Droppable>
                                 </div>
                                 
-                                <div className="addTask" style={{ cursor: 'pointer' }} > <ViewTask task={{}} projectId={activeProjectID} add={true}/> <AddIcon style={{ fontSize: 'medium', verticalAlign: 'bottom', height:'100%' }}></AddIcon></div>
+                                <div className="addTask" style={{ cursor: 'pointer' }} > <ViewTask status={key} task={{}} projectId={activeProjectID} add={true}/> <AddIcon style={{ fontSize: 'medium', verticalAlign: 'bottom', height:'100%' }}></AddIcon></div>
 
                             </div>
                         )

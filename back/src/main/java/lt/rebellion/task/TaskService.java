@@ -32,7 +32,6 @@ public class TaskService {
 	private final UserService userService;
 	private final RoleRepository roleRepository;
 
-	
 	// GET all tasks ====================================================>
 	public ResponseEntity<List<Task>> getAllTasks() {
 		List<Task> tasks = taskRepository.findAll();
@@ -46,22 +45,22 @@ public class TaskService {
 		Task task = taskRepository.findById(id).get();
 		return new ResponseEntity<Task>(task, HttpStatus.OK);
 	}
-	
+
 	// GET backlog tasks ================================================>
 	public ResponseEntity<List<Task>> getBacklogTasks(Long id) {
-		
+
 		Project project = projectRepository.findById(id).orElseThrow(() -> new NotFoundException("Project Not Found"));
-		if(!checkAuthorization(project)) {
+		if (!checkAuthorization(project)) {
 			throw new NotAuthorizedException(HttpStatus.UNAUTHORIZED, "Unauthorized request");
 		}
 		List<Task> tasks = taskRepository.findBacklogTasks(id);
 		return new ResponseEntity<>(tasks, HttpStatus.OK);
 	}
-	
+
 	// GET active-board tasks ===========================================>
 	public ResponseEntity<List<Task>> getActiveTasks(Long id) {
 		Project project = projectRepository.findById(id).orElseThrow(() -> new NotFoundException("Project Not Found"));
-		if(!checkAuthorization(project)) {
+		if (!checkAuthorization(project)) {
 			throw new NotAuthorizedException(HttpStatus.UNAUTHORIZED, "Unauthorized request");
 		}
 		List<Task> tasks = taskRepository.findActiveTasks(id);
@@ -73,7 +72,7 @@ public class TaskService {
 
 		validateTaskId(id);
 		Project project = taskRepository.findById(id).get().getProject();
-		
+
 		if (!checkAuthorization(project)) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
@@ -85,10 +84,12 @@ public class TaskService {
 	public ResponseEntity<Task> createTask(TaskCreateRequestDTO taskRequestDTO) {
 
 		Project project = projectRepository.findById(taskRequestDTO.getProjectId()).get();
+
 		if (!checkAuthorization(project)) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
-		Task task = new Task(taskRequestDTO.getName(), taskRequestDTO.getDescription(), EPriority.valueOf(taskRequestDTO.getPriority()), project);
+		Task task = new Task(taskRequestDTO.getName(), taskRequestDTO.getDescription(),
+				EPriority.valueOf(taskRequestDTO.getPriority()), EStatus.valueOf(taskRequestDTO.getStatus()), project);
 		taskRepository.save(task);
 
 		return new ResponseEntity<Task>(task, HttpStatus.CREATED);
@@ -121,18 +122,15 @@ public class TaskService {
 		if (project == null) {
 			throw new NullPointerException();
 		}
-		if(project.getStatus().equals(EStatus.DONE)) {
-			return false;
-		}
 		User user = userService.getCurrentUser();
-
 		Set<User> users = project.getUsers();
 		Role admin = roleRepository.findByName(ERole.ROLE_ADMIN).get();
 		Role moderator = roleRepository.findByName(ERole.ROLE_MODERATOR).get();
 
 		if (user.getRoles().contains(admin) || user.getRoles().contains(moderator)) {
 			return true;
-		} else if (users.stream().anyMatch(u -> u.getId().equals(user.getId()))) {
+		} else if ((!project.getStatus().equals(EStatus.DONE))
+				&& users.stream().anyMatch(u -> u.getId().equals(user.getId()))) {
 			return true;
 		}
 		return false;

@@ -27,6 +27,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import LayersOutlinedIcon from '@material-ui/icons/LayersOutlined';
 import ViewWeekOutlinedIcon from '@material-ui/icons/ViewWeekOutlined';
 import ViewHeadlineOutlinedIcon from '@material-ui/icons/ViewHeadlineOutlined';
+import LayersIcon from '@material-ui/icons/Layers';
 import logo from '../images/jawbreaker.png';
 
 const drawerWidth = 240;
@@ -117,7 +118,7 @@ export default function NavBar() {
 
   let history = useHistory();
   const { isAdmin, isAuthenticated, authUser, logout } = useContext(AuthContext);
-  const { refreshContext, setRefreshContext, activeProject } = useContext(ProjectContext);
+  const { refreshContext, setRefreshContext, activeProject , projectName} = useContext(ProjectContext);
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
 
@@ -202,11 +203,12 @@ export default function NavBar() {
           <Divider />
           <List>
             <ListItem button key={1} onClick={() => handleRedirect('/projects')}><ListItemIcon><LayersOutlinedIcon /></ListItemIcon><ListItemText primary={'Projects'} /></ListItem>
-            <ListItem button key={2} onClick={() => handleRedirect(`/backlog/${activeProject}`)}><ListItemIcon><ViewHeadlineOutlinedIcon /></ListItemIcon><ListItemText primary={'Backlog'} /></ListItem>
-            <ListItem button key={3} onClick={() => handleRedirect(`/active-board/${activeProject}`)}><ListItemIcon><ViewWeekOutlinedIcon /></ListItemIcon><ListItemText primary={'Active Board'} /></ListItem>
-
           </List>
           <Divider />
+          {activeProject && (<>
+            <ListItem button key={1} onClick={() => handleRedirect(`/tasks/${activeProject}`)}><ListItemIcon><LayersIcon /></ListItemIcon><ListItemText primary={`${projectName}`} /></ListItem>
+            <ListItem button key={2} onClick={() => handleRedirect(`/backlog/${activeProject}`)}><ListItemIcon><ViewHeadlineOutlinedIcon /></ListItemIcon><ListItemText primary={'Backlog'} /></ListItem>
+            <ListItem button key={3} onClick={() => handleRedirect(`/active-board/${activeProject}`)}><ListItemIcon><ViewWeekOutlinedIcon /></ListItemIcon><ListItemText primary={'Active Board'} /></ListItem> </>)}
           {/* <List>
             {['All mail', 'Trash', 'Spam'].map((text, index) => (
               <ListItem button key={text}>

@@ -42,12 +42,12 @@ const MenuProps = {
     },
 };
 
-const CreateTask = ({taskId, projectId, add}) => {
+const CreateTask = ({status, taskId, projectId, add}) => {
     const history = useHistory();
     const [state, setState] = useState({
             name: '',
-            description: [],
-            status: '',
+            description: '',
+            status: status,
             priority: '',
             task: '',
             personName: [],
@@ -117,11 +117,12 @@ const fetchUsers= async() =>{
 
         // setState({ userListId: userId });
 
-        let task = { name: state.name, status: state.status, description: state.description, priority: state.priority};
+        let taskCreate = { name: state.name, projectId: projectId, status: state.status, description: state.description, priority: state.priority};
+        let taskUpdate = { name: state.name, status: state.status, description: state.description, priority: state.priority};
             //,usersId: userId };
         //  console.log('task=>' + JSON.stringify(task));
         if (add === true) {
-           TaskService.createTask(task).then(res => {
+           TaskService.createTask(taskCreate).then(res => {
                 getSuccessMessage("added");
                 history.push(`/tasks/${projectId}`);
              
@@ -134,7 +135,7 @@ const fetchUsers= async() =>{
                 );
         } else {
             
-            TaskService.updateTask(task, taskId).then(res => {
+            TaskService.updateTask(taskUpdate, taskId).then(res => {
                 getSuccessMessage("updated");
 
                 history.push(`/tasks/${projectId}`);
@@ -178,19 +179,21 @@ const fetchUsers= async() =>{
     }
 
 
-    const handleChange = (e) => {
-        setState({
-            [e.target.id]: e.target.value
-        });
-    }
+//     const handleChange = (e) => {
+//         setState({
+//             [e.target.id]: e.target.value
+//         });
+//     }
 
-   const handlePersonName = (e) => {
-        setState({
-            personName: e.target.value
-        });
-    }
+//    const handlePersonName = (e) => {
+
+//         setState({
+//             personName: e.target.value
+//         });
+//     }
 
    const changeTitle = (event) => {
+    //    setState({ name: event.target.value})
        const nameValue=event.target.value;
        setState(state=>{
         state = { ...state }
@@ -200,6 +203,7 @@ const fetchUsers= async() =>{
     }
 
     const changeStatus = (event) => {
+        // setState({status: event.target.value})
         const statusValue=event.target.value;
         setState(state=>{
          state = { ...state }
@@ -209,6 +213,7 @@ const fetchUsers= async() =>{
     }
 
     const changeContent = (event) => {
+        // setState({content: event.target.value})
         const descriptionValue=event.target.value;
         setState(state=>{
          state = { ...state }
@@ -218,6 +223,7 @@ const fetchUsers= async() =>{
     }
 
     const changePriority = (event) => {
+        // setState({priority: event.target.value})
         const priorityValue=event.target.value;
         setState(state=>{
          state = { ...state }
