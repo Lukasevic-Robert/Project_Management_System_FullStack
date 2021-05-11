@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     '&:hover': {
-     fontWeight: 800
+      fontWeight: 800
     },
   },
   appBar: {
@@ -118,7 +118,7 @@ export default function NavBar() {
 
   let history = useHistory();
   const { isAdmin, isAuthenticated, authUser, logout } = useContext(AuthContext);
-  const { refreshContext, setRefreshContext, activeProject , projectName} = useContext(ProjectContext);
+  const { refreshContext, setRefreshContext, activeProject, projectName } = useContext(ProjectContext);
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
 
@@ -162,20 +162,20 @@ export default function NavBar() {
                 <MenuIcon />
               </IconButton>)}
             <Typography variant="h6" className={classes.title}>
-              <Link style={{ color: 'white', fontSize: 20, fontFamily: 'Righteous' }} className="nav-link" to={() => isAuthenticated() ? "/projects" : "/signin"}><img style={{ width: 30 }} src={logo} alt="logo"></img> JawBreaker</Link>
+              <Link id="nav-logo-link" style={{ color: 'white', fontSize: 20, fontFamily: 'Righteous' }} className="nav-link" to={() => isAuthenticated() ? "/projects" : "/signin"}><img style={{ width: 30 }} src={logo} alt="logo"></img> JawBreaker</Link>
             </Typography>
 
             {isAdmin() && (
-              <Link to={"/admin"} style={{ color: '#92ddea' }} className={classes.align}><Button style={{ color: 'white' }}>ADMIN BOARD</Button></Link>
+              <Link id="link-to-admin" to={"/admin"} style={{ color: '#92ddea' }} className={classes.align}><Button style={{ color: 'white' }}>ADMIN BOARD</Button></Link>
             )}
             {isAuthenticated() ? (
               <>
-                <Link to={"/profile"} className={classes.align}><Button style={{ color: 'white' }}>{authUser.email}</Button></Link>
+                <Link id="link-to-profile" to={"/profile"} className={classes.align}><Button style={{ color: 'white' }}>{authUser.email}</Button></Link>
                 <Button onClick={() => logOut()} color="secondary">LogOut</Button>
               </>
             ) : (
               <>
-                <Link className={classes.align} to={"/signin"}><Button style={{ color: 'white' }}>LogIn</Button></Link>
+                <Link id="nav-link-to-signin" className={classes.align} to={"/signin"}><Button style={{ color: 'white' }}>LogIn</Button></Link>
                 {/* <li className="nav-item">
                 <Link to={"/register"} className="nav-link">
                   Sign Up
@@ -187,6 +187,7 @@ export default function NavBar() {
           </Toolbar>
         </AppBar>
         <Drawer
+          id="drawer"
           className={classes.drawer}
           variant="persistent"
           anchor="left"
@@ -196,19 +197,19 @@ export default function NavBar() {
           }}
         >
           <div className={classes.drawerHeader}>
-            <IconButton onClick={handleDrawerClose}>
+            <IconButton id="handle-drawer" onClick={handleDrawerClose}>
               {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
             </IconButton>
           </div>
           <Divider />
           <List>
-            <ListItem button key={1} onClick={() => handleRedirect('/projects')}><ListItemIcon><LayersOutlinedIcon /></ListItemIcon><ListItemText primary={'Projects'} /></ListItem>
+            <ListItem id="button-to-projects-drawer" button key={1} onClick={() => handleRedirect('/projects')}><ListItemIcon><LayersOutlinedIcon /></ListItemIcon><ListItemText primary={'Projects'} /></ListItem>
           </List>
           <Divider />
           {activeProject && (<>
-            <ListItem button key={1} onClick={() => handleRedirect(`/tasks/${activeProject}`)}><ListItemIcon><LayersIcon /></ListItemIcon><ListItemText primary={`${projectName}`} /></ListItem>
-            <ListItem button key={2} onClick={() => handleRedirect(`/backlog/${activeProject}`)}><ListItemIcon><ViewHeadlineOutlinedIcon /></ListItemIcon><ListItemText primary={'Backlog'} /></ListItem>
-            <ListItem button key={3} onClick={() => handleRedirect(`/active-board/${activeProject}`)}><ListItemIcon><ViewWeekOutlinedIcon /></ListItemIcon><ListItemText primary={'Active Board'} /></ListItem> </>)}
+            <ListItem id="button-name-projects-drawer" button key={1} onClick={() => handleRedirect(`/tasks/${activeProject}`)}><ListItemIcon><LayersIcon /></ListItemIcon><ListItemText primary={`${projectName}`} /></ListItem>
+            <ListItem id="button-to-backlog-drawer" button key={2} onClick={() => handleRedirect(`/backlog/${activeProject}`)}><ListItemIcon><ViewHeadlineOutlinedIcon /></ListItemIcon><ListItemText primary={'Backlog'} /></ListItem>
+            <ListItem id="button-to-activeboard-drawer" button key={3} onClick={() => handleRedirect(`/active-board/${activeProject}`)}><ListItemIcon><ViewWeekOutlinedIcon /></ListItemIcon><ListItemText primary={'Active Board'} /></ListItem> </>)}
           {/* <List>
             {['All mail', 'Trash', 'Spam'].map((text, index) => (
               <ListItem button key={text}>

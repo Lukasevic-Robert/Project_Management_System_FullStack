@@ -40,6 +40,9 @@ const useStyles = makeStyles({
     },
     tableRow: {
         height: 60,
+    },
+    colorWhite: {
+        color: 'white'
     }
 });
 
@@ -179,7 +182,7 @@ function ProjectList() {
                         {projectBoss && (
                             <Link to={`/projects/-1`}>
                                 <Fab size="medium" color="primary" className={classes.fab + ' ' + classes.create}>
-                                    <AddIcon id="icon" />
+                                    <AddIcon className={classes.colorWhite} id="add-project-button" />
                                 </Fab>
                             </Link>)}
                     </div>
@@ -210,13 +213,13 @@ function ProjectList() {
                                         {projectBoss && (
                                             <TableCell align="right">
 
-                                                <Fab size="small" color="secondary" onClick={() => history.push(`/projects/${row.id}`)} aria-label="Edit" className={classes.fab}>
-                                                    <EditIcon id="icon"></EditIcon>
+                                                <Fab id="link-to-edit-projects1" size="small" color="secondary" onClick={() => history.push(`/projects/${row.id}`)} aria-label="Edit" className={classes.fab}>
+                                                    <EditIcon className={classes.colorWhite}></EditIcon>
                                                 </Fab>
 
 
-                                                <Fab id="delete-button" size="small" aria-label="Delete" className={classes.fab} onClick={() => handleClickOpen(row.id, row.name)}>
-                                                    <DeleteIcon id="icon" />
+                                                <Fab id="delete-project-button" size="small" aria-label="Delete" className={classes.fab} onClick={() => handleClickOpen(row.id, row.name)}>
+                                                    <DeleteIcon className={classes.colorWhite} />
                                                 </Fab>
 
                                                 <Dialog
@@ -227,8 +230,8 @@ function ProjectList() {
                                                     <DialogTitle id="alert-dialog-title">{`Are you sure you want to delete project: ${deleteName}?`}</DialogTitle>
 
                                                     <DialogActions>
-                                                        <Button onClick={handleClose} color="primary">CANCEL</Button>
-                                                        <Button onClick={() => deleteProject(deleteId)} color="primary" autoFocus>OK</Button>
+                                                    <Button id="dialog-project-delete-cancel" onClick={handleClose} color="primary">CANCEL</Button>
+                                                    <Button id="dialog-project-delete-submit" onClick={() => deleteProject(deleteId)} color="primary" autoFocus>OK</Button>
                                                     </DialogActions>
                                                 </Dialog>
                                             </TableCell>)}

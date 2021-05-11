@@ -70,7 +70,7 @@ const ViewTask = ({ status, task, projectId, add }) => {
 
   return (
     <div>
-      <div type="button" onClick={handleOpen} style={{ width: '100%' }}>
+      <div id="button-open-create-task-form" type="button" onClick={handleOpen} style={{ width: '100%' }}>
         {add ? <div>Add new task </div> : <div>{task.name}</div>}
       </div>
 

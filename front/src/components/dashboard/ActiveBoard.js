@@ -231,7 +231,7 @@ const ActiveBoard = ({ match }) => {
         <div className="activeBoard">
             <div className="boardHeadingStyle">
                 <div style={{ fontSize: 'larger', fontWeight: 'bold' }}>
-                    Project nr. {match.params.id} <Link to={`/projects/${activeProjectID}`}><EditIcon style={{ fontSize: 'large', color: '#be9ddf', marginBottom: '5%' }}></EditIcon>
+                    Project nr. {match.params.id} <Link id="link-to-edit-projects2" to={`/projects/${activeProjectID}`}><EditIcon style={{ fontSize: 'large', color: '#be9ddf', marginBottom: '5%' }}></EditIcon>
                     </Link>
                 </div>
                 
@@ -259,7 +259,7 @@ const ActiveBoard = ({ match }) => {
                                                 >
                                                     {data.items.map((el, index) => {
                                                         return (
-                                                            <Draggable key={el.id} index={index} draggableId={el.id}>
+                                                            <Draggable id="draggable-task" key={el.id} index={index} draggableId={el.id}>
                                                                 {(provided, snapshot) => {
                                                                     return (
                                                                         <div
@@ -271,7 +271,7 @@ const ActiveBoard = ({ match }) => {
                                                                             <div className="boardTask">
                                                                                 <ViewTask task={el} projectId={activeProjectID} add={false}/>
                                                                                 <Tooltip title="Move back to backlog">
-                                                                                    <ReplyIcon onClick={() => sendToBacklog(el)} style={{ marginBottom: "px", cursor: 'pointer', fontSize: 'medium', color: 'rgba(27, 28, 43, 0.3' }}></ReplyIcon>
+                                                                                    <ReplyIcon id="move-back-to-backlog" onClick={() => sendToBacklog(el)} style={{ marginBottom: "px", cursor: 'pointer', fontSize: 'medium', color: 'rgba(27, 28, 43, 0.3' }}></ReplyIcon>
                                                                                 </Tooltip>
 
                                                                             </div>
