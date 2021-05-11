@@ -15,14 +15,14 @@ import CloseIcon from '@material-ui/icons/Close';
 
 
 const theme = createMuiTheme({
-    palette: {
-        primary: {
-            main: '#be9ddf',
-        },
-        secondary: {
-            main: '#ffa5d8',
-        },
+  palette: {
+    primary: {
+      main: '#be9ddf',
     },
+    secondary: {
+      main: '#ffa5d8',
+    },
+  },
 });
 
 const useStyles = makeStyles((theme) => ({
@@ -35,16 +35,16 @@ const useStyles = makeStyles((theme) => ({
   paper: {
     backgroundColor: theme.palette.background.paper,
     // border: '1px solid #000',
-    backgroundColor:'rgb(255, 255, 255)',
+    backgroundColor: 'rgb(255, 255, 255)',
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
     width: '80vw',
     height: '80vh',
-    overflow:'auto'
+    overflow: 'auto'
   },
 }));
 
-const ViewTask = ({ task, projectId, add }) => {
+const ViewTask = ({ status, task, projectId, add }) => {
   const classes = useStyles();
   const history = useHistory();
 
@@ -60,21 +60,21 @@ const ViewTask = ({ task, projectId, add }) => {
 
   const getErrorMessage = () => {
     const errorMessage = swal({
-        text: "Something went wrong! ",
-        button: "Go back to backlog",
-        icon: "warning",
-        dangerMode: true,
+      text: "Something went wrong! ",
+      button: "Go back to backlog",
+      icon: "warning",
+      dangerMode: true,
     });
     return errorMessage;
-}
+  }
 
   return (
     <div>
-      <div type="button" onClick={handleOpen} style={{width: '100%'}}>
-      {add?<div>Add new task </div>:<div>{task.name}</div>}
+      <div type="button" onClick={handleOpen} style={{ width: '100%' }}>
+        {add ? <div>Add new task </div> : <div>{task.name}</div>}
       </div>
-       
-      
+
+
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
@@ -89,23 +89,23 @@ const ViewTask = ({ task, projectId, add }) => {
       >
         <Fade in={open}>
           <div className={classes.paper}>
-              {/* <div className="projectHeadingStyle"> </div> */}
-              {/* <div> <CloseIcon id="icon" onClick={() => handleClose()} style={{textAlign:"right", cursor: 'pointer'}}></CloseIcon></div> */}
-<div>
+            {/* <div className="projectHeadingStyle"> </div> */}
+            {/* <div> <CloseIcon id="icon" onClick={() => handleClose()} style={{textAlign:"right", cursor: 'pointer'}}></CloseIcon></div> */}
+            <div>
 
-  <CreateTask taskId={task.id} projectId={projectId} add={add}></CreateTask>
-            {/* <Link to={`/api/v1/projects/${task.id}`}>
+              <CreateTask status={status} taskId={task.id} projectId={projectId} add={add}></CreateTask>
+              {/* <Link to={`/api/v1/projects/${task.id}`}>
                                                 <Fab size="small" color="secondary" aria-label="Edit" className={classes.fab}>
                                                     <EditIcon id="icon"></EditIcon>
                                                 </Fab>
                                             </Link> */}
-                                            {/* <Fab size="small" color="secondary" aria-label="Edit" className={classes.fab}>
+              {/* <Fab size="small" color="secondary" aria-label="Edit" className={classes.fab}>
                                              <CancelIcon id="icon" onClick={() => sendToBacklog(id)} style={{marginRight:"15px", cursor: 'pointer'}}></CancelIcon>
                                              </Fab> */}
-           
-           
+
+
             </div>
-{/* <div>
+            {/* <div>
     {
      task.description.map((item) => (
         <p id="transition-modal-description" key={item}>{item}</p>
@@ -113,8 +113,8 @@ const ViewTask = ({ task, projectId, add }) => {
      }   
     
     </div> */}
-           
-          
+
+
           </div>
         </Fade>
       </Modal>

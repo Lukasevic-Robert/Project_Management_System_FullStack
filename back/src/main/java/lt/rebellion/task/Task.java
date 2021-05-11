@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lt.rebellion.baseEntity.BaseEntity;
 import lt.rebellion.model.EPriority;
@@ -20,7 +20,7 @@ import lt.rebellion.model.EStatus;
 import lt.rebellion.project.Project;
 
 @AllArgsConstructor
-@NoArgsConstructor
+@RequiredArgsConstructor
 @Entity
 @Getter
 @Setter
@@ -59,4 +59,5 @@ public class Task extends BaseEntity {
 		this.priority = priority;
 		this.project = project;
 	}
+	
 }
