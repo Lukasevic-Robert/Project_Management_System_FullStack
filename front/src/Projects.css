@@ -1,13 +1,14 @@
-#delete-button{
+#delete-project-button{
     background-color: #92ddea;
 }
 
-#delete-button:hover{
+#delete-project-button:hover{
     background-color: #7eb8da;
 }
 
-#icon{
+#color-white{
     color:white;
+   background-color: white;
 }
 #table-head{
     height:50px; 

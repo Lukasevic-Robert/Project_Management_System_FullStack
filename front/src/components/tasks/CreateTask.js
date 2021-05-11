@@ -17,6 +17,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Input from '@material-ui/core/Input';
 import ListItemText from '@material-ui/core/ListItemText';
 import { useHistory } from 'react-router';
+import { makeStyles } from '@material-ui/core/styles';
 
 const theme = createMuiTheme({
     palette: {
@@ -42,7 +43,20 @@ const MenuProps = {
     },
 };
 
+const useStyles = makeStyles((theme) => ({
+    root: {
+        width: 400,
+        '& > * + *': {
+            marginTop: theme.spacing(3),
+        },
+    },
+    colorWhite: {
+        color: 'white',
+    }
+}));
+
 const CreateTask = ({status, taskId, projectId, add}) => {
+    const classes = useStyles();
     const history = useHistory();
     const [state, setState] = useState({
             name: '',
@@ -253,7 +267,7 @@ const fetchUsers= async() =>{
                             // required
                             InputLabelProps={{shrink: true}}
                             fullWidth
-                            id="task"
+                            id="name-task"
                             label="Task name"
                             name="task"
                             value={state.name}
@@ -271,7 +285,7 @@ const fetchUsers= async() =>{
                             InputLabelProps={{shrink: true}}
                             // required
                             fullWidth
-                           id="filled-textarea"
+                           id="filled-textarea-task"
                             label="Description"
                             name="description"
                             value={state.description}
@@ -331,8 +345,8 @@ const fetchUsers= async() =>{
                                 ))}
                             </Select>
                         </FormControl> */}
-                        <Button id="icon" variant="contained" color="primary" type="submit" style={{ marginRight: '10px' }}>Submit</Button>
-                        <Link to={`/tasks/${projectId}`} style={{ textDecoration: 'none' }}><Button id="icon" variant="contained" color="secondary">Cancel</Button></Link>
+                        <Button id="submit-task-update-create-form" className={classes.colorWhite} variant="contained" color="primary" type="submit" style={{ marginRight: '10px' }}>Submit</Button>
+                        <Link id="link-back-to-destination" to={`/tasks/${projectId}`} style={{ textDecoration: 'none' }}><Button id="cancel-task-update-create-form" className={classes.colorWhite} variant="contained" color="secondary">Cancel</Button></Link>
                     </ValidatorForm>
                 </Container>
             </ThemeProvider>

@@ -74,6 +74,9 @@ const useStyles = makeStyles((theme) => ({
             marginTop: theme.spacing(3),
         },
     },
+    colorWhite: {
+        color: 'white',
+    }
 }));
 
 
@@ -222,7 +225,7 @@ function CreateProject({ match }) {
     return (
         <ThemeProvider theme={theme}>
             <Container component="main" maxWidth="xs" className={classes.root}>
-                <ValidatorForm onSubmit={saveOrUpdateProject}>
+                <ValidatorForm id="create-update-project-form" onSubmit={saveOrUpdateProject}>
                     <Typography color="secondary" component="h1" variant="h5">{getTitle()}</Typography>
                     <TextValidator
                         variant="outlined"
@@ -286,8 +289,8 @@ function CreateProject({ match }) {
                             )}
                         />
                     </FormControl>
-                    <Button id="icon" variant="contained" color="primary" type="submit" style={{ marginRight: '10px' }}>Submit</Button>
-                    <Link to={'/projects'} style={{ textDecoration: 'none' }}><Button id="icon" variant="contained" color="secondary">Cancel</Button></Link>
+                    <Button id="submit-project-update-create-form" className={classes.colorWhite} variant="contained" color="primary" type="submit" style={{ marginRight: '10px' }}>Submit</Button>
+                    <Link to={'/projects'} style={{ textDecoration: 'none' }}><Button id="cancel-project-update-create-form" className={classes.colorWhite} variant="contained" color="secondary">Cancel</Button></Link>
                 </ValidatorForm>
             </Container>
         </ThemeProvider>

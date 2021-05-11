@@ -17,14 +17,14 @@ const ViewProjectTasks = ({ match }) => {
             </h3>
 
             <div>
-                <Link to={`/projects`}>
+                <Link id="link-to-projects-view" to={`/projects`}>
                     <button className="btn btn-info btn">Go back</button>
                 </Link>
             </div>
 
             <div>
                 <br/>
-            <Link to={`/active-board/${match.params.id}`}>
+            <Link id="link-to-activeboard-view" to={`/active-board/${match.params.id}`}>
                         <button className="btn btn-info btn">Go to active board</button>
                         </Link>
                         
