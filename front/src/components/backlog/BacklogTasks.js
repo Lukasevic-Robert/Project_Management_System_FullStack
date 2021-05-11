@@ -7,17 +7,13 @@ import ViewTask from "../dashboard/ViewTask"
 import swal from 'sweetalert';
 import { useHistory } from 'react-router';
 import ProjectService from "../../services/ProjectService";
-import { Avatar, Paper } from "@material-ui/core"
-import { createMuiTheme } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/core/styles';
 import SortIcon from '@material-ui/icons/Sort';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import SearchIcon from '@material-ui/icons/Search';
-import EditIcon from '@material-ui/icons/Edit';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/DeleteForever';
-import { Button, DialogTitle, DialogActions, Dialog, Fab, Box, Card, CardContent, Grid, LinearProgress, Typography } from '@material-ui/core';
+import { Button, DialogTitle, DialogActions, Dialog, Box, Card, CardContent, Grid, LinearProgress, Typography } from '@material-ui/core';
 
 const useStyles = makeStyles({
     purple: {
@@ -67,13 +63,12 @@ const BacklogTasks = ({ match }) => {
                     if (isMounted) {
                         setActiveTasks(response.data);
                         mapActive(response.data);
-                        //  getUsers();
 
                     }
                 })
                 .catch((error) => {
-                    //    getErrorMessage();
-                    //   history.push('/projects');
+                       getErrorMessage();
+                      history.push('/projects');
                 }
                 );
         };
@@ -88,8 +83,8 @@ const BacklogTasks = ({ match }) => {
                     }
                 })
                 .catch((error) => {
-                    //   getErrorMessage();
-                    //   history.push('/projects');
+                      getErrorMessage();
+                      history.push('/projects');
                 }
                 );
         };
@@ -122,14 +117,7 @@ const BacklogTasks = ({ match }) => {
                 }) 
             }
         }
-        // setTotalTasks(prev=>{
-        //     prev=prev+countTotal
-        //     console.log(prev)
-        //  return prev}
-        //  );
-    //  setUnfinishedTasks(prev=>{
-    //      prev=prev+countUnfinished
-    //   return prev} );
+   
     }
 
     const mapBacklog = (backlogTasks) => {
@@ -155,14 +143,7 @@ const BacklogTasks = ({ match }) => {
                 countUnfinished++
                 
             }
-        //    setTotalTasks(prev=>{
-        //        prev=prev+countTotal
-        //        console.log(prev)
-        //     return prev}
-        //     );
-        // setUnfinishedTasks(prev=>{
-        //     prev=prev+countUnfinished
-        //  return prev} );
+       
         }
 
         // SORT TASKS by updated date
@@ -216,7 +197,7 @@ const BacklogTasks = ({ match }) => {
         })
             .catch((error) => {
                 getErrorMessage();
-                //  history.push('/api/v1/projects');
+                 history.push('/api/v1/projects');
             }
             );
     }
@@ -260,7 +241,7 @@ const BacklogTasks = ({ match }) => {
         })
             .catch((error) => {
                 getErrorMessage();
-                // history.push('/api/v1/projects');
+                history.push('/api/v1/projects');
             });
     }
 
@@ -315,8 +296,6 @@ const BacklogTasks = ({ match }) => {
                      {title} <Link to={`/projects/${activeProjectID}`}>
                     </Link>
                 </div>
-         
-
 <div>
 
 </div>
@@ -336,7 +315,6 @@ const BacklogTasks = ({ match }) => {
           >
               {content}
           </Typography>
-
          
         </Grid>
        
@@ -344,10 +322,7 @@ const BacklogTasks = ({ match }) => {
      
     </CardContent>
   </Card>
-                
-                
-                
-              
+                    
                 </div>
                 <div className="col col-3"> 
                 <Card style={{ height: '100%' }} >
@@ -370,7 +345,6 @@ const BacklogTasks = ({ match }) => {
             {totalTasksCount}
           </Typography>
 
-         
         </Grid>
        
       </Grid>
@@ -389,7 +363,6 @@ const BacklogTasks = ({ match }) => {
             color="textSecondary"
             // gutterBottom
             variant="caption"
-
           >
             TASKS PROGRESS
           </Typography>
@@ -426,11 +399,6 @@ const BacklogTasks = ({ match }) => {
             </div>
 
             <div style={{textAlign:'right', marginRight:'2%'}}>
-                       
-                                {/* <Fab size="small" color="primary" className={classes.fab + ' ' + classes.create}>
-                                    <AddIcon id="icon" />
-                                    
-                                </Fab> */}
                            
                     </div>
                     
@@ -443,13 +411,6 @@ const BacklogTasks = ({ match }) => {
                     </div>
                     </div>
 
-                    {/* <div style={{textAlign:'right', display: 'flex', flexWrap: 'wrap' }}>
-                                                                                {
-                                                                                    initials.map((item, index) => (
-                                                                                        <Avatar className={classes.purple} key={index}>{item}</Avatar>
-                                                                                    ))
-                                                                                }
-                                                                            </div> */}
             <div className={"dndContainerBacklog"}>
                 <DragDropContext onDragEnd={handleDragEnd}>
                     {_.map(state, (data, key) => {
@@ -458,7 +419,6 @@ const BacklogTasks = ({ match }) => {
                             <div key={key} className={"column"}>
                                 <div>
                                     <div style={{ display: 'flex', justifyContent: 'space-between' }}><h5>{data.title}</h5>
-                                        {/* <MoreVertIcon style={{ color: 'grey' }}></MoreVertIcon> */}
                                        
                                     </div>
 
@@ -487,11 +447,7 @@ const BacklogTasks = ({ match }) => {
                                                                                 </div>
                                                                                 <div>
                                                                                    
-                                                                                    {/* <EditIcon id="icon" onClick={() => history.push(`/projects/${el.id}`)} style={{ fontSize: 'large', color: 'black', cursor: 'pointer' }}></EditIcon> */}
-                                                                                   
-
-                                                                                    {/* <Fab id="delete-button" size="small" aria-label="Delete" className={classes.fab} onClick={() => handleClickOpen(el.id, el.name)}> */}
-                                                                                    <DeleteIcon id="icon" onClick={() => handleClickOpen(el.id, el.name)} style={{ fontSize: 'large', color: 'black', cursor: 'pointer' }} />
+                                                                                                                                                                        <DeleteIcon id="icon" onClick={() => handleClickOpen(el.id, el.name)} style={{ fontSize: 'large', color: 'black', cursor: 'pointer' }} />
                                                                                     {/* </Fab> */}
 
                                                                                     <Dialog
