@@ -179,13 +179,8 @@ margin-bottom:-50px;
 
 }
 
-
-
-
 .dndContainerBacklog{
-  /* display:flex; */
   width: 100%;
-  /* justify-content: space-around; */
 padding: 2%;
 }
 
@@ -193,25 +188,18 @@ padding: 2%;
   width: 100%;
   background-color: #f7f4f4;
   box-shadow: 2px 20px 20px rgba(27, 28, 43, 0.2);
-/* display: flex;
-justify-content: space-between; */
 }
 
 .droppable-col-Backlog {
   width: 100%;
-  /* background-color: #eb0a0a; */
   padding: 10px 10px 0 10px;
-  /* border-radius: 7px; */
-  /* display: flex; */
-  /* flex-direction: column; */
+
   min-height: 100px;
 }
 
 .itemBacklog{
-  /* margin-bottom: 10px; */
   background-color: rgba(191, 195, 214, 0.1);
   box-shadow: 1px 2px 3px rgba(27, 28, 43, 0.2);
-  /* padding: 10px; */
   border-radius: 1px;
   min-height: 30px;
   width: 100%;
@@ -227,10 +215,6 @@ padding: 1%;
 .boardTaskBacklog{
   display: flex;
   justify-content: space-between;
-  /* background-color: hotpink; */
-  /* margin-top: -2%;
-  margin-right: -4%;
- */ 
  vertical-align: bottom;
 }
 

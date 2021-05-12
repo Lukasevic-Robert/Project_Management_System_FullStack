@@ -14,6 +14,9 @@ import SearchIcon from '@material-ui/icons/Search';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/DeleteForever';
 import { Button, DialogTitle, DialogActions, Dialog, Box, Card, CardContent, Grid, LinearProgress, Typography } from '@material-ui/core';
+import { createMuiTheme } from '@material-ui/core/styles';
+import { ThemeProvider } from '@material-ui/styles';
+
 
 const useStyles = makeStyles({
     purple: {
@@ -26,6 +29,17 @@ const useStyles = makeStyles({
 }
 );
 
+const theme = createMuiTheme({
+    palette: {
+        primary: {
+            main: '#be9ddf',
+        },
+        secondary: {
+            main: '#ffa5d8',
+        },
+    },
+});
+
 const BacklogTasks = ({ match }) => {
     const activeProjectID = match.params.id;
     const classes = useStyles();
@@ -33,9 +47,6 @@ const BacklogTasks = ({ match }) => {
     const [backlogTasks, setBacklogTasks] = useState([]);
     const [totalTasksCount, setTotalTasks]= useState(0);
     const [unfinishedTasksCount, setUnfinishedTasks]= useState(0);
-
-    const [refresh, setRefresh] = useState(false);
-
     const history = useHistory();
     const [initials, setInitials] = useState([]);
     let randomColor = Math.floor(Math.random() * 16777215).toString(16);
@@ -53,7 +64,7 @@ const BacklogTasks = ({ match }) => {
         }
     })
 
-    // GET ACTIVE TASKS from database 
+    // GET ACTIVE AND BACKLOG TASKS from database 
 
     useEffect(() => {
         let isMounted = true;
@@ -63,7 +74,6 @@ const BacklogTasks = ({ match }) => {
                     if (isMounted) {
                         setActiveTasks(response.data);
                         mapActive(response.data);
-
                     }
                 })
                 .catch((error) => {
@@ -97,8 +107,6 @@ const BacklogTasks = ({ match }) => {
     // MAP TASKS by status 
 
     const mapActive = (activeTasks) => {
-        let countTotal=0
-        let countUnfinished=0;
         setState(state => {
             state = { ...state }
             state.ACTIVE.items = [];
@@ -107,9 +115,7 @@ const BacklogTasks = ({ match }) => {
         
         for (let i = 0; i < activeTasks.length; i++) {
             activeTasks[i].id = String(activeTasks[i].id);
-            countTotal++
             if (activeTasks[i].status === "TODO" || activeTasks[i].status === "IN_PROGRESS") {
-                countUnfinished++;
                 setState(state => {
                     state = { ...state }
                     state.ACTIVE.items.push(activeTasks[i]);
@@ -117,7 +123,6 @@ const BacklogTasks = ({ match }) => {
                 }) 
             }
         }
-   
     }
 
     const mapBacklog = (backlogTasks) => {
@@ -126,24 +131,16 @@ const BacklogTasks = ({ match }) => {
             state.BACKLOG.items = [];
             return state
         })
-        let countTotal=0
-        let countUnfinished=0;
+       
         for (let i = 0; i < backlogTasks.length; i++) {
-           
-            countTotal++;
-           
             backlogTasks[i].id = String(backlogTasks[i].id);
             if (backlogTasks[i].status === "BACKLOG") {
-
                 setState(state => {
                     state = { ...state }
                     state.BACKLOG.items.push(backlogTasks[i]);
                     return state
-                })
-                countUnfinished++
-                
+                })                
             }
-       
         }
 
         // SORT TASKS by updated date
@@ -163,8 +160,6 @@ const BacklogTasks = ({ match }) => {
 
     // DRAG AND DROP logic
     const handleDragEnd = ({ destination, source, draggableId }) => {
-        // console.log("from",source)
-        // console.log("to", destination)
         if (!destination) {
             return
         }
@@ -197,7 +192,7 @@ const BacklogTasks = ({ match }) => {
         })
             .catch((error) => {
                 getErrorMessage();
-                 history.push('/api/v1/projects');
+                history.push('/projects');
             }
             );
     }
@@ -205,7 +200,7 @@ const BacklogTasks = ({ match }) => {
     const getErrorMessage = () => {
         const errorMessage = swal({
             text: "Something went wrong! ",
-            button: "Go back to backlog",
+            button: "Go back to projects",
             icon: "warning",
             dangerMode: true,
         });
@@ -221,9 +216,7 @@ const BacklogTasks = ({ match }) => {
                 return initials;
             })
             let project = res.data;
-            // let users = [];
-            // let userId = [];
-            // console.log(project)
+          
             project.users.map((user) => {
                 let userInitials = user.firstName.charAt(0).trim() + user.lastName.charAt(0).trim();
                 setInitials(initials => {
@@ -232,20 +225,19 @@ const BacklogTasks = ({ match }) => {
                     return initials;
                 })
             })
-            // setProject({ title: project.name, status: project.status, content: project.description, personName: users, userListId: userId });
+        
             setTitle(project.name);
             setContent(project.description);
             setTotalTasks(project.tasks.length)
-
             setUnfinishedTasks(project.tasks.filter((item) => item.status !== "DONE").length);
         })
             .catch((error) => {
                 getErrorMessage();
-                history.push('/api/v1/projects');
+                history.push('/projects');
             });
     }
 
-    // delete
+    // DELETE TASK
     const [open, setOpen] = React.useState(false);
     const [deleteId, setDeleteId] = React.useState(0);
     const [deleteName, setDeleteName] = React.useState(0);
@@ -282,26 +274,22 @@ const BacklogTasks = ({ match }) => {
     const getSuccessMessage = (status) => {
         const successMessage = swal({
             title: "Request successful",
-            text: `The project has been ${status}`,
+            text: `The task has been ${status}`,
             icon: "success",
             // button: "Go back to project list",
         });
         return successMessage;
     }
-    //delete
 
     return (
         <div className="activeBoard">
-            <div style={{ fontSize: 'larger', fontWeight: 'bold', marginRight:'2px' }}>
-                     {title} <Link to={`/projects/${activeProjectID}`}>
-                    </Link>
+            <div style={{ fontSize: 'larger', fontWeight: 'bold', marginLeft:'20px' }}>
+                     {title} 
                 </div>
-<div>
 
-</div>
             <div className="container-fluid containerDashboard">
                 <div className="row"> 
-                <div className="col col-6"> 
+                <div className="col col-7"> 
                 <Card style={{ height: '100%' }} >
     <CardContent>
       <Grid container
@@ -324,7 +312,7 @@ const BacklogTasks = ({ match }) => {
   </Card>
                     
                 </div>
-                <div className="col col-3"> 
+                <div className="col col-2"> 
                 <Card style={{ height: '100%' }} >
     <CardContent>
       <Grid container
@@ -391,24 +379,15 @@ const BacklogTasks = ({ match }) => {
                 </div>
             </div>
 
-            <div style={{ textAlign: 'right' }}>
-                <br />
-                <Link to={`/active-board/${match.params.id}`}>
-                    <button style={{ width: '20%' }} className="btn btn-dark btn">Go to active board</button>
-                </Link>
-            </div>
-
-            <div style={{textAlign:'right', marginRight:'2%'}}>
-                           
-                    </div>
                     
 <div className="headingStyleBacklog2">
-                    <div className="addTask" style={{ cursor: 'pointer',color:'black' }} > <ViewTask task={{}} projectId={activeProjectID} add={true}/> 
-            <AddIcon style={{ fontSize: 'medium', verticalAlign: 'bottom', height:'100%' }}></AddIcon></div>
-                    <div style={{ fontSize: 'smaller' }}><SortIcon></SortIcon>Sort
-                <FilterListIcon></FilterListIcon>Filter<SearchIcon></SearchIcon>Search 
-                    
-                    </div>
+                   <div style={{display:'flex', justifyContent: 'right'}}> <AddIcon/>   <ViewTask task={{}} projectId={activeProjectID} add={true}/>    <SortIcon ></SortIcon>Sort
+                <FilterListIcon></FilterListIcon>Filter<SearchIcon></SearchIcon>Search  </div>                  
+
+<div> <Link to={`/active-board/${match.params.id}`}>
+                    <button className="btn" style={{backgroundColor:'#be9ddf', color:'white'}}>Go to active board</button>
+                </Link> </div>
+
                     </div>
 
             <div className={"dndContainerBacklog"}>
@@ -418,7 +397,7 @@ const BacklogTasks = ({ match }) => {
 
                             <div key={key} className={"column"}>
                                 <div>
-                                    <div style={{ display: 'flex', justifyContent: 'space-between' }}><h5>{data.title}</h5>
+                                    <div><h6>{data.title}</h6>
                                        
                                     </div>
 
@@ -447,7 +426,7 @@ const BacklogTasks = ({ match }) => {
                                                                                 </div>
                                                                                 <div>
                                                                                    
-                                                                                                                                                                        <DeleteIcon id="icon" onClick={() => handleClickOpen(el.id, el.name)} style={{ fontSize: 'large', color: 'black', cursor: 'pointer' }} />
+                                                                                                                                                                        <DeleteIcon id="icon" onClick={() => handleClickOpen(el.id, el.name)} style={{ fontSize: 'large', color: 'grey', cursor: 'pointer' }} />
                                                                                     {/* </Fab> */}
 
                                                                                     <Dialog
