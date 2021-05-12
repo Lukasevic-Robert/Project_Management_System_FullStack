@@ -43,6 +43,16 @@ const useStyles = makeStyles({
     },
     colorWhite: {
         color: 'white'
+    },
+    filterProjects: {
+        marginLeft: 10,
+        textTransform: 'none',
+        backgroundColor: '#f5f4f4',
+        border: 'none',
+        '&:hover': {
+            backgroundColor: '#dddbdb',
+        }
+
     }
 });
 
@@ -60,6 +70,7 @@ function ProjectList() {
     const [elementCount, setElementCount] = useState(1);
     const [errorsFromBack, setErrorsFromBack] = useState([]);
     const [refresh, setRefresh] = useState(false);
+    const [filtered, setFiltered] = useState(false);
 
 
 
@@ -97,7 +108,7 @@ function ProjectList() {
     const deleteProject = (id) => {
         ProjectService.deleteProject(id).then(res => {
             getSuccessMessage("deleted");
-            if(projects.length === 1  && page > 0){
+            if (projects.length === 1 && page > 0) {
                 setPage(page - 1);
             }
             setRefresh(!refresh);
@@ -173,6 +184,10 @@ function ProjectList() {
         };
     }
 
+    const changeFiltered = () => {
+        setFiltered(!filtered);
+    }
+
     return (
 
         <ThemeProvider theme={theme}>
@@ -185,6 +200,7 @@ function ProjectList() {
                                     <AddIcon className={classes.colorWhite} id="add-project-button" />
                                 </Fab>
                             </Link>)}
+                        <Button id="filter-project-by-user" onClick={changeFiltered} className={classes.filterProjects} variant="outlined"><span style={{ fontFamily: 'M PLUS 1p', fontSize: 15 }}>Only My Projects</span></Button>
                     </div>
                     <Table className={classes.table} size="small" aria-label="a dense table">
                         <TableHead>
@@ -230,8 +246,8 @@ function ProjectList() {
                                                     <DialogTitle id="alert-dialog-title">{`Are you sure you want to delete project: ${deleteName}?`}</DialogTitle>
 
                                                     <DialogActions>
-                                                    <Button id="dialog-project-delete-cancel" onClick={handleClose} color="primary">CANCEL</Button>
-                                                    <Button id="dialog-project-delete-submit" onClick={() => deleteProject(deleteId)} color="primary" autoFocus>OK</Button>
+                                                        <Button id="dialog-project-delete-cancel" onClick={handleClose} color="primary">CANCEL</Button>
+                                                        <Button id="dialog-project-delete-submit" onClick={() => deleteProject(deleteId)} color="primary" autoFocus>OK</Button>
                                                     </DialogActions>
                                                 </Dialog>
                                             </TableCell>)}

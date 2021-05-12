@@ -34,17 +34,19 @@ const useStyles = makeStyles((theme) => ({
   },
   paper: {
     backgroundColor: theme.palette.background.paper,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
     // border: '1px solid #000',
-    backgroundColor: 'rgb(255, 255, 255)',
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
-    width: '80vw',
+    width: '60vw',
     height: '80vh',
     overflow: 'auto'
   },
 }));
 
-const ViewTask = ({ status, task, projectId, add }) => {
+const ViewTask = ({location, status, task, projectId, add }) => {
   const classes = useStyles();
   const history = useHistory();
 
@@ -93,7 +95,7 @@ const ViewTask = ({ status, task, projectId, add }) => {
             {/* <div> <CloseIcon id="icon" onClick={() => handleClose()} style={{textAlign:"right", cursor: 'pointer'}}></CloseIcon></div> */}
             <div>
 
-              <CreateTask status={status} taskId={task.id} projectId={projectId} add={add}></CreateTask>
+              <CreateTask handleClose={handleClose} status={status} taskId={task.id} projectId={projectId} add={add}></CreateTask>
               {/* <Link to={`/api/v1/projects/${task.id}`}>
                                                 <Fab size="small" color="secondary" aria-label="Edit" className={classes.fab}>
                                                     <EditIcon id="icon"></EditIcon>

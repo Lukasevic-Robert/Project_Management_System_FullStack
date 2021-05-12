@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { Link, useHistory } from "react-router-dom";
 import UserService from "../services/UserService";
 import ProjectService from "../services/ProjectService";
@@ -18,6 +18,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import { createFilterOptions } from '@material-ui/lab/Autocomplete';
 import { makeStyles } from '@material-ui/core/styles';
 import { withStyles } from "@material-ui/core/styles";
+import { ProjectContext } from './../context/ProjectContext';
 
 
 const CustomAutocomplete = withStyles({
@@ -84,6 +85,7 @@ function CreateProject({ match }) {
 
     const classes = useStyles();
 
+    const { location, activeProject } = useContext(ProjectContext);
     let history = useHistory();
     const [id, setId] = useState(match.params.id);
     const [title, setTitle] = useState('');
@@ -171,7 +173,11 @@ function CreateProject({ match }) {
         } else {
             ProjectService.updateProject(project, id).then(res => {
                 getSuccessMessage("updated");
-                history.push('/projects');
+                if (activeProject && location === 'active') {
+                    history.push(`/active-board/${activeProject}`)
+                } else {
+                    history.push('/projects');
+                }
             })
                 .catch((error) => {
                     getErrorMessage();
@@ -290,7 +296,7 @@ function CreateProject({ match }) {
                         />
                     </FormControl>
                     <Button id="submit-project-update-create-form" className={classes.colorWhite} variant="contained" color="primary" type="submit" style={{ marginRight: '10px' }}>Submit</Button>
-                    <Link to={'/projects'} style={{ textDecoration: 'none' }}><Button id="cancel-project-update-create-form" className={classes.colorWhite} variant="contained" color="secondary">Cancel</Button></Link>
+                    <Link to={activeProject && (location === 'active' ? `/active-board/${activeProject}` : '/projects')} style={{ textDecoration: 'none' }}><Button id="cancel-project-update-create-form" className={classes.colorWhite} variant="contained" color="secondary">Cancel</Button></Link>
                 </ValidatorForm>
             </Container>
         </ThemeProvider>
