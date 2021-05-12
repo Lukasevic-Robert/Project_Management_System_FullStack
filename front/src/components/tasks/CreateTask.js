@@ -1,4 +1,4 @@
-import React, { useState, useEffect }  from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Link } from "react-router-dom";
 import UserService from "../../services/UserService.js";
 import TaskService from "../../services/TaskService.js"
@@ -18,6 +18,7 @@ import Input from '@material-ui/core/Input';
 import ListItemText from '@material-ui/core/ListItemText';
 import { useHistory } from 'react-router';
 import { makeStyles } from '@material-ui/core/styles';
+import {ProjectContext} from '../../context/ProjectContext';
 
 const theme = createMuiTheme({
     palette: {
@@ -32,17 +33,6 @@ const theme = createMuiTheme({
     },
 });
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-    PaperProps: {
-        style: {
-            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-            width: 250,
-        },
-    },
-};
-
 const useStyles = makeStyles((theme) => ({
     root: {
         width: 400,
@@ -52,10 +42,15 @@ const useStyles = makeStyles((theme) => ({
     },
     colorWhite: {
         color: 'white',
+    },
+    container: {
+        width: 400
     }
+
 }));
 
-const CreateTask = ({status, taskId, projectId, add}) => {
+const CreateTask = ({handleClose, status, taskId, projectId, add}) => {
+    const {location, setRefreshActive, refreshActive} = useContext(ProjectContext);
     const classes = useStyles();
     const history = useHistory();
     const [state, setState] = useState({
@@ -138,7 +133,11 @@ const fetchUsers= async() =>{
         if (add === true) {
            TaskService.createTask(taskCreate).then(res => {
                 getSuccessMessage("added");
-                history.push(`/tasks/${projectId}`);
+                if(location === 'active'){
+                    handleClose();
+                    setRefreshActive(!refreshActive);
+                } else {
+                history.push(`/tasks/${projectId}`);}
              
             })
                 .catch((error) => {
@@ -151,8 +150,11 @@ const fetchUsers= async() =>{
             
             TaskService.updateTask(taskUpdate, taskId).then(res => {
                 getSuccessMessage("updated");
-
-                history.push(`/tasks/${projectId}`);
+                if(location === 'active'){
+                    handleClose();
+                    setRefreshActive(!refreshActive);
+                } else {
+                history.push(`/tasks/${projectId}`);}
 
             })
                 .catch((error) => {
@@ -245,6 +247,9 @@ const fetchUsers= async() =>{
          return state;
         })
     }
+    const handleCancel = () => {
+        handleClose();
+    }
 
     // handleSubmit = (e) =>{
     //     e.preventDefault();
@@ -255,7 +260,7 @@ const fetchUsers= async() =>{
     return (
         <div>
        <ThemeProvider theme={theme}>
-                <Container component="main" maxWidth="xs">
+                <Container component="main" className={classes.container}>
 
                     <ValidatorForm onSubmit={saveOrUpdatetask}>
 
@@ -346,7 +351,7 @@ const fetchUsers= async() =>{
                             </Select>
                         </FormControl> */}
                         <Button id="submit-task-update-create-form" className={classes.colorWhite} variant="contained" color="primary" type="submit" style={{ marginRight: '10px' }}>Submit</Button>
-                        <Link id="link-back-to-destination" to={`/tasks/${projectId}`} style={{ textDecoration: 'none' }}><Button id="cancel-task-update-create-form" className={classes.colorWhite} variant="contained" color="secondary">Cancel</Button></Link>
+                       <Button id="cancel-task-update-create-form" onClick={() => handleCancel()} className={classes.colorWhite} variant="contained" color="secondary">Cancel</Button>
                     </ValidatorForm>
                 </Container>
             </ThemeProvider>
