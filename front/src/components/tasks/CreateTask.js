@@ -1,4 +1,4 @@
-import React, { useState, useEffect }  from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Link } from "react-router-dom";
 import UserService from "../../services/UserService.js";
 import TaskService from "../../services/TaskService.js"
@@ -17,6 +17,8 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Input from '@material-ui/core/Input';
 import ListItemText from '@material-ui/core/ListItemText';
 import { useHistory } from 'react-router';
+import { makeStyles } from '@material-ui/core/styles';
+import {ProjectContext} from '../../context/ProjectContext';
 
 const theme = createMuiTheme({
     palette: {
@@ -31,22 +33,29 @@ const theme = createMuiTheme({
     },
 });
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-    PaperProps: {
-        style: {
-            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-            width: 250,
+const useStyles = makeStyles((theme) => ({
+    root: {
+        width: 400,
+        '& > * + *': {
+            marginTop: theme.spacing(3),
         },
     },
-};
+    colorWhite: {
+        color: 'white',
+    },
+    container: {
+        width: 400
+    }
 
-const CreateTask = ({taskId, paramProjectId, add}) => {
+}));
+
+const CreateTask = ({handleClose, status, taskId, projectId, add}) => {
+    const {location, setRefreshActive, refreshActive} = useContext(ProjectContext);
+    const classes = useStyles();
     const history = useHistory();
     const[name, setName]=useState('');
     const[description, setDescription]=useState('');
-    const[status, setStatus]=useState('');
+    const[status, setStatus]=useState(status);
     const[priority, setPriority]=useState('');
     const [personName, setPersonName] = useState([]);
     const [userList, setUserList] = useState([]);
@@ -54,16 +63,7 @@ const CreateTask = ({taskId, paramProjectId, add}) => {
     const [userData, setUserData] = useState([]);
 
 
-    // const [state, setState] = useState({
-    //         name: '',
-    //         description: [],
-    //         status: '',
-    //         priority: '',
-    //         task: '',
-    //         personName: [],
-    //         userList: [],
-    //         userListId: [],
-    //         userData: [],
+
         
     // })
 
@@ -140,16 +140,19 @@ const fetchUsers= async() =>{
 
         // setState({ userListId: userId });
 
-        let task = { name: name, description: description, priority: priority, projectId: paramProjectId};
-       console.log(task)
+
+        let taskCreate = { name: state.name, projectId: projectId, status: state.status, description: state.description, priority: state.priority};
+        let taskUpdate = { name: state.name, status: state.status, description: state.description, priority: state.priority};
             //,usersId: userId };
         //  console.log('task=>' + JSON.stringify(task));
         if (add === true) {
-           TaskService.createTask(task).then(res => {
-               console.log(res)
-               
+           TaskService.createTask(taskCreate).then(res => {
                 getSuccessMessage("added");
-                history.push(`/tasks/${paramProjectId}`);
+                if(location === 'active'){
+                    handleClose();
+                    setRefreshActive(!refreshActive);
+                } else {
+                history.push(`/tasks/${projectId}`);}
              
             })
                 .catch((error) => {
@@ -160,10 +163,14 @@ const fetchUsers= async() =>{
                 );
         } else {
             
-            TaskService.updateTask(task, taskId).then(res => {
+            TaskService.updateTask(taskUpdate, taskId).then(res => {
                 getSuccessMessage("updated");
 
-                history.push(`/tasks/${paramProjectId}`);
+                if(location === 'active'){
+                    handleClose();
+                    setRefreshActive(!refreshActive);
+                } else {
+                history.push(`/tasks/${projectId}`);}
 
             })
                 .catch((error) => {
@@ -221,12 +228,16 @@ const fetchUsers= async() =>{
 
     const changePriority = (event) => {
         setPriority(event.target.value);
+
+    }
+    const handleCancel = () => {
+        handleClose();
     }
 
     return (
         <div>
        <ThemeProvider theme={theme}>
-                <Container component="main" maxWidth="xs">
+                <Container component="main" className={classes.container}>
 
                     <ValidatorForm onSubmit={saveOrUpdatetask}>
 
@@ -238,7 +249,7 @@ const fetchUsers= async() =>{
                             // required
                             InputLabelProps={{shrink: true}}
                             fullWidth
-                            id="task"
+                            id="name-task"
                             label="Task name"
                             name="task"
                             value={name}
@@ -256,7 +267,7 @@ const fetchUsers= async() =>{
                             InputLabelProps={{shrink: true}}
                             // required
                             fullWidth
-                           id="filled-textarea"
+                           id="filled-textarea-task"
                             label="Description"
                             name="description"
                             value={description}
@@ -316,8 +327,9 @@ const fetchUsers= async() =>{
                                 ))}
                             </Select>
                         </FormControl> */}
-                        <Button id="icon" variant="contained" color="primary" type="submit" style={{ marginRight: '10px' }}>Submit</Button>
-                        <Link to={`/tasks/${paramProjectId}`} style={{ textDecoration: 'none' }}><Button id="icon" variant="contained" color="secondary">Cancel</Button></Link>
+
+                        <Button id="submit-task-update-create-form" className={classes.colorWhite} variant="contained" color="primary" type="submit" style={{ marginRight: '10px' }}>Submit</Button>
+                       <Button id="cancel-task-update-create-form" onClick={() => handleCancel()} className={classes.colorWhite} variant="contained" color="secondary">Cancel</Button>
                     </ValidatorForm>
                 </Container>
             </ThemeProvider>

@@ -40,6 +40,19 @@ const useStyles = makeStyles({
     },
     tableRow: {
         height: 60,
+    },
+    colorWhite: {
+        color: 'white'
+    },
+    filterProjects: {
+        marginLeft: 10,
+        textTransform: 'none',
+        backgroundColor: '#f5f4f4',
+        border: 'none',
+        '&:hover': {
+            backgroundColor: '#dddbdb',
+        }
+
     }
 });
 
@@ -47,7 +60,7 @@ function ProjectList() {
 
     let history = useHistory();
 
-    const { rowsPerPage, setRowsPerPage, page, setPage, setActiveProject } = useContext(ProjectContext);
+    const { rowsPerPage, setRowsPerPage, page, setPage, setActiveProject, setProjectName } = useContext(ProjectContext);
     const value = useContext(AuthContext);
 
     const [projectBoss, setProjectBoss] = useState(false);
@@ -57,6 +70,7 @@ function ProjectList() {
     const [elementCount, setElementCount] = useState(1);
     const [errorsFromBack, setErrorsFromBack] = useState([]);
     const [refresh, setRefresh] = useState(false);
+    const [filtered, setFiltered] = useState(false);
 
 
 
@@ -94,6 +108,9 @@ function ProjectList() {
     const deleteProject = (id) => {
         ProjectService.deleteProject(id).then(res => {
             getSuccessMessage("deleted");
+            if (projects.length === 1 && page > 0) {
+                setPage(page - 1);
+            }
             setRefresh(!refresh);
         })
             .catch((error) => {
@@ -134,8 +151,10 @@ function ProjectList() {
         setOpen(false);
     };
 
-    const handleRedirect = (rowId) => {
+    const handleRedirect = (rowId, rowName) => {
+        setProjectName(rowName);
         history.push(`/backlog/${rowId}`);
+
     }
 
     // end project delete confirmation dialog
@@ -166,6 +185,10 @@ function ProjectList() {
         };
     }
 
+    const changeFiltered = () => {
+        setFiltered(!filtered);
+    }
+
     return (
 
         <ThemeProvider theme={theme}>
@@ -175,9 +198,10 @@ function ProjectList() {
                         {projectBoss && (
                             <Link to={`/projects/-1`}>
                                 <Fab size="medium" color="primary" className={classes.fab + ' ' + classes.create}>
-                                    <AddIcon id="icon" />
+                                    <AddIcon className={classes.colorWhite} id="add-project-button" />
                                 </Fab>
                             </Link>)}
+                        <Button id="filter-project-by-user" onClick={changeFiltered} className={classes.filterProjects} variant="outlined"><span style={{ fontFamily: 'M PLUS 1p', fontSize: 15 }}>Only My Projects</span></Button>
                     </div>
                     <Table className={classes.table} size="small" aria-label="a dense table">
                         <TableHead>
@@ -197,7 +221,7 @@ function ProjectList() {
 
                                     <TableRow key={row.id} className={classes.tableRow}>
 
-                                        <TableCell onClick={() => handleRedirect(row.id)} style={{ cursor: 'pointer' }}><span>{row.name}</span></TableCell>
+                                        <TableCell onClick={() => handleRedirect(row.id, row.name)} style={{ cursor: 'pointer' }}><span>{row.name}</span></TableCell>
 
                                         <TableCell align="center">{row.description}</TableCell>
                                         <TableCell align="center"><span style={{ color: row.status === 'ACTIVE' ? '#cf932b' : '#63cf7f' }}>{row.status}</span></TableCell>
@@ -206,13 +230,13 @@ function ProjectList() {
                                         {projectBoss && (
                                             <TableCell align="right">
 
-                                                <Fab size="small" color="secondary" onClick={() => history.push(`/projects/${row.id}`)} aria-label="Edit" className={classes.fab}>
-                                                    <EditIcon id="icon"></EditIcon>
+                                                <Fab id="link-to-edit-projects1" size="small" color="secondary" onClick={() => history.push(`/projects/${row.id}`)} aria-label="Edit" className={classes.fab}>
+                                                    <EditIcon className={classes.colorWhite}></EditIcon>
                                                 </Fab>
 
 
-                                                <Fab id="delete-button" size="small" aria-label="Delete" className={classes.fab} onClick={() => handleClickOpen(row.id, row.name)}>
-                                                    <DeleteIcon id="icon" />
+                                                <Fab id="delete-project-button" size="small" aria-label="Delete" className={classes.fab} onClick={() => handleClickOpen(row.id, row.name)}>
+                                                    <DeleteIcon className={classes.colorWhite} />
                                                 </Fab>
 
                                                 <Dialog
@@ -223,8 +247,8 @@ function ProjectList() {
                                                     <DialogTitle id="alert-dialog-title">{`Are you sure you want to delete project: ${deleteName}?`}</DialogTitle>
 
                                                     <DialogActions>
-                                                        <Button onClick={handleClose} color="primary">CANCEL</Button>
-                                                        <Button onClick={() => deleteProject(deleteId)} color="primary" autoFocus>OK</Button>
+                                                        <Button id="dialog-project-delete-cancel" onClick={handleClose} color="primary">CANCEL</Button>
+                                                        <Button id="dialog-project-delete-submit" onClick={() => deleteProject(deleteId)} color="primary" autoFocus>OK</Button>
                                                     </DialogActions>
                                                 </Dialog>
                                             </TableCell>)}

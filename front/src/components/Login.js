@@ -66,6 +66,9 @@ const useStyles = makeStyles({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
+  colorWhite: {
+    color: 'white'
+  }
 });
 
 const API_URL = "http://localhost:8080/api/auth/";
@@ -125,7 +128,7 @@ export default function SignIn() {
             Sign in
         </Typography>
 
-          <ValidatorForm className={classes.form} onSubmit={handleSubmit}>
+          <ValidatorForm id="login-form" className={classes.form} onSubmit={handleSubmit}>
             {(errUnauthorized === 403 || errUnauthorized === 401) && <div className="alert alert-danger" role="alert"> Please double-check the email and password you entered and try again.</div>}
 
             <TextValidator
@@ -133,7 +136,7 @@ export default function SignIn() {
               margin="normal"
               // required
               fullWidth
-              id="email"
+              id="email-login"
               label="Email Address"
               name="email"
               value={email}
@@ -151,25 +154,26 @@ export default function SignIn() {
               name="password"
               label="Password"
               type="password"
-              id="password"
+              id="password-login"
               value={password}
               validators={['required']}
               errorMessages={['This field is required']}
               onChange={handlePasswordChange}
             // autoComplete="current-password"
             />
-            <FormControlLabel
+            {/* <FormControlLabel id="remember-me"
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
-            />
+            /> */}
             <Button
+            id="login-submit"
               type="submit"
               fullWidth
               variant="contained"
               color="primary"
               className={classes.submit}
             >
-              <span id="icon">Sign In</span>
+              <span className={classes.colorWhite}>Sign In</span>
             </Button>
             <Grid container>
               {/* <Grid item xs>
@@ -177,11 +181,11 @@ export default function SignIn() {
                 Forgot password?
               </Link>
             </Grid> */}
-              <Grid item>
+              {/* <Grid item>
                 <Link href="#" variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link>
-              </Grid>
+              </Grid> */}
             </Grid>
           </ValidatorForm>
 

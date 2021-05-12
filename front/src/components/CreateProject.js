@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { Link, useHistory } from "react-router-dom";
 import UserService from "../services/UserService";
 import ProjectService from "../services/ProjectService";
@@ -18,6 +18,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import { createFilterOptions } from '@material-ui/lab/Autocomplete';
 import { makeStyles } from '@material-ui/core/styles';
 import { withStyles } from "@material-ui/core/styles";
+import { ProjectContext } from './../context/ProjectContext';
 
 
 const CustomAutocomplete = withStyles({
@@ -29,8 +30,11 @@ const CustomAutocomplete = withStyles({
         variant: "outlined",
         position: "relative",
         border: "1px solid #be9ddf",
-    },  
-        
+        width: "100%",
+        display: "flex",
+        justifyContent: "space-between",
+    },
+
 })(Autocomplete);
 
 
@@ -38,15 +42,15 @@ const theme = createMuiTheme({
 
     overrides: {
         MuiChip: {
-          deleteIcon: {
-            color: '#be9ddf',
+            deleteIcon: {
+                color: '#be9ddf',
                 "&:hover": {
-                  color: '#8d6dad'
+                    color: '#8d6dad'
                 }
-              
-          }
-        }
-      },
+
+            }
+        },
+    },
     palette: {
         primary: {
             main: '#7eb8da',
@@ -71,6 +75,9 @@ const useStyles = makeStyles((theme) => ({
             marginTop: theme.spacing(3),
         },
     },
+    colorWhite: {
+        color: 'white',
+    }
 }));
 
 
@@ -78,6 +85,7 @@ function CreateProject({ match }) {
 
     const classes = useStyles();
 
+    const { location, activeProject } = useContext(ProjectContext);
     let history = useHistory();
     const [id, setId] = useState(match.params.id);
     const [title, setTitle] = useState('');
@@ -165,7 +173,11 @@ function CreateProject({ match }) {
         } else {
             ProjectService.updateProject(project, id).then(res => {
                 getSuccessMessage("updated");
-                history.push('/projects');
+                if (activeProject && location === 'active') {
+                    history.push(`/active-board/${activeProject}`)
+                } else {
+                    history.push('/projects');
+                }
             })
                 .catch((error) => {
                     getErrorMessage();
@@ -219,7 +231,7 @@ function CreateProject({ match }) {
     return (
         <ThemeProvider theme={theme}>
             <Container component="main" maxWidth="xs" className={classes.root}>
-                <ValidatorForm onSubmit={saveOrUpdateProject}>
+                <ValidatorForm id="create-update-project-form" onSubmit={saveOrUpdateProject}>
                     <Typography color="secondary" component="h1" variant="h5">{getTitle()}</Typography>
                     <TextValidator
                         variant="outlined"
@@ -239,6 +251,7 @@ function CreateProject({ match }) {
                     <TextValidator
                         variant="outlined"
                         margin="normal"
+                        multiline
                         required
                         fullWidth
                         id="filled-textarea"
@@ -258,8 +271,8 @@ function CreateProject({ match }) {
                             value={status}
                             onChange={changeStatus}
                         >
-                            <MenuItem style={{color : '#cf932b', backgroundColor : 'transparent'}} value={`ACTIVE`}><span style={{color : '#cf932b'}}>ACTIVE</span></MenuItem>
-                            <MenuItem style={{color : '#63cf7f', backgroundColor : 'transparent'}} value={`DONE`}><span style={{color : '#63cf7f'}}>DONE</span></MenuItem>
+                            <MenuItem style={{ color: '#cf932b', backgroundColor: 'transparent' }} value={`ACTIVE`}><span style={{ color: '#cf932b' }}>ACTIVE</span></MenuItem>
+                            <MenuItem style={{ color: '#63cf7f', backgroundColor: 'transparent' }} value={`DONE`}><span style={{ color: '#63cf7f' }}>DONE</span></MenuItem>
 
                         </Select>
                     </FormControl> : ''}
@@ -282,8 +295,8 @@ function CreateProject({ match }) {
                             )}
                         />
                     </FormControl>
-                    <Button id="icon" variant="contained" color="primary" type="submit" style={{ marginRight: '10px' }}>Submit</Button>
-                    <Link to={'/projects'} style={{ textDecoration: 'none' }}><Button id="icon" variant="contained" color="secondary">Cancel</Button></Link>
+                    <Button id="submit-project-update-create-form" className={classes.colorWhite} variant="contained" color="primary" type="submit" style={{ marginRight: '10px' }}>Submit</Button>
+                    <Link to={activeProject && (location === 'active' ? `/active-board/${activeProject}` : '/projects')} style={{ textDecoration: 'none' }}><Button id="cancel-project-update-create-form" className={classes.colorWhite} variant="contained" color="secondary">Cancel</Button></Link>
                 </ValidatorForm>
             </Container>
         </ThemeProvider>

@@ -51,7 +51,7 @@ body, html, .App, #root, .auth-wrapper {
 
 .projectHeadingStyle {
   display: flex;
-justify-content: space-between;
+justify-content: start;
 align-items: center;
 margin-bottom: 20px;
 padding: 2%;

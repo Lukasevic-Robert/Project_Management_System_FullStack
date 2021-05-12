@@ -10,14 +10,14 @@ import CreateTask from "../tasks/CreateTask.js"
 import CloseIcon from '@material-ui/icons/Close';
 
 const theme = createMuiTheme({
-    palette: {
-        primary: {
-            main: '#be9ddf',
-        },
-        secondary: {
-            main: '#ffa5d8',
-        },
+  palette: {
+    primary: {
+      main: '#be9ddf',
     },
+    secondary: {
+      main: '#ffa5d8',
+    },
+  },
 });
 
 const useStyles = makeStyles((theme) => ({
@@ -29,17 +29,19 @@ const useStyles = makeStyles((theme) => ({
   },
   paper: {
     backgroundColor: theme.palette.background.paper,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
     // border: '1px solid #000',
-    backgroundColor:'rgb(255, 255, 255)',
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
-    width: '80vw',
+    width: '60vw',
     height: '80vh',
-    overflow:'auto'
+    overflow: 'auto'
   },
 }));
 
-const ViewTask = ({ task, projectId, add }) => {
+const ViewTask = ({location, status, task, projectId, add }) => {
   const classes = useStyles();
   const history = useHistory();
 
@@ -55,21 +57,21 @@ const ViewTask = ({ task, projectId, add }) => {
 
   const getErrorMessage = () => {
     const errorMessage = swal({
-        text: "Something went wrong! ",
-        button: "Go back to backlog",
-        icon: "warning",
-        dangerMode: true,
+      text: "Something went wrong! ",
+      button: "Go back to backlog",
+      icon: "warning",
+      dangerMode: true,
     });
     return errorMessage;
-}
+  }
 
   return (
     <div>
-      <div type="button" onClick={handleOpen} style={{width: '100%'}}>
-      {add?<div>Add new task </div>:<div>{task.name}</div>}
+      <div id="button-open-create-task-form" type="button" onClick={handleOpen} style={{ width: '100%' }}>
+        {add ? <div>Add new task </div> : <div>{task.name}</div>}
       </div>
-       
-      
+
+
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
@@ -87,13 +89,13 @@ const ViewTask = ({ task, projectId, add }) => {
               {/* <div> <CloseIcon id="icon" onClick={() => handleClose()} style={{textAlign:"right", cursor: 'pointer'}}></CloseIcon></div> */}
 <div>
 
-  <CreateTask taskId={task.id} paramProjectId={projectId} add={add}></CreateTask>
-          
-           
+  <CreateTask handleClose={handleClose} status={status} taskId={task.id} projectId={projectId} add={add}></CreateTask>
+               
            
             </div>
            
           
+
           </div>
         </Fade>
       </Modal>
