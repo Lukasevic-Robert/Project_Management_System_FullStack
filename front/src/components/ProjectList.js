@@ -153,7 +153,8 @@ function ProjectList() {
 
     const handleRedirect = (rowId, rowName) => {
         setProjectName(rowName);
-        history.push(`/tasks/${rowId}`);
+        history.push(`/backlog/${rowId}`);
+
     }
 
     // end project delete confirmation dialog

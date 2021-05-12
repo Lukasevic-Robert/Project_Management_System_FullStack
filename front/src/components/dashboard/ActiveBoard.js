@@ -8,7 +8,6 @@ import swal from 'sweetalert';
 import { useHistory } from 'react-router';
 import ProjectService from "../../services/ProjectService";
 import { Avatar } from "@material-ui/core"
-import { createMuiTheme } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/core/styles';
 import SortIcon from '@material-ui/icons/Sort';
 import FilterListIcon from '@material-ui/icons/FilterList';
@@ -16,7 +15,6 @@ import SearchIcon from '@material-ui/icons/Search';
 import EditIcon from '@material-ui/icons/Edit';
 import Tooltip from "@material-ui/core/Tooltip";
 import ReplyIcon from '@material-ui/icons/Reply';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 import AddIcon from '@material-ui/icons/Add';
 import Typography from '@material-ui/core/Typography';
 import { ProjectContext } from '../../context/ProjectContext';
@@ -71,7 +69,7 @@ const ActiveBoard = ({ match }) => {
                         setActiveTasks(response.data);
                         mapByStatus(response.data);
                         getUsers();
-                        console.log(response.data)
+                     //   console.log(response.data)
                     }
                 })
                 .catch((error) => {

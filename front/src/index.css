@@ -178,3 +178,100 @@ margin-right:-25px;
 margin-bottom:-50px;
 
 }
+
+.dndContainerBacklog{
+  width: 100%;
+padding: 2%;
+}
+
+.dndContainerBacklog .column{
+  width: 100%;
+  background-color: #f7f4f4;
+  box-shadow: 2px 20px 20px rgba(27, 28, 43, 0.2);
+}
+
+.droppable-col-Backlog {
+  width: 100%;
+  padding: 10px 10px 0 10px;
+
+  min-height: 100px;
+}
+
+.itemBacklog{
+  background-color: rgba(191, 195, 214, 0.1);
+  box-shadow: 1px 2px 3px rgba(27, 28, 43, 0.2);
+  border-radius: 1px;
+  min-height: 30px;
+  width: 100%;
+  display: flex;
+  justify-content:left;
+  flex-direction: column;
+color: black;
+text-decoration: none;
+padding: 1%;
+}
+
+
+.boardTaskBacklog{
+  display: flex;
+  justify-content: space-between;
+ vertical-align: bottom;
+}
+
+.headingStyleBacklog{
+  display: flex;
+justify-content: space-between;
+padding: 2%;
+margin-left: 2%;
+margin-right: 2%;
+margin-top: 1%;
+margin-bottom: -3%;
+color: rgb(59, 56, 56);
+}
+
+.headingStyleBacklog div{
+  width: 150px;
+  height: 120px;
+  vertical-align: center;
+  text-align: center;
+}
+.headingStyleBacklog:first-child{
+  width: 30%;
+}
+
+.headingStyleBacklog2 {display:flex; 
+  justify-content:space-between; 
+  margin-bottom:-10px; 
+  margin-left:2%; 
+  margin-right:2%; 
+  margin-top:2%; 
+}
+
+.containerDashboard div{
+height:110px;
+justify-content: center;
+vertical-align: center;
+}
+
+
+.itemBacklog.dragging.medium{
+  background-color:rgb(255, 255, 0, 0.2);
+}
+.itemBacklog.dragging.low{
+  background-color:rgb(0, 128, 0, 0.2);
+}
+.itemBacklog.dragging.high{
+  background-color:rgb(255, 0, 0, 0.2);
+}
+
+.itemBacklog.medium{
+  border-left: 10px solid rgb(255, 255, 0, 0.7);
+}
+
+.itemBacklog.high{
+  border-left: 10px solid rgb(255, 0, 0, 0.7);
+}
+
+.itemBacklog.low{
+  border-left: 10px solid rgb(0, 128, 0, 0.7);
+}

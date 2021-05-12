@@ -18,13 +18,17 @@ class TaskService{
     //     return axios.get(API_BASE_URL + '/v1/projects/page', config);
     // }
 
-    // deleteProject(projectId){
-    //     return axios.delete(API_BASE_URL + '/v1/projects/' + projectId, { headers: authHeader() });
-    // }
+    deleteTask(taskId){
+        return axios.delete(API_BASE_URL + 'tasks/' + taskId, { headers: authHeader() });
+    }
 
 
     getActiveTasks(projectId){
         return axios.get(API_BASE_URL + projectId + '/tasks/active', { headers: authHeader() });
+    }
+
+    getBacklogTasks(projectId){
+        return axios.get(API_BASE_URL + projectId + '/tasks/backlog', { headers: authHeader() });
     }
 
     getAllTasks(){

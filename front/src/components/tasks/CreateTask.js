@@ -53,39 +53,43 @@ const CreateTask = ({handleClose, status, taskId, projectId, add}) => {
     const {location, setRefreshActive, refreshActive} = useContext(ProjectContext);
     const classes = useStyles();
     const history = useHistory();
-    const [state, setState] = useState({
-            name: '',
-            description: '',
-            status: status,
-            priority: '',
-            task: '',
-            personName: [],
-            userList: [],
-            userListId: [],
-            userData: [],
+    const[name, setName]=useState('');
+    const[description, setDescription]=useState('');
+    const[status, setStatus]=useState(status);
+    const[priority, setPriority]=useState('');
+    const [personName, setPersonName] = useState([]);
+    const [userList, setUserList] = useState([]);
+    const [userListId, setUserListId] = useState([]);
+    const [userData, setUserData] = useState([]);
+
+
+
         
-    })
+    // })
 
     useEffect(() => {
-        let isMounted = true;
+        let isMounted;
 const fetchUsers= async() =>{
+    isMounted = true;
     if (isMounted) {
         UserService.getUsers().then((res) => {
             let users = res.data;
             let userInfo = [];
-            users.map((user) => {
+            users.forEach((user) => {
                 let fullname = user.firstName + ` ` + user.lastName;
                 userInfo.push(fullname);
             })
-            setState({ userList: userInfo, userData: users });
+            setUserList(userInfo);
+            setUserData(users);
         })
             .catch((error) => {
                 getErrorMessage();
-               history.push(`/tasks/${projectId}`);
+               history.push(`/tasks/${paramProjectId}`);
             });
         }
 }
         const fetchData = async () => {
+            isMounted = true;
                   if (add === true) {
             return;
         } else {
@@ -99,13 +103,23 @@ const fetchUsers= async() =>{
                 //     users.push(user.firstName + ` ` + user.lastName);
                 //     userId.push(user.id);
                 // })
-             setState({ name: task.name, status: task.status, description: task.description, priority: task.priority})
+                setName(task.name);
+                setStatus(task.status);
+                // let descriptionTemp=[]
+                // task.description.forEach((item)=>{
+                //     descriptionTemp.push(item);
+                // });
+                // setDescription(descriptionTemp);
+                setDescription(task.description);
+                setPriority(task.priority);
+
+            //  setState({ name: task.name, status: task.status, description: task.description, priority: task.priority})
                  //, personName: users, userListId: userId });
                     }
                 })
                 .catch((error) => {
                    getErrorMessage();
-                   history.push(`/tasks/${projectId}`);
+                   history.push(`/tasks/${paramProjectId}`);
                 }
                 );
         };}
@@ -126,6 +140,7 @@ const fetchUsers= async() =>{
 
         // setState({ userListId: userId });
 
+
         let taskCreate = { name: state.name, projectId: projectId, status: state.status, description: state.description, priority: state.priority};
         let taskUpdate = { name: state.name, status: state.status, description: state.description, priority: state.priority};
             //,usersId: userId };
@@ -142,7 +157,7 @@ const fetchUsers= async() =>{
             })
                 .catch((error) => {
                    getErrorMessage();
-                 history.push(`/tasks/${projectId}`);
+                 history.push(`/tasks/${paramProjectId}`);
 
                 }
                 );
@@ -150,6 +165,7 @@ const fetchUsers= async() =>{
             
             TaskService.updateTask(taskUpdate, taskId).then(res => {
                 getSuccessMessage("updated");
+
                 if(location === 'active'){
                     handleClose();
                     setRefreshActive(!refreshActive);
@@ -159,7 +175,7 @@ const fetchUsers= async() =>{
             })
                 .catch((error) => {
                    getErrorMessage();
-                   history.push(`/tasks/${projectId}`);
+                   history.push(`/tasks/${paramProjectId}`);
                 }
                 );
         }
@@ -194,68 +210,29 @@ const fetchUsers= async() =>{
         }
     }
 
-
-//     const handleChange = (e) => {
-//         setState({
-//             [e.target.id]: e.target.value
-//         });
-//     }
-
-//    const handlePersonName = (e) => {
-
-//         setState({
-//             personName: e.target.value
-//         });
-//     }
+    const handlePersonName = (event, value) => {
+        setPersonName(value);
+    }
 
    const changeTitle = (event) => {
-    //    setState({ name: event.target.value})
-       const nameValue=event.target.value;
-       setState(state=>{
-        state = { ...state }
-        state.name=nameValue;
-        return state;
-       })
+       setName(event.target.value);
     }
 
     const changeStatus = (event) => {
-        // setState({status: event.target.value})
-        const statusValue=event.target.value;
-        setState(state=>{
-         state = { ...state }
-         state.status=statusValue;
-         return state;
-        })
+        setStatus(event.target.value);
     }
 
-    const changeContent = (event) => {
-        // setState({content: event.target.value})
-        const descriptionValue=event.target.value;
-        setState(state=>{
-         state = { ...state }
-         state.description=descriptionValue;
-         return state;
-        })
+    const changeContent = (event, value) => {
+       setDescription(event)
     }
 
     const changePriority = (event) => {
-        // setState({priority: event.target.value})
-        const priorityValue=event.target.value;
-        setState(state=>{
-         state = { ...state }
-         state.priority=priorityValue;
-         return state;
-        })
+        setPriority(event.target.value);
+
     }
     const handleCancel = () => {
         handleClose();
     }
-
-    // handleSubmit = (e) =>{
-    //     e.preventDefault();
-    //     console.log(this.state);
-    // }
-
 
     return (
         <div>
@@ -275,7 +252,7 @@ const fetchUsers= async() =>{
                             id="name-task"
                             label="Task name"
                             name="task"
-                            value={state.name}
+                            value={name}
                             // autoComplete="email"
                             validators={['required']}
                             errorMessages={['this field is required']}
@@ -293,7 +270,7 @@ const fetchUsers= async() =>{
                            id="filled-textarea-task"
                             label="Description"
                             name="description"
-                            value={state.description}
+                            value={description}
                             // autoComplete="email"
                          //   validators={['required']}
                          //   errorMessages={['this field is required']}
@@ -304,7 +281,7 @@ const fetchUsers= async() =>{
                             <Select
                                 labelId="demo-simple-select-label"
                                 id="demo-simple-select"
-                                value={state.status}
+                                value={status}
                                 onChange={changeStatus}
                             >
                                 <MenuItem value={`TODO`}>TO DO</MenuItem>
@@ -320,7 +297,7 @@ const fetchUsers= async() =>{
                             <Select
                                 labelId="demo-simple-select-label"
                                 id="demo-simple-select"
-                                value={state.priority}
+                                value={priority}
                                 onChange={changePriority}
                             >
                                 <MenuItem value={`LOW`}>LOW</MenuItem>
@@ -350,6 +327,7 @@ const fetchUsers= async() =>{
                                 ))}
                             </Select>
                         </FormControl> */}
+
                         <Button id="submit-task-update-create-form" className={classes.colorWhite} variant="contained" color="primary" type="submit" style={{ marginRight: '10px' }}>Submit</Button>
                        <Button id="cancel-task-update-create-form" onClick={() => handleCancel()} className={classes.colorWhite} variant="contained" color="secondary">Cancel</Button>
                     </ValidatorForm>
