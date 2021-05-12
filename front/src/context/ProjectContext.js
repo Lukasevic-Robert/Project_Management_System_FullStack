@@ -9,6 +9,7 @@ const ProjectContextProvider = ({ children }) => {
     const [page, setPage] = useState(0);
     const [refreshContext, setRefreshContext] = useState(false);
     const [refreshActive, setRefreshActive] = useState(false);
+    const [refreshBacklog, setRefreshBacklog] = useState(false);
     const [activeProject, setActiveProject] = useState();
     const [projectName, setProjectName] = useState();
     const [location, setLocation] = useState('');
@@ -34,7 +35,9 @@ const ProjectContextProvider = ({ children }) => {
                 location,
                 setLocation,
                 refreshActive, 
-                setRefreshActive
+                setRefreshActive,
+                refreshBacklog,
+                setRefreshBacklog
             }}
         >
             {children}

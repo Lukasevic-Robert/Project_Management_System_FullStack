@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
@@ -89,7 +89,7 @@ const ViewTask = ({location, status, task, projectId, add }) => {
               {/* <div> <CloseIcon id="icon" onClick={() => handleClose()} style={{textAlign:"right", cursor: 'pointer'}}></CloseIcon></div> */}
 <div>
 
-  <CreateTask handleClose={handleClose} status={status} taskId={task.id} projectId={projectId} add={add}></CreateTask>
+  <CreateTask handleClose={handleClose} taskStatus={status} taskId={task.id} projectId={projectId} add={add}></CreateTask>
                
            
             </div>

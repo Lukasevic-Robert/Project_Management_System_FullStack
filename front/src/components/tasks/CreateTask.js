@@ -18,7 +18,7 @@ import Input from '@material-ui/core/Input';
 import ListItemText from '@material-ui/core/ListItemText';
 import { useHistory } from 'react-router';
 import { makeStyles } from '@material-ui/core/styles';
-import {ProjectContext} from '../../context/ProjectContext';
+import { ProjectContext } from '../../context/ProjectContext';
 
 const theme = createMuiTheme({
     palette: {
@@ -49,14 +49,14 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-const CreateTask = ({handleClose, status, taskId, projectId, add}) => {
-    const {location, setRefreshActive, refreshActive} = useContext(ProjectContext);
+const CreateTask = ({ handleClose, taskStatus, taskId, projectId, add }) => {
+    const { location, setRefreshActive, refreshActive, refreshBacklog, setRefreshBacklog } = useContext(ProjectContext);
     const classes = useStyles();
     const history = useHistory();
-    const[name, setName]=useState('');
-    const[description, setDescription]=useState('');
-    const[status, setStatus]=useState(status);
-    const[priority, setPriority]=useState('');
+    const [name, setName] = useState('');
+    const [description, setDescription] = useState('');
+    const [status, setStatus] = useState('');
+    const [priority, setPriority] = useState('');
     const [personName, setPersonName] = useState([]);
     const [userList, setUserList] = useState([]);
     const [userListId, setUserListId] = useState([]);
@@ -64,124 +64,114 @@ const CreateTask = ({handleClose, status, taskId, projectId, add}) => {
 
 
 
-        
+
     // })
 
     useEffect(() => {
+        setStatus(taskStatus);
         let isMounted;
-const fetchUsers= async() =>{
-    isMounted = true;
-    if (isMounted) {
-        UserService.getUsers().then((res) => {
-            let users = res.data;
-            let userInfo = [];
-            users.forEach((user) => {
-                let fullname = user.firstName + ` ` + user.lastName;
-                userInfo.push(fullname);
-            })
-            setUserList(userInfo);
-            setUserData(users);
-        })
-            .catch((error) => {
-                getErrorMessage();
-               history.push(`/tasks/${paramProjectId}`);
-            });
+        const fetchUsers = async () => {
+            isMounted = true;
+            if (isMounted) {
+                UserService.getUsers().then((res) => {
+                    let users = res.data;
+                    let userInfo = [];
+                    users.forEach((user) => {
+                        let fullname = user.firstName + ` ` + user.lastName;
+                        userInfo.push(fullname);
+                    })
+                    setUserList(userInfo);
+                    setUserData(users);
+                })
+                    .catch((error) => {
+                        getErrorMessage();
+                        history.push(`/tasks/${projectId}`);
+                    });
+            }
         }
-}
         const fetchData = async () => {
             isMounted = true;
-                  if (add === true) {
-            return;
-        } else {
-            await TaskService.getTaskById(taskId).then(
-                response => {
-                    if (isMounted) {
-                        let task = response.data;
-             // let users = [];
-                // let userId = [];
-                // task.users.map((user) => {
-                //     users.push(user.firstName + ` ` + user.lastName);
-                //     userId.push(user.id);
-                // })
-                setName(task.name);
-                setStatus(task.status);
-                // let descriptionTemp=[]
-                // task.description.forEach((item)=>{
-                //     descriptionTemp.push(item);
-                // });
-                // setDescription(descriptionTemp);
-                setDescription(task.description);
-                setPriority(task.priority);
+            if (add === true) {
+                return;
+            } else {
+                await TaskService.getTaskById(taskId).then(
+                    response => {
+                        if (isMounted) {
+                            let task = response.data;
 
-            //  setState({ name: task.name, status: task.status, description: task.description, priority: task.priority})
-                 //, personName: users, userListId: userId });
+                            setName(task.name);
+                            setStatus(task.status);
+                            setDescription(task.description);
+                            setPriority(task.priority);
+                        }
+                    })
+                    .catch((error) => {
+                        getErrorMessage();
+                        history.push(`/tasks/${projectId}`);
                     }
-                })
-                .catch((error) => {
-                   getErrorMessage();
-                   history.push(`/tasks/${paramProjectId}`);
-                }
-                );
-        };}
+                    );
+            };
+        }
         fetchData();
-    //   fetchUsers();
+        //   fetchUsers();
         return () => { isMounted = false };
     }, [taskId]);
 
-   const saveOrUpdatetask = (e) => {
+    const saveOrUpdatetask = (e) => {
         e.preventDefault();
-        // let userId = [];
-        // state.userData.map((user) => {
-        //     let username = user.firstName + ` ` + user.lastName;
-        //     if (state.personName.includes(username)) {
-        //         userId.push(user.id);
-        //     }
-        // });
+        console.log(name)
 
-        // setState({ userListId: userId });
-
-
-        let taskCreate = { name: state.name, projectId: projectId, status: state.status, description: state.description, priority: state.priority};
-        let taskUpdate = { name: state.name, status: state.status, description: state.description, priority: state.priority};
-            //,usersId: userId };
+        let taskCreate = { name: name, projectId: projectId, status: status, description: description, priority: priority };
+        let taskUpdate = { name: name, status: status, description: description, priority: priority };
+        //,usersId: userId };
         //  console.log('task=>' + JSON.stringify(task));
         if (add === true) {
-           TaskService.createTask(taskCreate).then(res => {
+            TaskService.createTask(taskCreate).then(res => {
+
                 getSuccessMessage("added");
-                if(location === 'active'){
+                if (location === 'active') {
                     handleClose();
                     setRefreshActive(!refreshActive);
+                } else if (location === 'backlog') {
+                    handleClose();
+                    setRefreshBacklog(!refreshBacklog);
                 } else {
-                history.push(`/tasks/${projectId}`);}
-             
+                    history.push(`/tasks/${projectId}`);
+                }
+
             })
                 .catch((error) => {
-                   getErrorMessage();
-                 history.push(`/tasks/${paramProjectId}`);
+                    getErrorMessage();
+                    history.push(`/tasks/${projectId}`);
 
                 }
                 );
         } else {
-            
+
             TaskService.updateTask(taskUpdate, taskId).then(res => {
                 getSuccessMessage("updated");
 
-                if(location === 'active'){
+                if (location === 'active') {
                     handleClose();
                     setRefreshActive(!refreshActive);
-                } else {
-                history.push(`/tasks/${projectId}`);}
+                } else if (location === 'backlog') {
+                    handleClose();
+                    setRefreshBacklog(!refreshBacklog);
+                }
+                else {
+                    history.push(`/tasks/${projectId}`);
+                }
 
             })
                 .catch((error) => {
-                   getErrorMessage();
-                   history.push(`/tasks/${paramProjectId}`);
+                    getErrorMessage();
+                    history.push(`/tasks/${projectId}`);
                 }
                 );
         }
     }
 
-    const getErrorMessage=()=> {
+    const getErrorMessage = () => {
         const errorMessage = swal({
             text: "Something went wrong! ",
             button: "Go back to task list",
@@ -191,7 +181,7 @@ const fetchUsers= async() =>{
         return errorMessage;
     }
 
-    const getSuccessMessage=(status)=> {
+    const getSuccessMessage = (status) => {
         const successMessage = swal({
             title: "Request successful",
             text: `The task has been ${status}`,
@@ -201,7 +191,7 @@ const fetchUsers= async() =>{
         return successMessage;
     }
 
-    const getTitle=()=> {
+    const getTitle = () => {
         if (add == true) {
             return <h3 className="text-center">Add a new task</h3>
         }
@@ -210,20 +200,20 @@ const fetchUsers= async() =>{
         }
     }
 
-    const handlePersonName = (event, value) => {
-        setPersonName(value);
-    }
+    // const handlePersonName = (event, value) => {
+    //     setPersonName(value);
+    // }
 
-   const changeTitle = (event) => {
-       setName(event.target.value);
+    const changeTitle = (event) => {
+        setName(event.target.value);
     }
 
     const changeStatus = (event) => {
         setStatus(event.target.value);
     }
 
-    const changeContent = (event, value) => {
-       setDescription(event)
+    const changeContent = (event) => {
+        setDescription(event.target.value);
     }
 
     const changePriority = (event) => {
@@ -236,7 +226,7 @@ const fetchUsers= async() =>{
 
     return (
         <div>
-       <ThemeProvider theme={theme}>
+            <ThemeProvider theme={theme}>
                 <Container component="main" className={classes.container}>
 
                     <ValidatorForm onSubmit={saveOrUpdatetask}>
@@ -247,7 +237,7 @@ const fetchUsers= async() =>{
                             variant="outlined"
                             margin="normal"
                             // required
-                            InputLabelProps={{shrink: true}}
+                            InputLabelProps={{ shrink: true }}
                             fullWidth
                             id="name-task"
                             label="Task name"
@@ -264,16 +254,16 @@ const fetchUsers= async() =>{
                             variant="outlined"
                             multiline
                             margin="normal"
-                            InputLabelProps={{shrink: true}}
+                            InputLabelProps={{ shrink: true }}
                             // required
                             fullWidth
-                           id="filled-textarea-task"
+                            id="filled-textarea-task"
                             label="Description"
                             name="description"
                             value={description}
                             // autoComplete="email"
-                         //   validators={['required']}
-                         //   errorMessages={['this field is required']}
+                            //   validators={['required']}
+                            //   errorMessages={['this field is required']}
                             onChange={changeContent}
 
                         />{add != true ? <FormControl required id="form-control">
@@ -329,7 +319,7 @@ const fetchUsers= async() =>{
                         </FormControl> */}
 
                         <Button id="submit-task-update-create-form" className={classes.colorWhite} variant="contained" color="primary" type="submit" style={{ marginRight: '10px' }}>Submit</Button>
-                       <Button id="cancel-task-update-create-form" onClick={() => handleCancel()} className={classes.colorWhite} variant="contained" color="secondary">Cancel</Button>
+                        <Button id="cancel-task-update-create-form" onClick={() => handleCancel()} className={classes.colorWhite} variant="contained" color="secondary">Cancel</Button>
                     </ValidatorForm>
                 </Container>
             </ThemeProvider>

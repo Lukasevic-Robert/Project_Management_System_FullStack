@@ -152,6 +152,7 @@ function ProjectList() {
     };
 
     const handleRedirect = (rowId, rowName) => {
+        setActiveProject(rowId);
         setProjectName(rowName);
         history.push(`/backlog/${rowId}`);
 

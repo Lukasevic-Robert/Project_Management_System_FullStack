@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import _ from "lodash";
 import { Link } from "react-router-dom";
@@ -16,6 +16,7 @@ import DeleteIcon from '@material-ui/icons/DeleteForever';
 import { Button, DialogTitle, DialogActions, Dialog, Box, Card, CardContent, Grid, LinearProgress, Typography } from '@material-ui/core';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
+import { ProjectContext } from "../../context/ProjectContext";
 
 
 const useStyles = makeStyles({
@@ -41,12 +42,14 @@ const theme = createMuiTheme({
 });
 
 const BacklogTasks = ({ match }) => {
-    const activeProjectID = match.params.id;
+
+    const { activeProject, setLocation, refreshBacklog, setRefreshBacklog } = useContext(ProjectContext);
+
     const classes = useStyles();
     const [activeTasks, setActiveTasks] = useState([]);
     const [backlogTasks, setBacklogTasks] = useState([]);
-    const [totalTasksCount, setTotalTasks]= useState(0);
-    const [unfinishedTasksCount, setUnfinishedTasks]= useState(0);
+    const [totalTasksCount, setTotalTasks] = useState(0);
+    const [unfinishedTasksCount, setUnfinishedTasks] = useState(0);
     const history = useHistory();
     const [initials, setInitials] = useState([]);
     let randomColor = Math.floor(Math.random() * 16777215).toString(16);
@@ -67,9 +70,11 @@ const BacklogTasks = ({ match }) => {
     // GET ACTIVE AND BACKLOG TASKS from database 
 
     useEffect(() => {
+        setLocation('backlog');
         let isMounted = true;
+
         const fetchDataActive = async () => {
-            await TaskService.getActiveTasks(activeProjectID).then(
+            await TaskService.getActiveTasks(activeProject).then(
                 response => {
                     if (isMounted) {
                         setActiveTasks(response.data);
@@ -77,14 +82,14 @@ const BacklogTasks = ({ match }) => {
                     }
                 })
                 .catch((error) => {
-                       getErrorMessage();
-                      history.push('/projects');
+                    getErrorMessage();
+                    history.push('/projects');
                 }
                 );
         };
 
         const fetchDataBacklog = async () => {
-            await TaskService.getBacklogTasks(activeProjectID).then(
+            await TaskService.getBacklogTasks(activeProject).then(
                 response => {
                     if (isMounted) {
                         setBacklogTasks(response.data);
@@ -93,8 +98,8 @@ const BacklogTasks = ({ match }) => {
                     }
                 })
                 .catch((error) => {
-                      getErrorMessage();
-                      history.push('/projects');
+                    getErrorMessage();
+                    history.push('/projects');
                 }
                 );
         };
@@ -102,7 +107,7 @@ const BacklogTasks = ({ match }) => {
         fetchDataActive();
         fetchDataBacklog();
         return () => { isMounted = false };
-    }, [activeProjectID]);
+    }, [activeProject, refreshBacklog]);
 
     // MAP TASKS by status 
 
@@ -112,7 +117,7 @@ const BacklogTasks = ({ match }) => {
             state.ACTIVE.items = [];
             return state
         })
-        
+
         for (let i = 0; i < activeTasks.length; i++) {
             activeTasks[i].id = String(activeTasks[i].id);
             if (activeTasks[i].status === "TODO" || activeTasks[i].status === "IN_PROGRESS") {
@@ -120,7 +125,7 @@ const BacklogTasks = ({ match }) => {
                     state = { ...state }
                     state.ACTIVE.items.push(activeTasks[i]);
                     return state
-                }) 
+                })
             }
         }
     }
@@ -131,7 +136,7 @@ const BacklogTasks = ({ match }) => {
             state.BACKLOG.items = [];
             return state
         })
-       
+
         for (let i = 0; i < backlogTasks.length; i++) {
             backlogTasks[i].id = String(backlogTasks[i].id);
             if (backlogTasks[i].status === "BACKLOG") {
@@ -139,7 +144,7 @@ const BacklogTasks = ({ match }) => {
                     state = { ...state }
                     state.BACKLOG.items.push(backlogTasks[i]);
                     return state
-                })                
+                })
             }
         }
 
@@ -179,7 +184,7 @@ const BacklogTasks = ({ match }) => {
     // SEND REQUEST to database to update task status    
     const updateTask = (taskId, newStatus) => {
         let totalTasks = activeTasks.concat(backlogTasks)
-       
+
         let taskToUpdate = totalTasks.find(item => item.id === taskId);
         if (newStatus === 'BACKLOG') {
             taskToUpdate.status = newStatus;
@@ -209,14 +214,14 @@ const BacklogTasks = ({ match }) => {
 
     // GET USERS LIST from database and set initials    
     const getUsers = () => {
-        ProjectService.getProjectById(activeProjectID).then((res) => {
+        ProjectService.getProjectById(activeProject).then((res) => {
             setInitials(initials => {
                 initials = [...initials]
                 initials = [];
                 return initials;
             })
             let project = res.data;
-          
+
             project.users.map((user) => {
                 let userInitials = user.firstName.charAt(0).trim() + user.lastName.charAt(0).trim();
                 setInitials(initials => {
@@ -225,7 +230,7 @@ const BacklogTasks = ({ match }) => {
                     return initials;
                 })
             })
-        
+
             setTitle(project.name);
             setContent(project.description);
             setTotalTasks(project.tasks.length)
@@ -253,22 +258,17 @@ const BacklogTasks = ({ match }) => {
     };
 
     const deleteTask = async (taskId) => {
-     await TaskService.deleteTask(taskId).then(res => {
+        await TaskService.deleteTask(taskId).then(res => {
             getSuccessMessage("deleted");
-            setState(prev => {
-                prev = { ...prev }
-                prev.ACTIVE.items = prev.ACTIVE.items.filter((item) => item.id !== taskId);
-                prev.BACKLOG.items = prev.BACKLOG.items.filter((item) => item.id !== taskId)
-                return prev
-            })
+            setRefreshBacklog(!refreshBacklog);
         })
             .catch((error) => {
                 getErrorMessage();
             }
             );
         handleClose();
-        setTotalTasks(totalTasksCount-1);
-       setUnfinishedTasks(unfinishedTasksCount-1);
+        setTotalTasks(totalTasksCount - 1);
+        setUnfinishedTasks(unfinishedTasksCount - 1);
     }
 
     const getSuccessMessage = (status) => {
@@ -283,112 +283,63 @@ const BacklogTasks = ({ match }) => {
 
     return (
         <div className="activeBoard">
-            <div style={{ fontSize: 'larger', fontWeight: 'bold', marginLeft:'20px' }}>
-                     {title} 
-                </div>
+            <div style={{ fontSize: 'larger', fontWeight: 'bold', marginLeft: '20px' }}>
+                {title}
+            </div>
 
             <div className="container-fluid containerDashboard">
-                <div className="row"> 
-                <div className="col col-7"> 
-                <Card style={{ height: '100%' }} >
-    <CardContent>
-      <Grid container
-        style={{ justifyContent: 'space-between' }}
-      >
-        <Grid item>
-         
-          <Typography
-            color="textPrimary"
-            variant="body2"
-          >
-              {content}
-          </Typography>
-         
-        </Grid>
-       
-      </Grid>
-     
-    </CardContent>
-  </Card>
-                    
-                </div>
-                <div className="col col-2"> 
-                <Card style={{ height: '100%' }} >
-    <CardContent>
-      <Grid container
-        style={{ justifyContent: 'space-between' }}
-      >
-        <Grid item>
-          <Typography
-            color="textSecondary"
-            // gutterBottom
-            variant="caption"
-          >
-            TOTAL TASKS
-          </Typography>
-          <Typography
-            color="textPrimary"
-            variant="h5"
-          >
-            {totalTasksCount}
-          </Typography>
+                <div className="row">
+                    <div className="col col-7">
+                        <Card style={{ height: '100%' }} >
+                            <CardContent>
+                                <Grid container style={{ justifyContent: 'space-between' }}>
+                                    <Grid item>
+                                        <Typography color="textPrimary" variant="body2">{content}</Typography>
+                                    </Grid>
+                                </Grid>
+                            </CardContent>
+                        </Card>
+                    </div>
+                    <div className="col col-2">
+                        <Card style={{ height: '100%' }} >
+                            <CardContent>
+                                <Grid container style={{ justifyContent: 'space-between' }}>
+                                    <Grid item><Typography color="textSecondary" variant="caption">TOTAL TASKS</Typography>
+                                        <Typography color="textPrimary" variant="h5">{totalTasksCount}</Typography>
+                                    </Grid>
+                                </Grid>
+                            </CardContent>
+                        </Card>
+                    </div>
+                    <div className="col col-3">  <Card style={{ height: '100%' }} >
+                        <CardContent>
+                            <Grid container style={{ justifyContent: 'space-between' }}>
+                                <Grid item><Typography color="textSecondary" variant="caption">TASKS PROGRESS</Typography>
+                                    <Typography color="textPrimary" variant="h5">{Math.round(100 - unfinishedTasksCount / totalTasksCount * 100)}%</Typography>
+                                    <Box >
+                                        <LinearProgress style={{ height: '5px', color: 'black' }}
+                                            value={100 - unfinishedTasksCount / totalTasksCount * 100} variant="determinate" />
+                                    </Box>
+                                </Grid>
+                            </Grid>
+                        </CardContent>
+                    </Card>
+                    </div>
 
-        </Grid>
-       
-      </Grid>
-     
-    </CardContent>
-  </Card>
-     
-                </div>
-                <div className="col col-3">  <Card style={{ height: '100%' }} >
-    <CardContent>
-      <Grid container
-        style={{ justifyContent: 'space-between' }}
-      >
-        <Grid item>
-          <Typography
-            color="textSecondary"
-            // gutterBottom
-            variant="caption"
-          >
-            TASKS PROGRESS
-          </Typography>
-          <Typography
-            color="textPrimary"
-            variant="h5"
-          >
-            {Math.round(100-unfinishedTasksCount/totalTasksCount*100)}%
-          </Typography>
-
-          <Box >
-        <LinearProgress style={{height:'5px', color: 'black'}}
-          value={100-unfinishedTasksCount/totalTasksCount*100}
-          variant="determinate"
-        />
-      </Box>
-        </Grid>
-       
-      </Grid>
-     
-    </CardContent>
-  </Card>
-                </div>
-                
 
                 </div>
             </div>
 
-                    
-<div className="headingStyleBacklog2">
-                   <div style={{display:'flex', justifyContent: 'right'}}> <AddIcon/>   <ViewTask task={{}} projectId={activeProjectID} add={true}/>    <SortIcon ></SortIcon>Sort
-                <FilterListIcon></FilterListIcon>Filter<SearchIcon></SearchIcon>Search  </div>                  
 
-<div> <Link to={`/active-board/${match.params.id}`}>
-                    <button className="btn" style={{backgroundColor:'#be9ddf', color:'white'}}>Go to active board</button>
+            <div className="headingStyleBacklog2">
+                <div style={{ display: 'flex', justifyContent: 'right' }}> <AddIcon />   <ViewTask task={{}} status='BACKLOG' projectId={activeProject} add={true} />    <SortIcon ></SortIcon>Sort
+                <FilterListIcon></FilterListIcon>Filter<SearchIcon></SearchIcon>Search  </div>
+
+                <div> <Link to={`/active-board/${match.params.id}`}>
+                    <button className="btn" style={{ backgroundColor: '#be9ddf', color: 'white' }}>Go to active board</button>
                 </Link> </div>
 
-                    </div>
+            </div>
 
             <div className={"dndContainerBacklog"}>
                 <DragDropContext onDragEnd={handleDragEnd}>
@@ -398,7 +349,7 @@ const BacklogTasks = ({ match }) => {
                             <div key={key} className={"column"}>
                                 <div>
                                     <div><h6>{data.title}</h6>
-                                       
+
                                     </div>
 
                                     <Droppable droppableId={key}>
@@ -422,11 +373,11 @@ const BacklogTasks = ({ match }) => {
                                                                         >
                                                                             <div className="boardTaskBacklog">
                                                                                 <div>
-                                                                                    <ViewTask task={el} projectId={activeProjectID} add={false} />
+                                                                                    <ViewTask task={el} status='BACKLOG' projectId={activeProject} add={false} />
                                                                                 </div>
                                                                                 <div>
-                                                                                   
-                                                                                                                                                                        <DeleteIcon id="icon" onClick={() => handleClickOpen(el.id, el.name)} style={{ fontSize: 'large', color: 'grey', cursor: 'pointer' }} />
+
+                                                                                    <DeleteIcon id="icon" onClick={() => handleClickOpen(el.id, el.name)} style={{ fontSize: 'large', color: 'grey', cursor: 'pointer' }} />
                                                                                     {/* </Fab> */}
 
                                                                                     <Dialog
@@ -444,7 +395,7 @@ const BacklogTasks = ({ match }) => {
                                                                                 </div>
                                                                             </div>
 
-                                                                           
+
                                                                         </div>
                                                                     )
                                                                 }}
