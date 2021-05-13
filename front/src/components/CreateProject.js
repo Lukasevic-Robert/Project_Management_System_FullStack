@@ -242,6 +242,7 @@ function CreateProject({ match }) {
                         label="Project name"
                         name="project"
                         value={title}
+                        inputProps={{ maxLength: 50 }}
                         // autoComplete="email"
                         validators={['required']}
                         errorMessages={['this field is required']}

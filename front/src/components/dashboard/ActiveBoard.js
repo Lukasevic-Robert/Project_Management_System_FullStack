@@ -35,7 +35,6 @@ const useStyles = makeStyles({
 const ActiveBoard = ({ match }) => {
     const { projectName, setLocation, refreshActive } = useContext(ProjectContext);
     const { isProjectBoss } = useContext(AuthContext);
-
     const activeProjectID = match.params.id;
     const classes = useStyles();
     const [activeTasks, setActiveTasks] = useState([]);

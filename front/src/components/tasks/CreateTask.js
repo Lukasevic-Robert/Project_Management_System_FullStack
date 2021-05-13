@@ -243,6 +243,7 @@ const CreateTask = ({ handleClose, taskStatus, taskId, projectId, add }) => {
                             label="Task name"
                             name="task"
                             value={name}
+                            inputProps={{ maxLength: 50 }}
                             // autoComplete="email"
                             validators={['required']}
                             errorMessages={['this field is required']}

@@ -52,7 +52,18 @@ const useStyles = makeStyles({
         '&:hover': {
             backgroundColor: '#dddbdb',
         }
-
+    },
+    description: {
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
+        overflow: 'hidden',
+        maxWidth: '150px'
+    },
+    projectName: {
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
+        overflow: 'hidden',
+        maxWidth: '150px'
     }
 });
 
@@ -152,6 +163,9 @@ function ProjectList() {
     };
 
     const handleRedirect = (rowId, rowName) => {
+        localStorage.setItem('activeProjectId', JSON.stringify(rowId));
+        localStorage.setItem('activeProjectName', rowName);
+
         setActiveProject(rowId);
         setProjectName(rowName);
         history.push(`/backlog/${rowId}`);
@@ -208,7 +222,7 @@ function ProjectList() {
                         <TableHead>
                             <TableRow id="table-head" >
                                 <TableCell id="table-cell" >NAME</TableCell>
-                                <TableCell id="table-cell" align="center">DESCRIPTION</TableCell>
+                                <TableCell className={classes.description} id="table-cell" align="center">DESCRIPTION</TableCell>
                                 <TableCell id="table-cell" align="center">STATUS</TableCell>
                                 <TableCell id="table-cell" align="center">TOTAL TASKS</TableCell>
                                 <TableCell id="table-cell" align="center">TODO TASKS</TableCell>
@@ -222,9 +236,9 @@ function ProjectList() {
 
                                     <TableRow key={row.id} className={classes.tableRow}>
 
-                                        <TableCell onClick={() => handleRedirect(row.id, row.name)} style={{ cursor: 'pointer' }}><span>{row.name}</span></TableCell>
+                                        <TableCell className={classes.projectName} onClick={() => handleRedirect(row.id, row.name)} style={{ cursor: 'pointer' }}><span>{row.name}</span></TableCell>
 
-                                        <TableCell align="center">{row.description}</TableCell>
+                                        <TableCell className={classes.description} align="center">{row.description}</TableCell>
                                         <TableCell align="center"><span style={{ color: row.status === 'ACTIVE' ? '#cf932b' : '#63cf7f' }}>{row.status}</span></TableCell>
                                         <TableCell align="center">{row.taskCount}</TableCell>
                                         <TableCell align="center">{row.undoneTaskCount}</TableCell>

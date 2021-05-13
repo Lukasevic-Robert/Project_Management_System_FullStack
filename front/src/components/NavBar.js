@@ -111,6 +111,12 @@ const useStyles = makeStyles((theme) => ({
     }),
     marginLeft: 0,
   },
+  projectName:{
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    maxWidth: '100px'
+  }
 }));
 
 
@@ -207,7 +213,7 @@ export default function NavBar() {
           </List>
           <Divider />
           {activeProject && (<>
-            <ListItem id="button-name-projects-drawer" button key={1} onClick={() => handleRedirect(`/tasks/${activeProject}`)}><ListItemIcon><LayersIcon /></ListItemIcon><ListItemText primary={`${projectName}`} /></ListItem>
+            <ListItem id="button-name-projects-drawer" button key={1} onClick={() => handleRedirect(`/tasks/${activeProject}`)}><ListItemIcon><LayersIcon /></ListItemIcon><ListItemText className={classes.projectName} primary={`${projectName}`} /></ListItem>
             <ListItem id="button-to-backlog-drawer" button key={2} onClick={() => handleRedirect(`/backlog/${activeProject}`)}><ListItemIcon><ViewHeadlineOutlinedIcon /></ListItemIcon><ListItemText primary={'Backlog'} /></ListItem>
             <ListItem id="button-to-activeboard-drawer" button key={3} onClick={() => handleRedirect(`/active-board/${activeProject}`)}><ListItemIcon><ViewWeekOutlinedIcon /></ListItemIcon><ListItemText primary={'Active Board'} /></ListItem> </>)}
           {/* <List>
