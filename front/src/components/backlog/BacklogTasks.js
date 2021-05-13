@@ -27,7 +27,7 @@ const useStyles = makeStyles({
         fontSize: '12px',
         marginRight: '2px'
     },
-    content:{
+    content: {
         wordWrap: 'break-word',
     }
 }
@@ -47,7 +47,7 @@ const theme = createMuiTheme({
 
 const BacklogTasks = ({ match }) => {
 
-    const { activeProject, setLocation, refreshBacklog, setRefreshBacklog } = useContext(ProjectContext);
+    const { activeProjectId, setLocation, refreshBacklog, setRefreshBacklog } = useContext(ProjectContext);
 
     const classes = useStyles();
     const [activeTasks, setActiveTasks] = useState([]);
@@ -78,7 +78,7 @@ const BacklogTasks = ({ match }) => {
         let isMounted = true;
 
         const fetchDataActive = async () => {
-            await TaskService.getActiveTasks(activeProject).then(
+            await TaskService.getActiveTasks(activeProjectId).then(
                 response => {
                     if (isMounted) {
                         setActiveTasks(response.data);
@@ -93,7 +93,7 @@ const BacklogTasks = ({ match }) => {
         };
 
         const fetchDataBacklog = async () => {
-            await TaskService.getBacklogTasks(activeProject).then(
+            await TaskService.getBacklogTasks(activeProjectId).then(
                 response => {
                     if (isMounted) {
                         setBacklogTasks(response.data);
@@ -111,7 +111,7 @@ const BacklogTasks = ({ match }) => {
         fetchDataActive();
         fetchDataBacklog();
         return () => { isMounted = false };
-    }, [activeProject, refreshBacklog]);
+    }, [activeProjectId, refreshBacklog]);
 
     // MAP TASKS by status 
 
@@ -218,7 +218,7 @@ const BacklogTasks = ({ match }) => {
 
     // GET USERS LIST from database and set initials    
     const getUsers = () => {
-        ProjectService.getProjectById(activeProject).then((res) => {
+        ProjectService.getProjectById(activeProjectId).then((res) => {
             setInitials(initials => {
                 initials = [...initials]
                 initials = [];
@@ -296,7 +296,7 @@ const BacklogTasks = ({ match }) => {
                     <div className="col col-7">
                         <Card style={{ height: '100%' }} >
                             <CardContent>
-                                        <Typography className={classes.content} color="textPrimary" variant="body2">{content}</Typography>
+                                <Typography className={classes.content} color="textPrimary" variant="body2">{content}</Typography>
                             </CardContent>
                         </Card>
                     </div>
@@ -315,10 +315,10 @@ const BacklogTasks = ({ match }) => {
                         <CardContent>
                             <Grid container style={{ justifyContent: 'space-between' }}>
                                 <Grid item><Typography color="textSecondary" variant="caption">TASKS PROGRESS</Typography>
-                                    <Typography color="textPrimary" variant="h5">{Math.round(100 - unfinishedTasksCount / totalTasksCount * 100)}%</Typography>
+                                    <Typography color="textPrimary" variant="h5">{totalTasksCount && (Math.round(100 - unfinishedTasksCount / totalTasksCount * 100))}%</Typography>
                                     <Box >
                                         <LinearProgress style={{ height: '5px', color: 'black' }}
-                                            value={100 - unfinishedTasksCount / totalTasksCount * 100} variant="determinate" />
+                                            value={totalTasksCount ? (100 - unfinishedTasksCount / totalTasksCount * 100) : 0} variant="determinate" />
                                     </Box>
                                 </Grid>
                             </Grid>
@@ -328,8 +328,9 @@ const BacklogTasks = ({ match }) => {
                 </div>
             </div>
             <div className="headingStyleBacklog2">
-                <div style={{ display: 'flex', justifyContent: 'right' }}><AddIcon /><ViewTask task={{}} status='BACKLOG' projectId={activeProject} add={true} /><SortIcon ></SortIcon>Sort
-                <FilterListIcon></FilterListIcon>Filter<SearchIcon></SearchIcon>Search  </div>
+                <div style={{ display: 'flex', justifyContent: 'right' }}><AddIcon /><ViewTask task={{}} status='BACKLOG' projectId={activeProjectId} add={true} />
+                {/* <SortIcon ></SortIcon>Sort<FilterListIcon></FilterListIcon>Filter<SearchIcon></SearchIcon>Search   */}
+                </div>
                 <div> <Link to={`/active-board/${match.params.id}`}>
                     <button className="btn" style={{ backgroundColor: '#be9ddf', color: 'white' }}>Go to active board</button>
                 </Link> </div>
@@ -359,7 +360,7 @@ const BacklogTasks = ({ match }) => {
                                                                         >
                                                                             <div className="boardTaskBacklog">
                                                                                 <div>
-                                                                                    <ViewTask task={el} status='BACKLOG' projectId={activeProject} add={false} />
+                                                                                    <ViewTask task={el} status='BACKLOG' projectId={activeProjectId} add={false} />
                                                                                 </div>
                                                                                 <div>
 

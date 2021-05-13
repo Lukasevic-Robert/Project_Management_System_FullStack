@@ -2,6 +2,7 @@ package lt.rebellion.task;
 
 import java.util.List;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
 import org.springframework.http.ResponseEntity;
@@ -57,13 +58,13 @@ public class TaskController {
 
 	// CREATE task ======================================================>
 	@PostMapping("/tasks")
-	public ResponseEntity<Task> createTaskByProjectId(@RequestBody TaskCreateRequestDTO taskRequestDTO) {
+	public ResponseEntity<Task> createTaskByProjectId(@RequestBody @Valid @NotBlank TaskCreateRequestDTO taskRequestDTO) {
 		return taskService.createTask(taskRequestDTO);
 	}
 
 	// UPDATE task by id ================================================>
 	@PutMapping("/tasks/{id}")
-	public ResponseEntity<Task> updateTaskById(@PathVariable Long id, @RequestBody TaskUpdateRequestDTO TaskUpdateRequestDTO) {
+	public ResponseEntity<Task> updateTaskById(@PathVariable Long id, @RequestBody @Valid @NotBlank TaskUpdateRequestDTO TaskUpdateRequestDTO) {
 		return taskService.updateTaskById(id, TaskUpdateRequestDTO);
 	}
 

@@ -46,14 +46,14 @@ public class ProjectController {
 	
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping("/{id}")
-	public Project getProjectById(@PathVariable @NotBlank Long id){
+	public Project getProjectById(@PathVariable @Valid @NotBlank Long id){
 		return projectService.getProjectById(id);
 	}
 	
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping
 	@PreAuthorize("hasRole('ROLE_MODERATOR') or hasRole('ROLE_ADMIN')")
-	public ProjectDTO createProject(@Valid @RequestBody ProjectRequestDTO projectRequestDTO){
+	public ProjectDTO createProject(@Valid @NotBlank @RequestBody ProjectRequestDTO projectRequestDTO){
 		return projectService.createProject(projectRequestDTO);
 	}
 	

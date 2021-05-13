@@ -10,8 +10,9 @@ const ProjectContextProvider = ({ children }) => {
     const [refreshContext, setRefreshContext] = useState(false);
     const [refreshActive, setRefreshActive] = useState(false);
     const [refreshBacklog, setRefreshBacklog] = useState(false);
-    const [activeProject, setActiveProject] = useState(localStorage.getItem('activeProjectId'));
+    const [activeProjectId, setActiveProjectId] = useState(localStorage.getItem('activeProjectId'));
     const [projectName, setProjectName] = useState(localStorage.getItem('activeProjectName'));
+    const [activeProject, setActiveProject] = useState(JSON.parse(localStorage.getItem('activeProject')));
     const [location, setLocation] = useState('');
 
     useEffect(() => {
@@ -22,22 +23,16 @@ const ProjectContextProvider = ({ children }) => {
     return (
         <Provider
             value={{
-                rowsPerPage,
-                setRowsPerPage,
-                page,
-                setPage,
-                refreshContext,
-                setRefreshContext,
-                activeProject,
-                setActiveProject,
-                projectName,
-                setProjectName,
-                location,
-                setLocation,
-                refreshActive, 
-                setRefreshActive,
-                refreshBacklog,
-                setRefreshBacklog
+                rowsPerPage, setRowsPerPage,
+                page, setPage,
+                refreshContext, setRefreshContext,
+                activeProjectId, setActiveProjectId,
+                projectName, setProjectName,
+                location, setLocation,
+                refreshActive, setRefreshActive,
+                refreshBacklog, setRefreshBacklog,
+                activeProject, setActiveProject
+
             }}
         >
             {children}
