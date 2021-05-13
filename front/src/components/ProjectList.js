@@ -71,7 +71,7 @@ function ProjectList() {
 
     let history = useHistory();
 
-    const { rowsPerPage, setRowsPerPage, page, setPage, setActiveProject, setProjectName } = useContext(ProjectContext);
+    const { rowsPerPage, setRowsPerPage, page, setPage, setActiveProjectId, setProjectName, setActiveProject } = useContext(ProjectContext);
     const value = useContext(AuthContext);
 
     const [projectBoss, setProjectBoss] = useState(false);
@@ -89,7 +89,7 @@ function ProjectList() {
     useEffect(() => {
 
         getProjects();
-        setActiveProject('');
+        setActiveProjectId('');
         checkAuthorization();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [page, rowsPerPage, refresh])
@@ -103,6 +103,8 @@ function ProjectList() {
                 setResponseData(response.data);
                 setProjects(response.data.content);
                 setElementCount(response.data.totalElements);
+            
+                // setUsersId(response.data.content.users.id);
 
             },
             error => {
@@ -162,13 +164,26 @@ function ProjectList() {
         setOpen(false);
     };
 
-    const handleRedirect = (rowId, rowName) => {
-        localStorage.setItem('activeProjectId', JSON.stringify(rowId));
-        localStorage.setItem('activeProjectName', rowName);
+    const handleRedirect = (row) => {
+        localStorage.setItem('activeProjectId', JSON.stringify(row.id));
+        localStorage.setItem('activeProjectName', row.name);
+        localStorage.setItem('activeProject', JSON.stringify(row))
+        setActiveProjectId(row.id);
+        setProjectName(row.name);
+        setActiveProject(row);
 
-        setActiveProject(rowId);
-        setProjectName(rowName);
-        history.push(`/backlog/${rowId}`);
+        let usersId = [];
+
+        row.users.map((user) =>{
+            usersId.push(user.id);
+        })
+
+        console.log(row)
+        if (projectBoss || usersId.includes(value.getCurrentUser().id)) {
+            history.push(`/backlog/${row.id}`);
+        } else {
+            history.push(`/tasks/${row.id}`);
+        }
 
     }
 
@@ -216,7 +231,7 @@ function ProjectList() {
                                     <AddIcon className={classes.colorWhite} id="add-project-button" />
                                 </Fab>
                             </Link>)}
-                        <Button id="filter-project-by-user" onClick={changeFiltered} className={classes.filterProjects} variant="outlined"><span style={{ fontFamily: 'M PLUS 1p', fontSize: 15 }}>Only My Projects</span></Button>
+                        {/* <Button id="filter-project-by-user" onClick={changeFiltered} className={classes.filterProjects} variant="outlined"><span style={{ fontFamily: 'M PLUS 1p', fontSize: 15 }}>Only My Projects</span></Button> */}
                     </div>
                     <Table className={classes.table} size="small" aria-label="a dense table">
                         <TableHead>
@@ -236,7 +251,7 @@ function ProjectList() {
 
                                     <TableRow key={row.id} className={classes.tableRow}>
 
-                                        <TableCell className={classes.projectName} onClick={() => handleRedirect(row.id, row.name)} style={{ cursor: 'pointer' }}><span>{row.name}</span></TableCell>
+                                        <TableCell className={classes.projectName} onClick={() => handleRedirect(row)} style={{ cursor: 'pointer' }}><span>{row.name}</span></TableCell>
 
                                         <TableCell className={classes.description} align="center">{row.description}</TableCell>
                                         <TableCell align="center"><span style={{ color: row.status === 'ACTIVE' ? '#cf932b' : '#63cf7f' }}>{row.status}</span></TableCell>
