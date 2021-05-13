@@ -10,8 +10,8 @@ const ProjectContextProvider = ({ children }) => {
     const [refreshContext, setRefreshContext] = useState(false);
     const [refreshActive, setRefreshActive] = useState(false);
     const [refreshBacklog, setRefreshBacklog] = useState(false);
-    const [activeProject, setActiveProject] = useState();
-    const [projectName, setProjectName] = useState();
+    const [activeProject, setActiveProject] = useState(localStorage.getItem('activeProjectId'));
+    const [projectName, setProjectName] = useState(localStorage.getItem('activeProjectName'));
     const [location, setLocation] = useState('');
 
     useEffect(() => {

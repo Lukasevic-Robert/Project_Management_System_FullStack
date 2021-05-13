@@ -26,8 +26,12 @@ const useStyles = makeStyles({
         height: '25px',
         fontSize: '12px',
         marginRight: '2px'
+    },
+    content:{
+        wordWrap: 'break-word',
     }
 }
+
 );
 
 const theme = createMuiTheme({
@@ -292,11 +296,7 @@ const BacklogTasks = ({ match }) => {
                     <div className="col col-7">
                         <Card style={{ height: '100%' }} >
                             <CardContent>
-                                <Grid container style={{ justifyContent: 'space-between' }}>
-                                    <Grid item>
-                                        <Typography color="textPrimary" variant="body2">{content}</Typography>
-                                    </Grid>
-                                </Grid>
+                                        <Typography className={classes.content} color="textPrimary" variant="body2">{content}</Typography>
                             </CardContent>
                         </Card>
                     </div>
@@ -325,41 +325,27 @@ const BacklogTasks = ({ match }) => {
                         </CardContent>
                     </Card>
                     </div>
-
-
                 </div>
             </div>
-
-
             <div className="headingStyleBacklog2">
-                <div style={{ display: 'flex', justifyContent: 'right' }}> <AddIcon />   <ViewTask task={{}} status='BACKLOG' projectId={activeProject} add={true} />    <SortIcon ></SortIcon>Sort
+                <div style={{ display: 'flex', justifyContent: 'right' }}><AddIcon /><ViewTask task={{}} status='BACKLOG' projectId={activeProject} add={true} /><SortIcon ></SortIcon>Sort
                 <FilterListIcon></FilterListIcon>Filter<SearchIcon></SearchIcon>Search  </div>
-
                 <div> <Link to={`/active-board/${match.params.id}`}>
                     <button className="btn" style={{ backgroundColor: '#be9ddf', color: 'white' }}>Go to active board</button>
                 </Link> </div>
-
             </div>
-
             <div className={"dndContainerBacklog"}>
                 <DragDropContext onDragEnd={handleDragEnd}>
                     {_.map(state, (data, key) => {
                         return (
-
                             <div key={key} className={"column"}>
                                 <div>
                                     <div><h6>{data.title}</h6>
-
                                     </div>
-
                                     <Droppable droppableId={key}>
                                         {(provided, snapshot) => {
                                             return (
-                                                <div
-                                                    ref={provided.innerRef}
-                                                    {...provided.droppableProps}
-                                                    className={"droppable-col-Backlog"}
-                                                >
+                                                <div ref={provided.innerRef}{...provided.droppableProps} className={"droppable-col-Backlog"}>
                                                     {data.items.map((el, index) => {
                                                         return (
                                                             <Draggable key={el.id} index={index} draggableId={el.id}>
