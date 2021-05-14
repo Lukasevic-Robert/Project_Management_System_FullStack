@@ -1,12 +1,21 @@
 package lt.rebellion.task;
 
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.supercsv.io.CsvBeanWriter;
+import org.supercsv.io.ICsvBeanWriter;
+import org.supercsv.prefs.CsvPreference;
 
 import lombok.RequiredArgsConstructor;
 import lt.rebellion.exception.NotAuthorizedException;
@@ -50,7 +59,7 @@ public class TaskService {
 	public ResponseEntity<List<Task>> getBacklogTasks(Long id) {
 
 		Project project = projectRepository.findById(id).orElseThrow(() -> new NotFoundException("Project Not Found"));
-		if (!checkAuthorization(project)) {
+		if (!checkAuthorizationToHandleProject(project)) {
 			throw new NotAuthorizedException(HttpStatus.UNAUTHORIZED, "Unauthorized request");
 		}
 		List<Task> tasks = taskRepository.findBacklogTasks(id);
@@ -60,7 +69,7 @@ public class TaskService {
 	// GET active-board tasks ===========================================>
 	public ResponseEntity<List<Task>> getActiveTasks(Long id) {
 		Project project = projectRepository.findById(id).orElseThrow(() -> new NotFoundException("Project Not Found"));
-		if (!checkAuthorization(project)) {
+		if (!checkAuthorizationToHandleProject(project)) {
 			throw new NotAuthorizedException(HttpStatus.UNAUTHORIZED, "Unauthorized request");
 		}
 		List<Task> tasks = taskRepository.findActiveTasks(id);
@@ -73,7 +82,7 @@ public class TaskService {
 		validateTaskId(id);
 		Project project = taskRepository.findById(id).get().getProject();
 
-		if (!checkAuthorization(project)) {
+		if (!checkAuthorizationToHandleProject(project)) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
 		taskRepository.deleteById(id);
@@ -85,7 +94,7 @@ public class TaskService {
 
 		Project project = projectRepository.findById(taskRequestDTO.getProjectId()).get();
 
-		if (!checkAuthorization(project)) {
+		if (!checkAuthorizationToHandleProject(project)) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
 		Task task = new Task(taskRequestDTO.getName(), taskRequestDTO.getDescription(),
@@ -102,7 +111,7 @@ public class TaskService {
 
 		Project project = taskRepository.findById(id).get().getProject();
 
-		if (!checkAuthorization(project)) {
+		if (!checkAuthorizationToHandleProject(project)) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
 		Task task = taskRepository.findById(id).get();
@@ -116,8 +125,35 @@ public class TaskService {
 		return new ResponseEntity<Task>(task, HttpStatus.OK);
 	}
 
+	public void exportToCSV(Long id, HttpServletResponse response) throws IOException {
+		DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
+		String currentDateTime = dateFormatter.format(new Date());
+
+		String headerKey = "Content-Disposition";
+		String headerValue = "attachment; filename=tasks_" + currentDateTime + ".csv";
+		response.setHeader(headerKey, headerValue);
+
+		Project project = projectRepository.findById(id).get();
+
+		if (!checkAuthorizationToHandleProject(project)) {
+			throw new NotAuthorizedException(HttpStatus.UNAUTHORIZED, "Unauthorized request");
+		}
+		List<Task> tasks = project.getTasks();
+
+		ICsvBeanWriter csvWriter = new CsvBeanWriter(response.getWriter(), CsvPreference.STANDARD_PREFERENCE);
+		String[] csvHeader = { "Task ID", "Name", "Description", "Status", "Priority" };
+		String[] nameMapping = { "id", "name", "description", "status", "priority" };
+
+		csvWriter.writeHeader(csvHeader);
+
+		for (Task task : tasks) {
+			csvWriter.write(task, nameMapping);
+		}
+		csvWriter.close();
+	}
+
 	// CHECK Authorization ==============================================>
-	public boolean checkAuthorization(Project project) {
+	public boolean checkAuthorizationToHandleProject(Project project) {
 
 		if (project == null) {
 			throw new NullPointerException();

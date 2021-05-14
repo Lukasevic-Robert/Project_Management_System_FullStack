@@ -14,6 +14,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import lombok.Getter;
 import lombok.Setter;
 
+
 @MappedSuperclass
 @Getter
 @Setter

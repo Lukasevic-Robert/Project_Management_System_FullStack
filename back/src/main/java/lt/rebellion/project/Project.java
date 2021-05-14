@@ -26,7 +26,6 @@ import lt.rebellion.model.EStatus;
 import lt.rebellion.task.Task;
 import lt.rebellion.user.User;
 
-
 @Entity
 @Getter
 @Setter

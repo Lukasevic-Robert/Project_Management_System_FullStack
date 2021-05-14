@@ -1,7 +1,9 @@
 package lt.rebellion.task;
 
+import java.io.IOException;
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
@@ -67,5 +69,10 @@ public class TaskController {
 	public ResponseEntity<Task> updateTaskById(@PathVariable Long id, @RequestBody @Valid @NotBlank TaskUpdateRequestDTO TaskUpdateRequestDTO) {
 		return taskService.updateTaskById(id, TaskUpdateRequestDTO);
 	}
+	
+	@GetMapping("{id}/tasks/export")
+	public void exportToCSV(@PathVariable Long id,  HttpServletResponse response) throws IOException {
+        taskService.exportToCSV(id, response);
+    }
 
 }

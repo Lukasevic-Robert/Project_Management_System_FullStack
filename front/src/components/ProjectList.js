@@ -12,6 +12,7 @@ import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 import { ProjectContext } from '../context/ProjectContext.js';
 import { AuthContext } from '../context/AuthContext.js';
+import SaveIcon from '@material-ui/icons/Save';
 
 
 
@@ -64,7 +65,12 @@ const useStyles = makeStyles({
         whiteSpace: 'nowrap',
         overflow: 'hidden',
         maxWidth: '150px'
-    }
+    },
+    button: {
+        margin: theme.spacing(1),
+        color: 'white',
+        marginLeft: 'auto'
+    },
 });
 
 function ProjectList() {
@@ -123,7 +129,7 @@ function ProjectList() {
     }
 
     const getProjectsByUser = async () => {
-
+        setPage(0);
         await ProjectService.getProjectsByUser(page, rowsPerPage).then(
             response => {
 
@@ -243,6 +249,10 @@ function ProjectList() {
         setFiltered(!filtered);
     }
 
+    const getProjectCSV = () => {
+        ProjectService.requestProjectCSV();
+    }
+
     return (
 
         <ThemeProvider theme={theme}>
@@ -256,6 +266,7 @@ function ProjectList() {
                                 </Fab>
                             </Link>)}
                         <Button id="filter-project-by-user" onClick={changeFiltered} className={classes.filterProjects} variant="outlined"><span style={{ fontFamily: 'M PLUS 1p', fontSize: 15 }}>{!filtered ? <>Only My Projects</> : <>Show All Projects</>}</span></Button>
+                        <Button id="project-csv" onClick={getProjectCSV} variant="contained" color="primary" size="small" className={classes.button} startIcon={<SaveIcon />}>Save .csv</Button>
                     </div>
                     <Table className={classes.table} size="small" aria-label="a dense table">
                         <TableHead>
