@@ -71,7 +71,7 @@ function ProjectList() {
 
     let history = useHistory();
 
-    const { rowsPerPage, setRowsPerPage, page, setPage, setActiveProjectId, setProjectName, setActiveProject } = useContext(ProjectContext);
+    const { rowsPerPage, setRowsPerPage, page, setPage, setActiveProjectId, setProjectName, setActiveProject, refreshProject, setRefreshProject } = useContext(ProjectContext);
     const value = useContext(AuthContext);
 
     const [projectBoss, setProjectBoss] = useState(false);
@@ -80,7 +80,6 @@ function ProjectList() {
     const [responseData, setResponseData] = useState([]);
     const [elementCount, setElementCount] = useState(1);
     const [errorsFromBack, setErrorsFromBack] = useState([]);
-    const [refresh, setRefresh] = useState(false);
     const [filtered, setFiltered] = useState(false);
 
 
@@ -92,7 +91,7 @@ function ProjectList() {
         setActiveProjectId('');
         checkAuthorization();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [page, rowsPerPage, refresh])
+    }, [page, rowsPerPage, refreshProject])
 
 
     const getProjects = async () => {
@@ -124,7 +123,7 @@ function ProjectList() {
             if (projects.length === 1 && page > 0) {
                 setPage(page - 1);
             }
-            setRefresh(!refresh);
+            setRefreshProject(!refreshProject);
         })
             .catch((error) => {
                 getErrorMessage();
@@ -165,26 +164,23 @@ function ProjectList() {
     };
 
     const handleRedirect = (row) => {
-        localStorage.setItem('activeProjectId', JSON.stringify(row.id));
-        localStorage.setItem('activeProjectName', row.name);
-        localStorage.setItem('activeProject', JSON.stringify(row))
-        setActiveProjectId(row.id);
-        setProjectName(row.name);
-        setActiveProject(row);
-
+    
         let usersId = [];
-
         row.users.map((user) =>{
             usersId.push(user.id);
         })
 
-        console.log(row)
         if (projectBoss || usersId.includes(value.getCurrentUser().id)) {
+            localStorage.setItem('activeProjectId', JSON.stringify(row.id));
+            localStorage.setItem('activeProjectName', row.name);
+            localStorage.setItem('activeProject', JSON.stringify(row))
+            setActiveProjectId(row.id);
+            setProjectName(row.name);
+            setActiveProject(row);
             history.push(`/backlog/${row.id}`);
         } else {
             history.push(`/tasks/${row.id}`);
         }
-
     }
 
     // end project delete confirmation dialog

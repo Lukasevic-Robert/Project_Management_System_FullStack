@@ -33,7 +33,7 @@ const useStyles = makeStyles({
 );
 
 const ActiveBoard = ({ match }) => {
-    const { projectName, setLocation, refreshActive } = useContext(ProjectContext);
+    const { projectName, setLocation, refreshActive} = useContext(ProjectContext);
     const { isProjectBoss } = useContext(AuthContext);
     const activeProjectID = match.params.id;
     const classes = useStyles();
@@ -241,8 +241,8 @@ const ActiveBoard = ({ match }) => {
                     </Typography>
                 </div>
 
-                <div style={{ fontSize: 'smaller' }}><SortIcon></SortIcon>Sort
-                <FilterListIcon></FilterListIcon>Filter<SearchIcon></SearchIcon>Search</div>
+                {/* <div style={{ fontSize: 'smaller' }}><SortIcon></SortIcon>Sort
+                <FilterListIcon></FilterListIcon>Filter<SearchIcon></SearchIcon>Search</div> */}
             </div>
             <div className={"dndContainer"}>
                 <DragDropContext onDragEnd={handleDragEnd}>

@@ -14,6 +14,7 @@ const ProjectContextProvider = ({ children }) => {
     const [projectName, setProjectName] = useState(localStorage.getItem('activeProjectName'));
     const [activeProject, setActiveProject] = useState(JSON.parse(localStorage.getItem('activeProject')));
     const [location, setLocation] = useState('');
+    const [refreshProject, setRefreshProject] = useState(false);
 
     useEffect(() => {
         setRowsPerPage(5);
@@ -31,7 +32,8 @@ const ProjectContextProvider = ({ children }) => {
                 location, setLocation,
                 refreshActive, setRefreshActive,
                 refreshBacklog, setRefreshBacklog,
-                activeProject, setActiveProject
+                activeProject, setActiveProject,
+                refreshProject, setRefreshProject
 
             }}
         >

@@ -64,6 +64,11 @@ const ViewProjectTasks = ({ match }) => {
     let history = useHistory();
     const [id, setId] = useState(match.params.id);
     const [personName, setPersonName] = useState([]);
+    const [title, setTitle] = useState('');
+    const [status, setStatus] = useState('');
+    const [content, setContent] = useState('');
+    const [totalTasksCount, setTotalTasks] = useState(0);
+    const [unfinishedTasksCount, setUnfinishedTasks] = useState(0);
 
 
     useEffect(() => {
@@ -75,6 +80,11 @@ const ViewProjectTasks = ({ match }) => {
 
             })
             setPersonName(users);
+            setTitle(project.name);
+            setContent(project.description);
+            setStatus(project.status);
+            setTotalTasks(project.tasks.length);
+            setUnfinishedTasks(project.tasks.filter((item) => item.status !== "DONE").length);
         })
             .catch((error) => {
                 getErrorMessage();
@@ -98,21 +108,21 @@ const ViewProjectTasks = ({ match }) => {
             <Card className={classes.root}>
                 <CardContent>
                     <Typography className={classes.title} color="textSecondary" gutterBottom>
-                        {activeProject.name}
+                        {title}
                     </Typography>
                     <Typography className={classes.content} variant="h5" component="h2">
-                        {activeProject.description}
+                        {content}
                     </Typography>
                     {<br />}
                     <Typography className={classes.pos} color="textSecondary">
-                        <span style={{ fontSize: 24, color: activeProject.status === 'ACTIVE' ? '#cf932b' : '#63cf7f' }}>{activeProject.status}</span>
+                        <span style={{ fontSize: 24, color: status === 'ACTIVE' ? '#cf932b' : '#63cf7f' }}>{status}</span>
                     </Typography>
                     {<hr />}
 
                     <Typography color="textSecondary" variant="caption">TASKS PROGRESS</Typography>
-                    <Typography color="textPrimary" variant="h5">{activeProject.taskCount && (Math.round(100 - activeProject.undoneTaskCount / activeProject.taskCount * 100))}%</Typography>
+                    <Typography color="textPrimary" variant="h5">{totalTasksCount && (Math.round(100 - unfinishedTasksCount / totalTasksCount * 100))}%</Typography>
                     <LinearProgress style={{ height: '5px', color: 'black' }}
-                        value={activeProject.taskCount ? (100 - activeProject.undoneTaskCount / activeProject.taskCount * 100) : 0} variant="determinate" /><br /><br />
+                        value={totalTasksCount ? (100 - unfinishedTasksCount / totalTasksCount * 100) : 0} variant="determinate" /><br /><br />
 
                     <Typography><span>Working on the Project:</span><br /><br /></Typography>
 

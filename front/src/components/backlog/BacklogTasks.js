@@ -394,12 +394,14 @@ const BacklogTasks = ({ match }) => {
                                             )
                                         }}
                                     </Droppable>
+                                    <hr />
                                 </div>
 
                             </div>
                         )
                     })}
                 </DragDropContext>
+        
             </div>
 
         </div>

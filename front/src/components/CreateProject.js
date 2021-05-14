@@ -85,7 +85,7 @@ function CreateProject({ match }) {
 
     const classes = useStyles();
 
-    const { location, activeProjectId } = useContext(ProjectContext);
+    const { location, activeProjectId, setProjectName } = useContext(ProjectContext);
     let history = useHistory();
     const [id, setId] = useState(match.params.id);
     const [title, setTitle] = useState('');
@@ -173,6 +173,7 @@ function CreateProject({ match }) {
         } else {
             ProjectService.updateProject(project, id).then(res => {
                 getSuccessMessage("updated");
+                setProjectName(title);
                 if (activeProjectId && location === 'active') {
                     history.push(`/active-board/${activeProjectId}`)
                 } else {
