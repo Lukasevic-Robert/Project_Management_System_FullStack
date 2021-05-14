@@ -12,9 +12,20 @@ const API_BASE_URL = `http://localhost:8080/api`;
                 page:pageNr, size:sizeNr, sort:`id,desc`
             },
           }
-          console.log(config)
         return axios.get(API_BASE_URL + '/v1/projects/page', config);
     }
+
+    const getProjectsByUser = (pageNr, sizeNr) => {
+        let config = {
+            headers: authHeader(),
+            params: {
+                page:pageNr, size:sizeNr, sort:`id,desc`
+            },
+          }
+        return axios.get(API_BASE_URL + '/v1/projects/pageByUser', config);
+    }
+
+
 
     const deleteProject = (projectId) => {
         return axios.delete(API_BASE_URL + '/v1/projects/' + projectId, { headers: authHeader() });
@@ -37,5 +48,6 @@ export default{
     deleteProject,
     getProjectById,
     createProject,
-    updateProject
+    updateProject,
+    getProjectsByUser
 };
