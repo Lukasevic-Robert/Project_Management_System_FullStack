@@ -87,11 +87,17 @@ function ProjectList() {
     // GET PROJECTS from database ==========================>
     useEffect(() => {
 
-        getProjects();
-        setActiveProjectId('');
-        checkAuthorization();
+        if (!filtered) {
+            getProjects();
+            setActiveProjectId('');
+            checkAuthorization();
+        } else {
+            getProjectsByUser();
+            setActiveProjectId('');
+            checkAuthorization();
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [page, rowsPerPage, refreshProject])
+    }, [page, rowsPerPage, refreshProject, filtered])
 
 
     const getProjects = async () => {
@@ -102,7 +108,29 @@ function ProjectList() {
                 setResponseData(response.data);
                 setProjects(response.data.content);
                 setElementCount(response.data.totalElements);
-            
+
+                // setUsersId(response.data.content.users.id);
+
+            },
+            error => {
+                setErrorsFromBack((error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                    error.message ||
+                    error.toString())
+            }
+        );
+    }
+
+    const getProjectsByUser = async () => {
+
+        await ProjectService.getProjectsByUser(page, rowsPerPage).then(
+            response => {
+
+                setResponseData(response.data);
+                setProjects(response.data.content);
+                setElementCount(response.data.totalElements);
+
                 // setUsersId(response.data.content.users.id);
 
             },
@@ -164,13 +192,13 @@ function ProjectList() {
     };
 
     const handleRedirect = (row) => {
-    
+
         let usersId = [];
-        row.users.map((user) =>{
+        row.users.map((user) => {
             usersId.push(user.id);
         })
 
-        if (projectBoss || usersId.includes(value.getCurrentUser().id)) {
+        if (projectBoss || (usersId.includes(value.getCurrentUser().id) && row.status === 'ACTIVE')) {
             localStorage.setItem('activeProjectId', JSON.stringify(row.id));
             localStorage.setItem('activeProjectName', row.name);
             localStorage.setItem('activeProject', JSON.stringify(row))
@@ -227,7 +255,7 @@ function ProjectList() {
                                     <AddIcon className={classes.colorWhite} id="add-project-button" />
                                 </Fab>
                             </Link>)}
-                        {/* <Button id="filter-project-by-user" onClick={changeFiltered} className={classes.filterProjects} variant="outlined"><span style={{ fontFamily: 'M PLUS 1p', fontSize: 15 }}>Only My Projects</span></Button> */}
+                        <Button id="filter-project-by-user" onClick={changeFiltered} className={classes.filterProjects} variant="outlined"><span style={{ fontFamily: 'M PLUS 1p', fontSize: 15 }}>{!filtered ? <>Only My Projects</> : <>Show All Projects</>}</span></Button>
                     </div>
                     <Table className={classes.table} size="small" aria-label="a dense table">
                         <TableHead>
