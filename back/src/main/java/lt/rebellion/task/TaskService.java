@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,79 +31,49 @@ public class TaskService {
 	private final UserService userService;
 	private final RoleRepository roleRepository;
 
-	// GET all tasks ====================================================>
-	public ResponseEntity<List<Task>> getAllTasks() {
+	public List<Task> getAllTasks() {
 		List<Task> tasks = taskRepository.findAll();
-		return new ResponseEntity<>(tasks, HttpStatus.OK);
+		return tasks;
 	}
 
-	// GET task by id ===================================================>
-	public ResponseEntity<Task> getTaskById(Long id) {
-
+	public Task getTaskById(Long id) {
 		validateTaskId(id);
 		Task task = taskRepository.findById(id).get();
-		return new ResponseEntity<Task>(task, HttpStatus.OK);
+		return task;
 	}
 
-	// GET backlog tasks ================================================>
-	public ResponseEntity<List<Task>> getBacklogTasks(Long id) {
-
+	public List<Task> getBacklogTasks(Long id) {
 		Project project = projectRepository.findById(id).orElseThrow(() -> new NotFoundException("Project Not Found"));
-		if (!checkAuthorization(project)) {
-			throw new NotAuthorizedException(HttpStatus.UNAUTHORIZED, "Unauthorized request");
-		}
+		checkAuthorization(project);
 		List<Task> tasks = taskRepository.findBacklogTasks(id);
-		return new ResponseEntity<>(tasks, HttpStatus.OK);
+		return tasks;
 	}
 
-	// GET active-board tasks ===========================================>
-	public ResponseEntity<List<Task>> getActiveTasks(Long id) {
+	public List<Task> getActiveTasks(Long id) {
 		Project project = projectRepository.findById(id).orElseThrow(() -> new NotFoundException("Project Not Found"));
-		if (!checkAuthorization(project)) {
-			throw new NotAuthorizedException(HttpStatus.UNAUTHORIZED, "Unauthorized request");
-		}
+		checkAuthorization(project);
 		List<Task> tasks = taskRepository.findActiveTasks(id);
-		return new ResponseEntity<>(tasks, HttpStatus.OK);
+		return tasks;
 	}
 
-	// DELETE task by id ================================================>
-	public ResponseEntity<String> deleteTaskById(Long id) {
-
+	public void deleteTaskById(Long id) {
 		validateTaskId(id);
-		Project project = taskRepository.findById(id).get().getProject();
-
-		if (!checkAuthorization(project)) {
-			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-		}
+		checkAuthorization(taskRepository.findById(id).get().getProject());
 		taskRepository.deleteById(id);
-		return new ResponseEntity<>("Task deleted", HttpStatus.OK);
 	}
 
-	// CREATE task ======================================================>
-	public ResponseEntity<Task> createTask(TaskCreateRequestDTO taskRequestDTO) {
-
+	public Task createTask(TaskCreateRequestDTO taskRequestDTO) {
 		Project project = projectRepository.findById(taskRequestDTO.getProjectId()).get();
-
-		if (!checkAuthorization(project)) {
-			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-		}
+		checkAuthorization(project);
 		Task task = new Task(taskRequestDTO.getName(), taskRequestDTO.getDescription(),
 				EPriority.valueOf(taskRequestDTO.getPriority()), EStatus.valueOf(taskRequestDTO.getStatus()), project);
 		taskRepository.save(task);
-
-		return new ResponseEntity<Task>(task, HttpStatus.CREATED);
+		return task;
 	}
 
-	// UPDATE task by id ================================================>
-	public ResponseEntity<Task> updateTaskById(Long id, TaskUpdateRequestDTO taskUpdateRequestDTO) {
-
+	public Task updateTaskById(Long id, TaskUpdateRequestDTO taskUpdateRequestDTO) {
 		validateTaskId(id);
-
-		Project project = taskRepository.findById(id).get().getProject();
-
-		if (!checkAuthorization(project)) {
-			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-		}
+		checkAuthorization(taskRepository.findById(id).get().getProject());
 		Task task = taskRepository.findById(id).get();
 
 		task.setName(taskUpdateRequestDTO.getName());
@@ -112,13 +81,10 @@ public class TaskService {
 		task.setPriority(EPriority.valueOf(taskUpdateRequestDTO.getPriority()));
 		task.setStatus(EStatus.valueOf(taskUpdateRequestDTO.getStatus()));
 		taskRepository.save(task);
-
-		return new ResponseEntity<Task>(task, HttpStatus.OK);
+		return task;
 	}
 
-	// CHECK Authorization ==============================================>
 	public boolean checkAuthorization(Project project) {
-
 		if (project == null) {
 			throw new NullPointerException();
 		}
@@ -133,10 +99,9 @@ public class TaskService {
 				&& users.stream().anyMatch(u -> u.getId().equals(user.getId()))) {
 			return true;
 		}
-		return false;
+		throw new NotAuthorizedException(HttpStatus.UNAUTHORIZED, "Unauthorized request");
 	}
 
-	// VALIDATE Task by id ==============================================>
 	public boolean validateTaskId(Long id) {
 		if (id == null) {
 			throw new NullPointerException();
@@ -144,7 +109,6 @@ public class TaskService {
 		if (!taskRepository.existsById(id)) {
 			throw new NotFoundException("Task not found with id: " + id);
 		}
-
 		return true;
 	}
 
@@ -155,5 +119,4 @@ public class TaskService {
 			throw new UnprocessableEntityException("Task name is required");
 		}
 	}
-
 }

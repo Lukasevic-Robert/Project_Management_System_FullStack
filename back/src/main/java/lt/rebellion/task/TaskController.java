@@ -5,7 +5,7 @@ import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
@@ -26,45 +27,45 @@ public class TaskController {
 
 	private final TaskService taskService;
 
-	// GET all tasks ====================================================>
+	@ResponseStatus(HttpStatus.OK)
 	@GetMapping("/tasks")
-	public ResponseEntity<List<Task>> getAllTasks() {
+	public List<Task> getAllTasks() {
 		return taskService.getAllTasks();
 	}
 
-	// GET task by id ===================================================>
+	@ResponseStatus(HttpStatus.OK)
 	@GetMapping("/tasks/{id}")
-	public ResponseEntity<Task> getTaskById(@NotBlank @PathVariable Long id) {
+	public Task getTaskById(@NotBlank @PathVariable Long id) {
 		return taskService.getTaskById(id);
 	}
-	
-	// GET backlog tasks by project id ==================================>
+
+	@ResponseStatus(HttpStatus.OK)
 	@GetMapping("{id}/tasks/backlog")
-	public ResponseEntity<List<Task>> getBacklogTasks(@NotBlank @PathVariable Long id){
+	public List<Task> getBacklogTasks(@NotBlank @PathVariable Long id) {
 		return taskService.getBacklogTasks(id);
 	}
-	
-	// GET active-board tasks by project id =============================>
+
+	@ResponseStatus(HttpStatus.OK)
 	@GetMapping("{id}/tasks/active")
-	public ResponseEntity<List<Task>> getActiveTasks(@NotBlank @PathVariable Long id){
+	public List<Task> getActiveTasks(@NotBlank @PathVariable Long id) {
 		return taskService.getActiveTasks(id);
 	}
 
-	// DELETE task by id ================================================>
+	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@DeleteMapping("/tasks/{id}")
-	public ResponseEntity<String> deleteTaskById(@PathVariable Long id) {
-		return taskService.deleteTaskById(id);
+	public void deleteTaskById(@PathVariable Long id) {
 	}
 
-	// CREATE task ======================================================>
+	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping("/tasks")
-	public ResponseEntity<Task> createTaskByProjectId(@RequestBody @Valid @NotBlank TaskCreateRequestDTO taskRequestDTO) {
+	public Task createTaskByProjectId(@RequestBody @Valid @NotBlank TaskCreateRequestDTO taskRequestDTO) {
 		return taskService.createTask(taskRequestDTO);
 	}
 
-	// UPDATE task by id ================================================>
+	@ResponseStatus(HttpStatus.OK)
 	@PutMapping("/tasks/{id}")
-	public ResponseEntity<Task> updateTaskById(@PathVariable Long id, @RequestBody @Valid @NotBlank TaskUpdateRequestDTO TaskUpdateRequestDTO) {
+	public Task updateTaskById(@PathVariable Long id,
+			@RequestBody @Valid @NotBlank TaskUpdateRequestDTO TaskUpdateRequestDTO) {
 		return taskService.updateTaskById(id, TaskUpdateRequestDTO);
 	}
 
