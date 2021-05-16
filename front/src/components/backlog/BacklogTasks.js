@@ -263,7 +263,6 @@ const deleteFunction = (taskId, taskName) =>{
         icon: 'warning',
         className: "swalFont",
         buttons: ["Cancel", "Yes, delete it!"],
-        // buttons: true,
         dangerMode: true,
         }).then( async (isConfirm)=>{
           if (isConfirm) {
@@ -275,7 +274,6 @@ const deleteFunction = (taskId, taskName) =>{
                     getErrorMessage();
                 }
                 );
-         
             setTotalTasks(totalTasksCount - 1);
             setUnfinishedTasks(unfinishedTasksCount - 1);
           }
