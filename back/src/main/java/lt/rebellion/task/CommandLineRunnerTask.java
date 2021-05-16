@@ -36,9 +36,7 @@ public class CommandLineRunnerTask implements CommandLineRunner {
 			}
 
 			tasks.get(i).setDescription(
-					"description 1" + " of task: " + tasks.get(i).getName() + "\n" + 
-							"description 2" + " of task: " + tasks.get(i).getName() + "\n" +
-							"description 3" + " of task: " + tasks.get(i).getName());
+					"description 1" + " of task: " + tasks.get(i).getName());
 			taskRepository.save(tasks.get(i));
 		}
 	}

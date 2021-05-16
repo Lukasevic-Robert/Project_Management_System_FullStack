@@ -46,5 +46,21 @@ class TaskService{
     getTaskById(taskId){
         return axios.get(API_BASE_URL+ 'tasks/'+taskId, { headers: authHeader() });
     }
+
+    requestTasksCSV = (projectId) => {
+        return axios({
+            url: API_BASE_URL+ projectId + '/tasks/export',
+            headers: authHeader(),
+            method: 'GET',
+            responseType: 'blob', // important
+          }).then((response) => {
+             const url = window.URL.createObjectURL(new Blob([response.data]));
+             const link = document.createElement('a');
+             link.href = url;
+             link.setAttribute('download', `tasks_${Date.now()}.csv`); //or any other extension
+             document.body.appendChild(link);
+             link.click();
+          });
+    }
 }
 export default new TaskService()

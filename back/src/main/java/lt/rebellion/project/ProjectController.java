@@ -2,6 +2,9 @@ package lt.rebellion.project;
 
 
 
+import java.io.IOException;
+
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -49,6 +53,12 @@ public class ProjectController {
 	@GetMapping("/pageByUser")
 	public Page<ProjectDTO> getPaginatedProjects_ByLoggedInUser(Pageable pageable){
 		return projectService.getPaginatedProjectsByUserId(pageable);
+	}
+	
+	@ResponseStatus(HttpStatus.OK)
+	@GetMapping("/pageFilter")
+	public Page<ProjectDTO> getPaginatedProjectsByKeyword(Pageable pageable, @RequestParam String keyword) {
+		return projectService.getPaginatedProjectsByKeyword(pageable, keyword);
 	}
 	
 	@ResponseStatus(HttpStatus.OK)
@@ -87,4 +97,9 @@ public class ProjectController {
 				message);
 		 projectService.deleteProjectById(id);
 	}
+	
+	@GetMapping("/export")
+	public HttpServletResponse exportToCSV(HttpServletResponse response) throws IOException {
+       return projectService.exportToCSV(response);
+    }
 }

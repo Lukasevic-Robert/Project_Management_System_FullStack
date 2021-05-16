@@ -3,7 +3,7 @@ import '../Projects.css'
 import { makeStyles } from '@material-ui/core/styles';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination, Button, Fab } from '@material-ui/core';
 import ProjectService from "../services/ProjectService.js";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import swal from 'sweetalert';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/DeleteForever';
@@ -12,6 +12,11 @@ import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 import { ProjectContext } from '../context/ProjectContext.js';
 import { AuthContext } from '../context/AuthContext.js';
+import SaveIcon from '@material-ui/icons/Save';
+import InputBase from '@material-ui/core/InputBase';
+import IconButton from '@material-ui/core/IconButton';
+import SearchIcon from '@material-ui/icons/Search';
+
 
 
 
@@ -34,9 +39,11 @@ const useStyles = makeStyles({
     },
     fab: {
         margin: 5,
+
     },
-    create: {
-        marginLeft: 20,
+    createButton: {
+        textTransform: 'none',
+        color: 'white',
     },
     tableRow: {
         height: 60,
@@ -46,6 +53,7 @@ const useStyles = makeStyles({
     },
     filterProjects: {
         marginLeft: 10,
+        height: 40,
         textTransform: 'none',
         backgroundColor: '#f5f4f4',
         border: 'none',
@@ -64,7 +72,36 @@ const useStyles = makeStyles({
         whiteSpace: 'nowrap',
         overflow: 'hidden',
         maxWidth: '150px'
-    }
+    },
+
+    button: {
+        margin: theme.spacing(1),
+        color: 'white',
+        marginLeft: 'auto'
+    },
+    margin: {
+        margin: theme.spacing(1),
+    },
+    search: {
+        padding: '2px 4px',
+        display: 'flex',
+        alignItems: 'center',
+        width: 200,
+        marginLeft: 10,
+        height: 40,
+        border: '1px solid #dddbdb',
+        boxShadow: 'none',
+    },
+    input: {
+        marginLeft: theme.spacing(1),
+        flex: 1,
+        fontSize: 14,
+        fontWeight: '500',
+        fontFamily: 'Fira Sans'
+    },
+    iconButton: {
+        padding: 10,
+    },
 });
 
 function ProjectList() {
@@ -81,23 +118,37 @@ function ProjectList() {
     const [elementCount, setElementCount] = useState(1);
     const [errorsFromBack, setErrorsFromBack] = useState([]);
     const [filtered, setFiltered] = useState(false);
+    const [searchRequest, setSearchRequest] = useState('');
+    const [keyword, setKeyword] = useState('');
+    const [searchSubmit, setSearchSubmit] = useState(false);
 
 
 
     // GET PROJECTS from database ==========================>
     useEffect(() => {
 
-        if (!filtered) {
+        if (searchSubmit) {
+            if (searchRequest === '') {
+                setKeyword('');
+                getProjectByKeyword('');
+            } else {
+                getProjectByKeyword();
+            }
+        } else if (!searchSubmit && searchRequest !== '') {
+            setKeyword('');
+        } else if (keyword !== '') {
+            getProjectByKeyword();
+        } else if (!filtered) {
             getProjects();
-            setActiveProjectId('');
-            checkAuthorization();
         } else {
             getProjectsByUser();
-            setActiveProjectId('');
-            checkAuthorization();
         }
+        setActiveProjectId('');
+        checkAuthorization();
+        setSearchSubmit(false);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [page, rowsPerPage, refreshProject, filtered])
+
 
 
     const getProjects = async () => {
@@ -123,7 +174,7 @@ function ProjectList() {
     }
 
     const getProjectsByUser = async () => {
-
+        setPage(0);
         await ProjectService.getProjectsByUser(page, rowsPerPage).then(
             response => {
 
@@ -236,7 +287,44 @@ function ProjectList() {
     }
 
     const changeFiltered = () => {
+        setPage(0);
+        setKeyword('');
         setFiltered(!filtered);
+    }
+
+    const getProjectCSV = () => {
+        ProjectService.requestProjectCSV();
+    }
+
+    const handleSearch = (event) => {
+        setKeyword(event.target.value);
+        setSearchRequest(event.target.value);
+    }
+    const handleSearchSubmit = (event) => {
+        event.preventDefault();
+        setSearchSubmit(true);
+        if (page > 0) {
+            setPage(0);
+        } else {
+            setRefreshProject(!refreshProject);
+        }
+    }
+    const getProjectByKeyword = async (empty) => {
+        await ProjectService.getProjectByKeyword(empty === '' ? '' : keyword, empty === '' ? 0 : page, rowsPerPage).then((response) => {
+            console.log('getProjectByKeyword ' + searchSubmit);
+
+            setSearchRequest('');
+            setResponseData(response.data);
+            setProjects(response.data.content);
+            setElementCount(response.data.totalElements);
+        },
+            error => {
+                setErrorsFromBack((error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                    error.message ||
+                    error.toString())
+            })
     }
 
     return (
@@ -246,12 +334,25 @@ function ProjectList() {
                 <TableContainer >
                     <div className="projectHeadingStyle">
                         {projectBoss && (
-                            <Link to={`/projects/-1`}>
-                                <Fab size="medium" color="primary" className={classes.fab + ' ' + classes.create}>
-                                    <AddIcon className={classes.colorWhite} id="add-project-button" />
-                                </Fab>
-                            </Link>)}
+                            <Button id="project-create-button" onClick={() => history.push(`/projects/-1`)} size="medium" variant="contained" color="primary" className={classes.createButton}>
+                                <AddIcon style={{ marginLeft: -10 }} className={classes.colorWhite} id="add-project-button" /> Add New Project
+                            </Button>)}
+                    </div>
+                    <div style={{ display: 'flex' }}>
+                        <Paper id="search-bar" component="form" onSubmit={handleSearchSubmit} className={classes.search}>
+                            <InputBase id="search-input"
+                                className={classes.input}
+                                placeholder="Search..."
+                                inputProps={{ 'aria-label': 'search google maps' }}
+                                onChange={handleSearch}
+                                value={searchRequest}
+                            />
+                            <IconButton type="submit" className={classes.iconButton} color="primary" aria-label="search">
+                                <SearchIcon />
+                            </IconButton>
+                        </Paper>
                         <Button id="filter-project-by-user" onClick={changeFiltered} className={classes.filterProjects} variant="outlined"><span style={{ fontFamily: 'M PLUS 1p', fontSize: 15 }}>{!filtered ? <>Only My Projects</> : <>Show All Projects</>}</span></Button>
+                        <Button id="project-csv" onClick={getProjectCSV} variant="contained" color="primary" size="small" className={classes.button} startIcon={<SaveIcon />}>Save .csv</Button>
                     </div>
                     <Table className={classes.table} size="small" aria-label="a dense table">
                         <TableHead>

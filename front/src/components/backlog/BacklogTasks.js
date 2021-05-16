@@ -17,22 +17,9 @@ import { Box, Card, CardContent, Grid, LinearProgress, Typography } from '@mater
 import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 import { ProjectContext } from "../../context/ProjectContext";
+import SaveIcon from '@material-ui/icons/Save';
+import Button from '@material-ui/core/Button';
 
-
-const useStyles = makeStyles({
-    purple: {
-        backgroundColor: 'purple',
-        width: '25px',
-        height: '25px',
-        fontSize: '12px',
-        marginRight: '2px'
-    },
-    content: {
-        wordWrap: 'break-word',
-    }
-}
-
-);
 
 const theme = createMuiTheme({
     palette: {
@@ -44,6 +31,28 @@ const theme = createMuiTheme({
         },
     },
 });
+
+const useStyles = makeStyles({
+    purple: {
+        backgroundColor: 'purple',
+        width: '25px',
+        height: '25px',
+        fontSize: '12px',
+        marginRight: '2px'
+    },
+    content: {
+        wordWrap: 'break-word',
+    },
+    button: {
+        margin: theme.spacing(1),
+        color: 'white',
+        marginLeft: 'auto',
+        display: 'flex',
+        marginRight: '2%',
+    },
+}
+
+);
 
 const BacklogTasks = ({ match }) => {
 
@@ -283,9 +292,15 @@ const deleteFunction = (taskId, taskName) =>{
         return successMessage;
     }
 
+    const getTasksCSV = (projectId) => {
+        console.log(projectId)
+        TaskService.requestTasksCSV(projectId);
+    }
+
     return (
+        <ThemeProvider theme={theme}>
         <div className="activeBoard">
-            <div style={{ fontSize: 'larger', fontWeight: 'bold', marginLeft: '20px' }}>
+            <div style={{ fontSize: 'larger', fontWeight: 'bold', marginLeft: '20px', paddingTop: '10px'}}>
                 {title}
             </div>
 
@@ -325,12 +340,14 @@ const deleteFunction = (taskId, taskName) =>{
                     </div>
                 </div>
             </div>
-            <div className="headingStyleBacklog2">
-                <div style={{ display: 'flex', justifyContent: 'right' }}><AddIcon /><ViewTask task={{}} status='BACKLOG' projectId={activeProjectId} add={true} />
+            <Button id="task-csv" onClick={() => getTasksCSV(activeProjectId)} variant="contained" color="primary" size="small" className={classes.button} startIcon={<SaveIcon />}>Save .csv</Button>
+            <div className="headingStyleBacklog2">  
+            <Button size="small" style={{color: '#4caf50'}}><AddIcon /><ViewTask task={{}} status='BACKLOG' projectId={activeProjectId} add={true} /></Button>
+                {/* <div style={{ display: 'flex', justifyContent: 'right' }}><AddIcon /><ViewTask task={{}} status='BACKLOG' projectId={activeProjectId} add={true} /> */}
                 {/* <SortIcon ></SortIcon>Sort<FilterListIcon></FilterListIcon>Filter<SearchIcon></SearchIcon>Search   */}
-                </div>
+                {/* </div> */}
                 <div> <Link to={`/active-board/${match.params.id}`}>
-                    <button className="btn" style={{ backgroundColor: '#be9ddf', color: 'white' }}>Go to active board</button>
+                    <button className="btn" style={{ backgroundColor: '#7eb8da', color: 'white' }}>Go to active board</button>
                 </Link> </div>
             </div>
             <div className={"dndContainerBacklog"}>
@@ -339,7 +356,7 @@ const deleteFunction = (taskId, taskName) =>{
                         return (
                             <div key={key} className={"column"}>
                                 <div>
-                                    <div><h6>{data.title}</h6>
+                                    <div><Typography color="textPrimary" variant="h6" style={{padding: 10}}>{data.title}</Typography>
                                     </div>
                                     <Droppable droppableId={key}>
                                         {(provided, snapshot) => {
@@ -387,6 +404,7 @@ const deleteFunction = (taskId, taskName) =>{
             </div>
 
         </div>
+        </ThemeProvider>
     )
 }
 

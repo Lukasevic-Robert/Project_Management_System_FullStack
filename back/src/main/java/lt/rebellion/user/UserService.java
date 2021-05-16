@@ -117,7 +117,6 @@ public class UserService {
 
 	}
 
-	// GET Current User ====================================================>
 	public User getCurrentUser() {
 
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -139,12 +138,12 @@ public class UserService {
 		return getCurrentUser().getId();
 	}
 
-	public ResponseEntity<List<User>> getAllUsers() {
+	public List<User> getAllUsers() {
 		List<User> users = userRepository.findAll();
-		return new ResponseEntity<List<User>>(users, HttpStatus.OK);
+		return users;
 	}
 
-	public ResponseEntity<Page<UserResponseDTO>> getAllPaginatedUsers(Pageable pageable) {
+	public Page<UserResponseDTO> getAllPaginatedUsers(Pageable pageable) {
 
 		Page<User> allUsers = userRepository.findAll(pageable);
 		List<UserResponseDTO> allUsersDTOs = allUsers.stream().map(u -> toUserResponseDTO(u))
@@ -152,11 +151,10 @@ public class UserService {
 		Page<UserResponseDTO> backToPage = new PageImpl<UserResponseDTO>(allUsersDTOs, pageable,
 				allUsers.getTotalElements());
 
-		return new ResponseEntity<Page<UserResponseDTO>>(backToPage, HttpStatus.OK);
+		return backToPage;
 	}
 
-	// GET Paginated Users By Keyword ======================================>
-	public ResponseEntity<Page<UserResponseDTO>> getPaginatedUsersByKeyword(Pageable pageable, String keyword) {
+	public Page<UserResponseDTO> getPaginatedUsersByKeyword(Pageable pageable, String keyword) {
 
 		Page<User> allUsers = userRepository.findPaginatedUsersByKeyword(pageable, keyword);
 		List<UserResponseDTO> allUsersDTOs = allUsers.stream().map(u -> toUserResponseDTO(u))
@@ -164,31 +162,20 @@ public class UserService {
 		Page<UserResponseDTO> backToPage = new PageImpl<UserResponseDTO>(allUsersDTOs, pageable,
 				allUsers.getTotalElements());
 
-		return new ResponseEntity<Page<UserResponseDTO>>(backToPage, HttpStatus.OK);
+		return backToPage;
 	}
 
-	// GET User By Id ======================================================>
 	public User getUserById(Long id) {
-		return userRepository.findById(id).get();
+		return userRepository.findById(id).orElseThrow(() -> new NotFoundException("User Not Found"));
 	}
 
-	// CONVERT to UserDTO
 	public UserDTO userToDTO(User user) {
 		return new UserDTO(user.getId(), user.getEmail());
 	}
 
-	// CONVERT to UserResponseDTO
 	public UserResponseDTO toUserResponseDTO(User user) {
 		UserResponseDTO userResponseDTO = new UserResponseDTO(user.getId(), user.getFirstName(), user.getLastName(),
 				user.getEmail(), user.getRoles());
 		return userResponseDTO;
-	}
-
-	public ResponseEntity<User> getResponseUserById(Long id) {
-		User user = getUserById(id);
-		if (user == null) {
-			throw new NotFoundException("User Not Found with id: " + id);
-		}
-		return new ResponseEntity<User>(user, HttpStatus.OK);
 	}
 }
