@@ -1,11 +1,20 @@
 package lt.rebellion.task;
 
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.supercsv.io.CsvBeanWriter;
+import org.supercsv.io.ICsvBeanWriter;
+import org.supercsv.prefs.CsvPreference;
 
 import lombok.RequiredArgsConstructor;
 import lt.rebellion.exception.NotAuthorizedException;
@@ -45,6 +54,7 @@ public class TaskService {
 	public List<Task> getBacklogTasks(Long id) {
 		Project project = projectRepository.findById(id).orElseThrow(() -> new NotFoundException("Project Not Found"));
 		checkAuthorization(project);
+
 		List<Task> tasks = taskRepository.findBacklogTasks(id);
 		return tasks;
 	}
@@ -64,7 +74,9 @@ public class TaskService {
 
 	public Task createTask(TaskCreateRequestDTO taskRequestDTO) {
 		Project project = projectRepository.findById(taskRequestDTO.getProjectId()).get();
+
 		checkAuthorization(project);
+
 		Task task = new Task(taskRequestDTO.getName(), taskRequestDTO.getDescription(),
 				EPriority.valueOf(taskRequestDTO.getPriority()), EStatus.valueOf(taskRequestDTO.getStatus()), project);
 		taskRepository.save(task);
@@ -74,8 +86,8 @@ public class TaskService {
 	public Task updateTaskById(Long id, TaskUpdateRequestDTO taskUpdateRequestDTO) {
 		validateTaskId(id);
 		checkAuthorization(taskRepository.findById(id).get().getProject());
+    
 		Task task = taskRepository.findById(id).get();
-
 		task.setName(taskUpdateRequestDTO.getName());
 		task.setDescription(taskUpdateRequestDTO.getDescription());
 		task.setPriority(EPriority.valueOf(taskUpdateRequestDTO.getPriority()));
@@ -84,7 +96,36 @@ public class TaskService {
 		return task;
 	}
 
+
+	public void exportToCSV(Long id, HttpServletResponse response) throws IOException {
+		DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
+		String currentDateTime = dateFormatter.format(new Date());
+
+		String headerKey = "Content-Disposition";
+		String headerValue = "attachment; filename=tasks_" + currentDateTime + ".csv";
+		response.setHeader(headerKey, headerValue);
+
+		Project project = projectRepository.findById(id).get();
+
+		if (!checkAuthorizationToHandleProject(project)) {
+			throw new NotAuthorizedException(HttpStatus.UNAUTHORIZED, "Unauthorized request");
+		}
+		List<Task> tasks = project.getTasks();
+
+		ICsvBeanWriter csvWriter = new CsvBeanWriter(response.getWriter(), CsvPreference.STANDARD_PREFERENCE);
+		String[] csvHeader = { "Task ID", "Name", "Description", "Status", "Priority" };
+		String[] nameMapping = { "id", "name", "description", "status", "priority" };
+
+		csvWriter.writeHeader(csvHeader);
+
+		for (Task task : tasks) {
+			csvWriter.write(task, nameMapping);
+		}
+		csvWriter.close();
+	}
+
 	public boolean checkAuthorization(Project project) {
+
 		if (project == null) {
 			throw new NullPointerException();
 		}

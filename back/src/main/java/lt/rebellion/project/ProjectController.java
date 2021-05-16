@@ -2,6 +2,9 @@ package lt.rebellion.project;
 
 
 
+import java.io.IOException;
+
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
@@ -77,4 +80,9 @@ public class ProjectController {
 	public void deleteProjectById(@PathVariable @NotBlank Long id){
 		 projectService.deleteProjectById(id);
 	}
+	
+	@GetMapping("/export")
+	public HttpServletResponse exportToCSV(HttpServletResponse response) throws IOException {
+       return projectService.exportToCSV(response);
+    }
 }

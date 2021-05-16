@@ -12,12 +12,14 @@ import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 import { ProjectContext } from '../context/ProjectContext.js';
 import { AuthContext } from '../context/AuthContext.js';
+import SaveIcon from '@material-ui/icons/Save';
 import InputBase from '@material-ui/core/InputBase';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import DirectionsIcon from '@material-ui/icons/Directions';
+
 
 
 const theme = createMuiTheme({
@@ -70,6 +72,12 @@ const useStyles = makeStyles({
         overflow: 'hidden',
         maxWidth: '150px'
     },
+
+    button: {
+        margin: theme.spacing(1),
+        color: 'white',
+        marginLeft: 'auto'
+    },
     margin: {
         margin: theme.spacing(1),
     },
@@ -93,7 +101,6 @@ const useStyles = makeStyles({
     iconButton: {
         padding: 10,
     },
-
 });
 
 function ProjectList() {
@@ -158,7 +165,7 @@ function ProjectList() {
     }
 
     const getProjectsByUser = async () => {
-
+        setPage(0);
         await ProjectService.getProjectsByUser(page, rowsPerPage).then(
             response => {
 
@@ -280,6 +287,10 @@ function ProjectList() {
         setFiltered(!filtered);
     }
 
+    const getProjectCSV = () => {
+        ProjectService.requestProjectCSV();
+    }
+    
     const handleSearch = (event) => {
         setKeyword(event.target.value);
         setSearchRequest(event.target.value);
@@ -338,7 +349,7 @@ function ProjectList() {
                             </IconButton>
                         </Paper>
                         <Button id="filter-project-by-user" onClick={changeFiltered} className={classes.filterProjects} variant="outlined"><span style={{ fontFamily: 'M PLUS 1p', fontSize: 15 }}>{!filtered ? <>Only My Projects</> : <>Show All Projects</>}</span></Button>
-
+                        <Button id="project-csv" onClick={getProjectCSV} variant="contained" color="primary" size="small" className={classes.button} startIcon={<SaveIcon />}>Save .csv</Button>
                     </div>
                     <Table className={classes.table} size="small" aria-label="a dense table">
                         <TableHead>
