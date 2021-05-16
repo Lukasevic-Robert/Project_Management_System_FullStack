@@ -245,7 +245,7 @@ function CreateProject({ match }) {
                         value={title}
                         inputProps={{ maxLength: 50 }}
                         // autoComplete="email"
-                        validators={['required']}
+                        validators={['required', 'matchRegexp:^([A-Za-z]+ )+[A-Za-z]+$|^[A-Za-z]+$']}
                         errorMessages={['this field is required']}
                         onChange={changeTitle}
                         autoFocus

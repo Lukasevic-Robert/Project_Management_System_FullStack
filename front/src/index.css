@@ -51,9 +51,8 @@ body, html, .App, #root, .auth-wrapper {
 
 .projectHeadingStyle {
   display: flex;
-  justify-content: start;
-  align-items: center;
-  padding: 2%;
+  padding: 1%;
+  padding-left: 10px;
 }
 
 .boardHeadingStyle {
