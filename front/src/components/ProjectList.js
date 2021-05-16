@@ -3,7 +3,7 @@ import '../Projects.css'
 import { makeStyles } from '@material-ui/core/styles';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination, Button, DialogTitle, DialogActions, Dialog, Fab } from '@material-ui/core';
 import ProjectService from "../services/ProjectService.js";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import swal from 'sweetalert';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/DeleteForever';
@@ -14,11 +14,9 @@ import { ProjectContext } from '../context/ProjectContext.js';
 import { AuthContext } from '../context/AuthContext.js';
 import SaveIcon from '@material-ui/icons/Save';
 import InputBase from '@material-ui/core/InputBase';
-import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
-import DirectionsIcon from '@material-ui/icons/Directions';
+
 
 
 
@@ -41,9 +39,11 @@ const useStyles = makeStyles({
     },
     fab: {
         margin: 5,
+
     },
-    create: {
-        marginLeft: 20,
+    createButton: {
+        textTransform: 'none',
+        color: 'white',
     },
     tableRow: {
         height: 60,
@@ -127,13 +127,15 @@ function ProjectList() {
     // GET PROJECTS from database ==========================>
     useEffect(() => {
 
-        if(searchSubmit){
-            if(searchRequest === ''){
+        if (searchSubmit) {
+            if (searchRequest === '') {
                 setKeyword('');
                 getProjectByKeyword('');
             } else {
                 getProjectByKeyword();
             }
+        } else if (!searchSubmit && searchRequest !== '') {
+            setKeyword('');
         } else if (keyword !== '') {
             getProjectByKeyword();
         } else if (!filtered) {
@@ -297,7 +299,7 @@ function ProjectList() {
     const getProjectCSV = () => {
         ProjectService.requestProjectCSV();
     }
-    
+
     const handleSearch = (event) => {
         setKeyword(event.target.value);
         setSearchRequest(event.target.value);
@@ -305,13 +307,13 @@ function ProjectList() {
     const handleSearchSubmit = (event) => {
         event.preventDefault();
         setSearchSubmit(true);
-        if(page > 0){
+        if (page > 0) {
             setPage(0);
         } else {
             setRefreshProject(!refreshProject);
         }
     }
-    const getProjectByKeyword = async(empty) => {
+    const getProjectByKeyword = async (empty) => {
         await ProjectService.getProjectByKeyword(empty === '' ? '' : keyword, empty === '' ? 0 : page, rowsPerPage).then((response) => {
             console.log('getProjectByKeyword ' + searchSubmit);
 
@@ -336,17 +338,15 @@ function ProjectList() {
                 <TableContainer >
                     <div className="projectHeadingStyle">
                         {projectBoss && (
-                            <Link to={`/projects/-1`}>
-                                <Fab size="medium" color="primary" className={classes.fab + ' ' + classes.create}>
-                                    <AddIcon className={classes.colorWhite} id="add-project-button" />
-                                </Fab>
-                            </Link>)}
+                            <Button id="project-create-button" onClick={() => history.push(`/projects/-1`)} size="medium" variant="contained" color="primary" className={classes.createButton}>
+                                <AddIcon style={{ marginLeft: -10 }} className={classes.colorWhite} id="add-project-button" /> Add New Project
+                            </Button>)}
                     </div>
                     <div style={{ display: 'flex' }}>
                         <Paper id="search-bar" component="form" onSubmit={handleSearchSubmit} className={classes.search}>
                             <InputBase id="search-input"
                                 className={classes.input}
-                                placeholder="Search Projects"
+                                placeholder="Search..."
                                 inputProps={{ 'aria-label': 'search google maps' }}
                                 onChange={handleSearch}
                                 value={searchRequest}

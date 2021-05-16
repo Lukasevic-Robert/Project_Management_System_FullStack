@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -33,6 +35,10 @@ public class ProjectService {
 	private final UserService userService;
 	private final TaskRepository taskRepository;
 	
+	
+	private static final Logger log = LoggerFactory.getLogger(ProjectService.class);
+
+	
 	public Page<ProjectDTO> findPaginated(Pageable pageable) {
 		Page<ProjectDTO> allProjects = projectRepository.findAll(pageable).map(this::toProjectDTO);
 		return allProjects;
@@ -57,7 +63,7 @@ public class ProjectService {
 	}
 
 	public ProjectDTO createProject(ProjectRequestDTO projectRequestDTO) {
-
+log.warn(projectRequestDTO.getDescription());
 		Project project = new Project(projectRequestDTO.getName(), projectRequestDTO.getDescription());
 		Set<User> userSet = new HashSet<>(projectRequestDTO.getUsersId().stream().map(id -> userService.getUserById(id))
 				.collect(Collectors.toList()));
