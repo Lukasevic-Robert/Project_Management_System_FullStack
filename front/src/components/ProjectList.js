@@ -13,6 +13,12 @@ import { ThemeProvider } from '@material-ui/styles';
 import { ProjectContext } from '../context/ProjectContext.js';
 import { AuthContext } from '../context/AuthContext.js';
 import SaveIcon from '@material-ui/icons/Save';
+import InputBase from '@material-ui/core/InputBase';
+import Divider from '@material-ui/core/Divider';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
+import SearchIcon from '@material-ui/icons/Search';
+import DirectionsIcon from '@material-ui/icons/Directions';
 
 
 
@@ -66,10 +72,34 @@ const useStyles = makeStyles({
         overflow: 'hidden',
         maxWidth: '150px'
     },
+
     button: {
         margin: theme.spacing(1),
         color: 'white',
         marginLeft: 'auto'
+    },
+    margin: {
+        margin: theme.spacing(1),
+    },
+    search: {
+        padding: '2px 4px',
+        display: 'flex',
+        alignItems: 'center',
+        width: 200,
+        marginLeft: 10,
+        height: 40,
+        border: '1px solid #dddbdb',
+        boxShadow: 'none',
+    },
+    input: {
+        marginLeft: theme.spacing(1),
+        flex: 1,
+        fontSize: 14,
+        fontWeight: '500',
+        fontFamily: 'Fira Sans'
+    },
+    iconButton: {
+        padding: 10,
     },
 });
 
@@ -87,13 +117,19 @@ function ProjectList() {
     const [elementCount, setElementCount] = useState(1);
     const [errorsFromBack, setErrorsFromBack] = useState([]);
     const [filtered, setFiltered] = useState(false);
+    const [searchRequest, setSearchRequest] = useState('');
+    const [keyword, setKeyword] = useState('');
 
 
 
     // GET PROJECTS from database ==========================>
     useEffect(() => {
 
-        if (!filtered) {
+        if (keyword !== '') {
+            getProjectByKeyword();
+            setActiveProjectId('');
+            checkAuthorization();
+        } else if (!filtered) {
             getProjects();
             setActiveProjectId('');
             checkAuthorization();
@@ -246,11 +282,44 @@ function ProjectList() {
     }
 
     const changeFiltered = () => {
+        setPage(0);
+        setKeyword('');
         setFiltered(!filtered);
     }
 
     const getProjectCSV = () => {
         ProjectService.requestProjectCSV();
+    }
+    
+    const handleSearch = (event) => {
+        setKeyword(event.target.value);
+        setSearchRequest(event.target.value);
+    }
+    const handleSearchSubmit = (event) => {
+        event.preventDefault();
+        setPage(0);
+        if (searchRequest === '') {
+            setKeyword('');
+            getProjectByKeyword('');
+        } else {
+            getProjectByKeyword();
+        }
+    }
+    const getProjectByKeyword = (empty) => {
+        ProjectService.getProjectByKeyword(empty === '' ? '' : keyword, page, rowsPerPage).then((response) => {
+
+            setSearchRequest('');
+            setResponseData(response.data);
+            setProjects(response.data.content);
+            setElementCount(response.data.totalElements);
+        },
+            error => {
+                setErrorsFromBack((error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                    error.message ||
+                    error.toString())
+            })
     }
 
     return (
@@ -265,6 +334,20 @@ function ProjectList() {
                                     <AddIcon className={classes.colorWhite} id="add-project-button" />
                                 </Fab>
                             </Link>)}
+                    </div>
+                    <div style={{ display: 'flex' }}>
+                        <Paper id="search-bar" component="form" onSubmit={handleSearchSubmit} className={classes.search}>
+                            <InputBase id="search-input"
+                                className={classes.input}
+                                placeholder="Search Projects"
+                                inputProps={{ 'aria-label': 'search google maps' }}
+                                onChange={handleSearch}
+                                value={searchRequest}
+                            />
+                            <IconButton type="submit" className={classes.iconButton} color="primary" aria-label="search">
+                                <SearchIcon />
+                            </IconButton>
+                        </Paper>
                         <Button id="filter-project-by-user" onClick={changeFiltered} className={classes.filterProjects} variant="outlined"><span style={{ fontFamily: 'M PLUS 1p', fontSize: 15 }}>{!filtered ? <>Only My Projects</> : <>Show All Projects</>}</span></Button>
                         <Button id="project-csv" onClick={getProjectCSV} variant="contained" color="primary" size="small" className={classes.button} startIcon={<SaveIcon />}>Save .csv</Button>
                     </div>
