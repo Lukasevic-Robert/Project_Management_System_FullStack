@@ -54,7 +54,6 @@ public class TaskService {
 	public List<Task> getBacklogTasks(Long id) {
 		Project project = projectRepository.findById(id).orElseThrow(() -> new NotFoundException("Project Not Found"));
 		checkAuthorization(project);
-
 		List<Task> tasks = taskRepository.findBacklogTasks(id);
 		return tasks;
 	}
@@ -74,9 +73,7 @@ public class TaskService {
 
 	public Task createTask(TaskCreateRequestDTO taskRequestDTO) {
 		Project project = projectRepository.findById(taskRequestDTO.getProjectId()).get();
-
 		checkAuthorization(project);
-
 		Task task = new Task(taskRequestDTO.getName(), taskRequestDTO.getDescription(),
 				EPriority.valueOf(taskRequestDTO.getPriority()), EStatus.valueOf(taskRequestDTO.getStatus()), project);
 		taskRepository.save(task);
@@ -106,10 +103,8 @@ public class TaskService {
 		response.setHeader(headerKey, headerValue);
 
 		Project project = projectRepository.findById(id).get();
-
-		if (!checkAuthorizationToHandleProject(project)) {
-			throw new NotAuthorizedException(HttpStatus.UNAUTHORIZED, "Unauthorized request");
-		}
+		checkAuthorization(project);
+	
 		List<Task> tasks = project.getTasks();
 
 		ICsvBeanWriter csvWriter = new CsvBeanWriter(response.getWriter(), CsvPreference.STANDARD_PREFERENCE);

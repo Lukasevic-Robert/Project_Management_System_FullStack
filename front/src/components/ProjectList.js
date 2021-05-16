@@ -53,6 +53,7 @@ const useStyles = makeStyles({
     },
     filterProjects: {
         marginLeft: 10,
+        height: 40,
         textTransform: 'none',
         backgroundColor: '#f5f4f4',
         border: 'none',
@@ -119,27 +120,33 @@ function ProjectList() {
     const [filtered, setFiltered] = useState(false);
     const [searchRequest, setSearchRequest] = useState('');
     const [keyword, setKeyword] = useState('');
+    const [searchSubmit, setSearchSubmit] = useState(false);
 
 
 
     // GET PROJECTS from database ==========================>
     useEffect(() => {
 
-        if (keyword !== '') {
+        if(searchSubmit){
+            if(searchRequest === ''){
+                setKeyword('');
+                getProjectByKeyword('');
+            } else {
+                getProjectByKeyword();
+            }
+        } else if (keyword !== '') {
             getProjectByKeyword();
-            setActiveProjectId('');
-            checkAuthorization();
         } else if (!filtered) {
             getProjects();
-            setActiveProjectId('');
-            checkAuthorization();
         } else {
             getProjectsByUser();
-            setActiveProjectId('');
-            checkAuthorization();
         }
+        setActiveProjectId('');
+        checkAuthorization();
+        setSearchSubmit(false);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [page, rowsPerPage, refreshProject, filtered])
+
 
 
     const getProjects = async () => {
@@ -297,16 +304,16 @@ function ProjectList() {
     }
     const handleSearchSubmit = (event) => {
         event.preventDefault();
-        setPage(0);
-        if (searchRequest === '') {
-            setKeyword('');
-            getProjectByKeyword('');
+        setSearchSubmit(true);
+        if(page > 0){
+            setPage(0);
         } else {
-            getProjectByKeyword();
+            setRefreshProject(!refreshProject);
         }
     }
-    const getProjectByKeyword = (empty) => {
-        ProjectService.getProjectByKeyword(empty === '' ? '' : keyword, page, rowsPerPage).then((response) => {
+    const getProjectByKeyword = async(empty) => {
+        await ProjectService.getProjectByKeyword(empty === '' ? '' : keyword, empty === '' ? 0 : page, rowsPerPage).then((response) => {
+            console.log('getProjectByKeyword ' + searchSubmit);
 
             setSearchRequest('');
             setResponseData(response.data);
