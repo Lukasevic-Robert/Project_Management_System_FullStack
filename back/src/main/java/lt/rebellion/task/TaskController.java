@@ -66,6 +66,7 @@ public class TaskController {
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@DeleteMapping("/tasks/{id}")
 	public void deleteTaskById(@PathVariable Long id) {
+		taskService.deleteTaskById(id);
 		String message = "Task with id: " + id + " was deleted";
 		journalService.newJournalEntry(Type.INFO, Category.TASK, Activity.DELETED, message);
 	}
