@@ -36,6 +36,16 @@ const API_BASE_URL = `http://localhost:8080/api`;
         return axios.get(API_BASE_URL + '/v1/projects/' + projectId, { headers: authHeader() });
     }
 
+    const getProjectByKeyword = (keyword, pageNr, sizeNr) => {
+        let config = {
+            headers: authHeader(),
+            params: {
+               keyword: keyword, page:pageNr, size:sizeNr, sort:`id,desc`
+            },
+          }
+        return axios.get(API_BASE_URL + '/v1/projects/pageFilter', config);
+    }
+
     const createProject = (project) => {
         return axios.post(API_BASE_URL+ '/v1/projects', project, { headers: authHeader() });
     }
@@ -49,5 +59,6 @@ export default{
     getProjectById,
     createProject,
     updateProject,
-    getProjectsByUser
+    getProjectsByUser,
+    getProjectByKeyword
 };
