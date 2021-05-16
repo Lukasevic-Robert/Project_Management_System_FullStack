@@ -27,3 +27,6 @@
 .table-container{
     width: 90%;
 }
+#search-bar:focus-within{
+    border-color: #7eb8da;
+}

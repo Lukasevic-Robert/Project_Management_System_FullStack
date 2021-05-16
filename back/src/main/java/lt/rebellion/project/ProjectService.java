@@ -38,6 +38,12 @@ public class ProjectService {
 		return allProjects;
 	}
 
+	public Page<ProjectDTO> getPaginatedProjectsByKeyword(Pageable pageable, String keyword) {
+		Page<ProjectDTO> allProjects = projectRepository.findPaginatedProjectsByKeyword(pageable, keyword.toUpperCase())
+				.map(this::toProjectDTO);
+		return allProjects;
+	}
+
 	public Project getProjectById(Long id) {
 		validateRequestedProject(id);
 		Project project = projectRepository.findById(id).get();
