@@ -1,15 +1,12 @@
 import React, { useContext, useState, useEffect } from 'react';
 import '../Projects.css'
 import { makeStyles } from '@material-ui/core/styles';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination, Button, DialogTitle, DialogActions, Dialog, Fab } from '@material-ui/core';
-import { useHistory } from "react-router-dom";
-
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@material-ui/core';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 import { ProjectContext } from '../context/ProjectContext.js';
 import { AuthContext } from '../context/AuthContext.js';
 import JournalService from '../services/JournalService';
-
 
 const theme = createMuiTheme({
     palette: {
@@ -63,38 +60,27 @@ const useStyles = makeStyles({
 
 function Journal() {
 
-    let history = useHistory();
-    const { rowsPerPage, setRowsPerPage, page, setPage, setActiveProjectId, setProjectName, setActiveProject, refreshProject, setRefreshProject } = useContext(ProjectContext);
-    const value = useContext(AuthContext);
-    const [projectBoss, setProjectBoss] = useState(false);
+    const { rowsPerPageJournal, setRowsPerPageJournal, pageJournal, setPageJournal, refreshJournal } = useContext(ProjectContext);
     const classes = useStyles();
     const [entries, setEntries] = useState([]);
-    const [responseData, setResponseData] = useState([]);
+    // const [responseData, setResponseData] = useState([]);
     const [elementCount, setElementCount] = useState(1);
-    const [errorsFromBack, setErrorsFromBack] = useState([]);
 
-
-
-    // GET PROJECTS from database ==========================>
+    // GET EVENTS from database ==========================>
     useEffect(() => {
         getEntries();
-    }, [page, rowsPerPage, refreshProject])
-
+    }, [pageJournal, rowsPerPageJournal, refreshJournal])
     const getEntries = async () => {
 
-        await JournalService.getEntries(page, rowsPerPage).then(
+        await JournalService.getEntries(pageJournal, rowsPerPageJournal).then(
             response => {
-                setResponseData(response.data);
+                // setResponseData(response.data);
                 setEntries(response.data.content);
                 setElementCount(response.data.totalElements);
                 // setUsersId(response.data.content.users.id);
             },
             error => {
-                setErrorsFromBack((error.response &&
-                    error.response.data &&
-                    error.response.data.message) ||
-                    error.message ||
-                    error.toString())
+                
             }
         );
     }
@@ -102,12 +88,12 @@ function Journal() {
 
     // PAGINATION =========================================>
     const handleChangePage = (event, newPage) => {
-        setPage(newPage)
+        setPageJournal(newPage)
     };
 
     const handleChangeRowsPerPage = event => {
-        setRowsPerPage(event.target.value);
-        setPage(0);
+        setRowsPerPageJournal(event.target.value);
+        setPageJournal(0);
     };
     
     return (
@@ -157,8 +143,8 @@ function Journal() {
                     rowsPerPageOptions={[5, 10, 25]}
                     component="div"
                     count={elementCount}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
+                    rowsPerPage={rowsPerPageJournal}
+                    page={pageJournal}
                     onChangePage={handleChangePage}
                     onChangeRowsPerPage={handleChangeRowsPerPage}
                 />
