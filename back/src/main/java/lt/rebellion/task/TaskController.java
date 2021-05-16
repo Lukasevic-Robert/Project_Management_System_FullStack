@@ -7,12 +7,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
-<<<<<<< HEAD
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-=======
 import org.springframework.http.HttpStatus;
->>>>>>> 4b980378fc7ceb36eea4abfd39a9f4f9fb5b4ea9
+
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,7 +35,7 @@ import lt.rebellion.journal.Type;
 public class TaskController {
 
 	private final TaskService taskService;
-	
+
 	@Autowired
 	private JournalService journalService;
 
@@ -67,47 +65,31 @@ public class TaskController {
 
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@DeleteMapping("/tasks/{id}")
-<<<<<<< HEAD
-	public ResponseEntity<String> deleteTaskById(@PathVariable Long id) {
-		String message="Task with id: "+id+" was deleted";
-		journalService.newJournalEntry(Type.INFO, Category.TASK, Activity.DELETED,
-				message);
-		return taskService.deleteTaskById(id);
-=======
 	public void deleteTaskById(@PathVariable Long id) {
->>>>>>> 4b980378fc7ceb36eea4abfd39a9f4f9fb5b4ea9
+		String message = "Task with id: " + id + " was deleted";
+		journalService.newJournalEntry(Type.INFO, Category.TASK, Activity.DELETED, message);
 	}
 
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping("/tasks")
-<<<<<<< HEAD
-	public ResponseEntity<Task> createTaskByProjectId(@RequestBody @Valid @NotBlank TaskCreateRequestDTO taskRequestDTO) {
-		String message="Task: "+taskRequestDTO.getName()+" was created";
-		journalService.newJournalEntry(Type.INFO, Category.TASK, Activity.CREATED,
-				message);
-=======
 	public Task createTaskByProjectId(@RequestBody @Valid @NotBlank TaskCreateRequestDTO taskRequestDTO) {
->>>>>>> 4b980378fc7ceb36eea4abfd39a9f4f9fb5b4ea9
+		String message = "Task: " + taskRequestDTO.getName() + " was created";
+		journalService.newJournalEntry(Type.INFO, Category.TASK, Activity.CREATED, message);
 		return taskService.createTask(taskRequestDTO);
 	}
 
 	@ResponseStatus(HttpStatus.OK)
 	@PutMapping("/tasks/{id}")
-<<<<<<< HEAD
-	public ResponseEntity<Task> updateTaskById(@PathVariable Long id, @RequestBody @Valid @NotBlank TaskUpdateRequestDTO TaskUpdateRequestDTO) {
-		String message="Task with id: "+id+" was updated";
-		journalService.newJournalEntry(Type.INFO, Category.TASK, Activity.UPDATED,
-				message);
-=======
 	public Task updateTaskById(@PathVariable Long id,
 			@RequestBody @Valid @NotBlank TaskUpdateRequestDTO TaskUpdateRequestDTO) {
->>>>>>> 4b980378fc7ceb36eea4abfd39a9f4f9fb5b4ea9
+		String message = "Task with id: " + id + " was updated";
+		journalService.newJournalEntry(Type.INFO, Category.TASK, Activity.UPDATED, message);
 		return taskService.updateTaskById(id, TaskUpdateRequestDTO);
 	}
-	
+
 	@GetMapping("{id}/tasks/export")
-	public void exportToCSV(@PathVariable Long id,  HttpServletResponse response) throws IOException {
-        taskService.exportToCSV(id, response);
-    }
+	public void exportToCSV(@PathVariable Long id, HttpServletResponse response) throws IOException {
+		taskService.exportToCSV(id, response);
+	}
 
 }
