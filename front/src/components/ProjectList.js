@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import '../Projects.css'
 import { makeStyles } from '@material-ui/core/styles';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination, Button, DialogTitle, DialogActions, Dialog, Fab } from '@material-ui/core';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination, Button, Fab } from '@material-ui/core';
 import ProjectService from "../services/ProjectService.js";
 import { Link, useHistory } from "react-router-dom";
 import swal from 'sweetalert';
@@ -145,21 +145,33 @@ function ProjectList() {
     }
 
     // DELETE a project ==================================>
-    const deleteProject = (id) => {
-        ProjectService.deleteProject(id).then(res => {
-            getSuccessMessage("deleted");
-            if (projects.length === 1 && page > 0) {
-                setPage(page - 1);
-            }
-            setRefreshProject(!refreshProject);
-        })
-            .catch((error) => {
-                getErrorMessage();
-            }
-            );
 
-        handleClose();
+    const deleteFunction = (id, projectName) =>{
+        swal({
+            text: `Are you sure you want to delete project: ${projectName}?`,
+            // text: "You won't be able to revert this!",
+            icon: 'warning',
+            className: "swalFont",
+            buttons: ["Cancel", "Yes, delete it!"],
+            // buttons: true,
+            dangerMode: true,
+            }).then( async (isConfirm)=>{
+              if (isConfirm) {
+                await  ProjectService.deleteProject(id).then(res => {
+                    getSuccessMessage("deleted");
+                    if (projects.length === 1 && page > 0) {
+                        setPage(page - 1);
+                    }
+                    setRefreshProject(!refreshProject);
+                })
+                    .catch((error) => {
+                        getErrorMessage();
+                    }
+                    );
+              }
+            })  
     }
+
 
     // PAGINATION =========================================>
     const handleChangePage = (event, newPage) => {
@@ -175,21 +187,7 @@ function ProjectList() {
     // const emptyRows = rowsPerPage - Math.min(rowsPerPage, projects.length - page * rowsPerPage);
     // end paging
 
-    // project delete confirmation dialog
-
-    const [open, setOpen] = React.useState(false);
-    const [deleteId, setDeleteId] = React.useState(0);
-    const [deleteName, setDeleteName] = React.useState(0);
-
-    const handleClickOpen = (rowId, rowName) => {
-        setOpen(true);
-        setDeleteId(rowId);
-        setDeleteName(rowName);
-    };
-
-    const handleClose = () => {
-        setOpen(false);
-    };
+ 
 
     const handleRedirect = (row) => {
 
@@ -210,8 +208,6 @@ function ProjectList() {
             history.push(`/tasks/${row.id}`);
         }
     }
-
-    // end project delete confirmation dialog
 
     const getErrorMessage = () => {
         const errorMessage = swal({
@@ -289,22 +285,11 @@ function ProjectList() {
                                                 </Fab>
 
 
-                                                <Fab id="delete-project-button" size="small" aria-label="Delete" className={classes.fab} onClick={() => handleClickOpen(row.id, row.name)}>
+                                                <Fab id="delete-project-button" size="small" aria-label="Delete" className={classes.fab} onClick={() => deleteFunction(row.id, row.name)}>
                                                     <DeleteIcon className={classes.colorWhite} />
                                                 </Fab>
 
-                                                <Dialog
-                                                    open={open}
-                                                    onClose={handleClose}
-                                                    aria-labelledby="alert-dialog-title"
-                                                    aria-describedby="alert-dialog-description">
-                                                    <DialogTitle id="alert-dialog-title">{`Are you sure you want to delete project: ${deleteName}?`}</DialogTitle>
-
-                                                    <DialogActions>
-                                                        <Button id="dialog-project-delete-cancel" onClick={handleClose} color="primary">CANCEL</Button>
-                                                        <Button id="dialog-project-delete-submit" onClick={() => deleteProject(deleteId)} color="primary" autoFocus>OK</Button>
-                                                    </DialogActions>
-                                                </Dialog>
+                                                
                                             </TableCell>)}
 
                                     </TableRow>

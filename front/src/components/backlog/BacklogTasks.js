@@ -13,7 +13,7 @@ import FilterListIcon from '@material-ui/icons/FilterList';
 import SearchIcon from '@material-ui/icons/Search';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/DeleteForever';
-import { Button, DialogTitle, DialogActions, Dialog, Box, Card, CardContent, Grid, LinearProgress, Typography } from '@material-ui/core';
+import { Box, Card, CardContent, Grid, LinearProgress, Typography } from '@material-ui/core';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 import { ProjectContext } from "../../context/ProjectContext";
@@ -247,33 +247,31 @@ const BacklogTasks = ({ match }) => {
     }
 
     // DELETE TASK
-    const [open, setOpen] = React.useState(false);
-    const [deleteId, setDeleteId] = React.useState(0);
-    const [deleteName, setDeleteName] = React.useState(0);
-
-    const handleClose = () => {
-        setOpen(false);
-    };
-
-    const handleClickOpen = (rowId, rowName) => {
-        setOpen(true);
-        setDeleteId(rowId);
-        setDeleteName(rowName);
-    };
-
-    const deleteTask = async (taskId) => {
-        await TaskService.deleteTask(taskId).then(res => {
-            getSuccessMessage("deleted");
-            setRefreshBacklog(!refreshBacklog);
-        })
-            .catch((error) => {
-                getErrorMessage();
-            }
-            );
-        handleClose();
-        setTotalTasks(totalTasksCount - 1);
-        setUnfinishedTasks(unfinishedTasksCount - 1);
-    }
+const deleteFunction = (taskId, taskName) =>{
+    swal({
+        text: `Are you sure you want to delete task: ${taskName}?`,
+        // text: "You won't be able to revert this!",
+        icon: 'warning',
+        className: "swalFont",
+        buttons: ["Cancel", "Yes, delete it!"],
+        // buttons: true,
+        dangerMode: true,
+        }).then( async (isConfirm)=>{
+          if (isConfirm) {
+            await TaskService.deleteTask(taskId).then(res => {
+                getSuccessMessage("deleted");
+                setRefreshBacklog(!refreshBacklog);
+            })
+                .catch((error) => {
+                    getErrorMessage();
+                }
+                );
+         
+            setTotalTasks(totalTasksCount - 1);
+            setUnfinishedTasks(unfinishedTasksCount - 1);
+          }
+        })  
+}
 
     const getSuccessMessage = (status) => {
         const successMessage = swal({
@@ -363,26 +361,10 @@ const BacklogTasks = ({ match }) => {
                                                                                     <ViewTask task={el} status='BACKLOG' projectId={activeProjectId} add={false} />
                                                                                 </div>
                                                                                 <div>
-
-                                                                                    <DeleteIcon id="icon" onClick={() => handleClickOpen(el.id, el.name)} style={{ fontSize: 'large', color: 'grey', cursor: 'pointer' }} />
-                                                                                    {/* </Fab> */}
-
-                                                                                    <Dialog
-                                                                                        open={open}
-                                                                                        onClose={handleClose}
-                                                                                        aria-labelledby="alert-dialog-title"
-                                                                                        aria-describedby="alert-dialog-description">
-                                                                                        <DialogTitle id="alert-dialog-title">{`Are you sure you want to delete project: ${deleteName}?`}</DialogTitle>
-
-                                                                                        <DialogActions>
-                                                                                            <Button onClick={handleClose} color="primary">CANCEL</Button>
-                                                                                            <Button onClick={() => deleteTask(deleteId)} color="primary" autoFocus>OK</Button>
-                                                                                        </DialogActions>
-                                                                                    </Dialog>
+                                                                                    <DeleteIcon id="icon" onClick={() => deleteFunction(el.id, el.name)} style={{ fontSize: 'large', color: 'grey', cursor: 'pointer' }} />
+                                                                                         
                                                                                 </div>
                                                                             </div>
-
-
                                                                         </div>
                                                                     )
                                                                 }}

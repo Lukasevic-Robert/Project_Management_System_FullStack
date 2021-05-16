@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,6 +18,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
+import lt.rebellion.journal.Activity;
+import lt.rebellion.journal.Category;
+import lt.rebellion.journal.JournalService;
+import lt.rebellion.journal.Type;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -25,6 +30,9 @@ import lombok.RequiredArgsConstructor;
 public class TaskController {
 
 	private final TaskService taskService;
+	
+	@Autowired
+	private JournalService journalService;
 
 	// GET all tasks ====================================================>
 	@GetMapping("/tasks")
@@ -53,18 +61,27 @@ public class TaskController {
 	// DELETE task by id ================================================>
 	@DeleteMapping("/tasks/{id}")
 	public ResponseEntity<String> deleteTaskById(@PathVariable Long id) {
+		String message="Task with id: "+id+" was deleted";
+		journalService.newJournalEntry(Type.INFO, Category.TASK, Activity.DELETED,
+				message);
 		return taskService.deleteTaskById(id);
 	}
 
 	// CREATE task ======================================================>
 	@PostMapping("/tasks")
 	public ResponseEntity<Task> createTaskByProjectId(@RequestBody @Valid @NotBlank TaskCreateRequestDTO taskRequestDTO) {
+		String message="Task: "+taskRequestDTO.getName()+" was created";
+		journalService.newJournalEntry(Type.INFO, Category.TASK, Activity.CREATED,
+				message);
 		return taskService.createTask(taskRequestDTO);
 	}
 
 	// UPDATE task by id ================================================>
 	@PutMapping("/tasks/{id}")
 	public ResponseEntity<Task> updateTaskById(@PathVariable Long id, @RequestBody @Valid @NotBlank TaskUpdateRequestDTO TaskUpdateRequestDTO) {
+		String message="Task with id: "+id+" was updated";
+		journalService.newJournalEntry(Type.INFO, Category.TASK, Activity.UPDATED,
+				message);
 		return taskService.updateTaskById(id, TaskUpdateRequestDTO);
 	}
 

@@ -174,6 +174,11 @@ export default function NavBar() {
             {isAdmin() && (
               <Link id="link-to-admin" to={"/admin"} style={{ color: '#92ddea' }} className={classes.align}><Button style={{ color: 'white' }}>ADMIN BOARD</Button></Link>
             )}
+
+            {isAdmin() && (
+              <Link id="link-to-admin" to={"/admin/journal"} style={{ color: '#92ddea' }} className={classes.align}><Button style={{ color: 'white' }}>EVENT JOURNAL</Button></Link>
+            )}
+
             {isAuthenticated() ? (
               <>
                 <Link id="link-to-profile" to={"/profile"} className={classes.align}><Button style={{ color: 'white' }}>{authUser.email}</Button></Link>
