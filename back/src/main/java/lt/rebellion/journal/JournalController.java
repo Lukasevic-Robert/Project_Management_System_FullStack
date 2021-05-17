@@ -12,10 +12,8 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import lt.rebellion.project.ProjectDTO;
 
 
 @RestController
@@ -40,25 +38,4 @@ public class JournalController {
 		return new ResponseEntity<>(journalService.getAllJournalEntries(pageable), HttpStatus.OK);
 	}
 
-	
-//	@ResponseStatus(HttpStatus.OK)
-//	@GetMapping("/page")
-//	public Page<JournalEntry> getPaginated(Pageable pageable){
-//		return journalService.getAllJournalEntries(pageable);
-//	}
-	
-	
-//	@ResponseStatus(HttpStatus.OK)
-//	@GetMapping("/page")
-//	public Page<ProjectDTO> getPaginatedProjects(Pageable pageable){
-//		return projectService.findPaginated(pageable);
-//	}
-	
-	public JournalService getJournalService() {
-		return journalService;
-	}
-
-	public void setJournalService(JournalService journalService) {
-		this.journalService = journalService;
-	}
 }

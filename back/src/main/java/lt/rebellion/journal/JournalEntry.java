@@ -1,7 +1,6 @@
 package lt.rebellion.journal;
 
 import java.time.LocalDateTime;
-import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,8 +11,7 @@ import javax.persistence.Table;
 
 import lombok.Getter;
 import lombok.Setter;
-import lt.rebellion.project.Project;
-import lt.rebellion.role.Role;
+
 
 
 @Getter
