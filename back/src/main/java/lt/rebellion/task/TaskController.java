@@ -71,7 +71,7 @@ public class TaskController {
 		return taskService.updateTaskById(id, TaskUpdateRequestDTO);
 	}
 	
-	@GetMapping("{id}/tasks/export")
+	@GetMapping("/{id}/tasks/export")
 	public void exportToCSV(@PathVariable Long id,  HttpServletResponse response) throws IOException {
         taskService.exportToCSV(id, response);
     }

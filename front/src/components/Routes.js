@@ -3,6 +3,7 @@ import React, { useContext } from 'react';
 import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import { Switch, Route, Redirect } from "react-router-dom";
 import Login from "./Login.js";
+import Register from './Register.js'
 import BoardUser from './BoardUser.js';
 import BoardAdmin from './BoardAdmin.js';
 import Profile from './Profile.js';
@@ -66,6 +67,7 @@ function Routes() {
 
                     <Route exact path='/' component={Login} />
                     <Route path="/signin" component={Login} />
+                    <Route path="/signup" component={Register} />
 
                     <AuthenticatedRoute path="/user" component={BoardUser} />
 

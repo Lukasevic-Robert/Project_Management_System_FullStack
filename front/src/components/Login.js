@@ -181,16 +181,16 @@ export default function SignIn() {
                 Forgot password?
               </Link>
             </Grid> */}
-              {/* <Grid item>
-                <Link href="#" variant="body2">
+              <Grid item>
+                <Link href="/signup" variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link>
-              </Grid> */}
+              </Grid>
             </Grid>
           </ValidatorForm>
 
         </div>
-        <Box mt={8}>
+        <Box mt={5}>
           <Copyright />
         </Box>
       </Container>
