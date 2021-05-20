@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lt.rebellion.model.EStatus;
 import lt.rebellion.user.User;
 
 @AllArgsConstructor
@@ -29,8 +30,9 @@ public class UserDetailsImpl implements UserDetails{
 
 	@JsonIgnore
 	private String password;
-	
+	private boolean isActive;
 	private Collection<? extends GrantedAuthority> authorities;
+	
 	
 	
 	public static UserDetailsImpl build(User user) {
@@ -43,7 +45,8 @@ public class UserDetailsImpl implements UserDetails{
 		return new UserDetailsImpl(
 				user.getId(), 
 				user.getEmail(),
-				user.getPassword(), 
+				user.getPassword(),
+				user.getStatus().equals(EStatus.ACTIVE),
 				authorities);
 	}
 
@@ -68,25 +71,25 @@ public class UserDetailsImpl implements UserDetails{
 	@Override
 	public boolean isAccountNonExpired() {
 
-		return true;
+		return isActive;
 	}
 
 	@Override
 	public boolean isAccountNonLocked() {
 
-		return true;
+		return isActive;
 	}
 
 	@Override
 	public boolean isCredentialsNonExpired() {
 
-		return true;
+		return isActive;
 	}
 
 	@Override
 	public boolean isEnabled() {
 
-		return true;
+		return isActive;
 	}
 	
 	@Override

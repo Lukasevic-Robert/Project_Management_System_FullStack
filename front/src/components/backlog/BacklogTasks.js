@@ -294,7 +294,6 @@ const BacklogTasks = ({ match }) => {
     }
 
     const getTasksCSV = (projectId) => {
-        console.log(projectId)
         TaskService.requestTasksCSV(projectId);
     }
 

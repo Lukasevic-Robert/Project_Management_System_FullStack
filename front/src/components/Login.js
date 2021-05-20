@@ -110,7 +110,8 @@ export default function SignIn() {
             error.response.data.message) ||
           error.message ||
           error.toString();
-        setMessage(resMessage);
+          console.log();
+        setMessage(error.response.data);
         setErrUnauthorized(error.response.status);
       })
   };
@@ -129,7 +130,7 @@ export default function SignIn() {
         </Typography>
 
           <ValidatorForm id="login-form" className={classes.form} onSubmit={handleSubmit}>
-            {(errUnauthorized === 403 || errUnauthorized === 401) && <div className="alert alert-danger" role="alert"> Please double-check the email and password you entered and try again.</div>}
+            {(errUnauthorized === 403 || errUnauthorized === 401 || errUnauthorized === 423) && <div className="alert alert-danger" role="alert">{message}</div>}
 
             <TextValidator
               variant="outlined"

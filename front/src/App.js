@@ -6,6 +6,7 @@ import { ThemeProvider } from '@material-ui/styles';
 import NavBar from './components/NavBar.js';
 import { AuthProvider } from './context/AuthContext';
 import { ProjectContextProvider } from './context/ProjectContext';
+import { UserContextProvider } from './context/UserContext';
 
 
 const theme = createMuiTheme({
@@ -27,9 +28,11 @@ function App() {
   return (<Router>
     <ThemeProvider theme={theme}>
       <AuthProvider>
-        <ProjectContextProvider>
-          <NavBar />
-        </ProjectContextProvider>
+        <UserContextProvider>
+          <ProjectContextProvider>
+            <NavBar />
+          </ProjectContextProvider>
+        </UserContextProvider>
       </AuthProvider>
     </ThemeProvider>
   </Router >

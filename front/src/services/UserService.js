@@ -25,6 +25,29 @@ class UserService {
     getUsers() {
         return axios.get(API_BASE_URL + '/v1/users', { headers: authHeader() });
     }
+
+    getUserById(id) {
+        return axios.get(API_BASE_URL + '/v1/users/' + id, { headers: authHeader() });
+    }
+
+    createUpdateUser(id){
+        return axios.put(API_BASE_URL + '/v1/users/' + id, { headers: authHeader() });
+    }
+
+    deleteUser(id) {
+        return axios.delete(API_BASE_URL + '/v1/users/' + id, { headers: authHeader() });
+    }
+    
+    getUserPage(pageNr, sizeNr) {
+        let config = {
+            headers: authHeader(),
+            params: {
+                page:pageNr, size:sizeNr, sort:`id,asc`
+            },
+          }
+        return axios.get(API_BASE_URL + '/v1/users/page', config);
+    }
+    
 }
 
 export default new UserService();

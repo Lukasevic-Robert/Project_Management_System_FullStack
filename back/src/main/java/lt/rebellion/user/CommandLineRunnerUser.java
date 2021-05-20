@@ -12,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
+import lt.rebellion.model.EStatus;
 import lt.rebellion.role.ERole;
 import lt.rebellion.role.Role;
 import lt.rebellion.role.RoleRepository;
@@ -43,6 +44,7 @@ public class CommandLineRunnerUser implements CommandLineRunner {
 		admin.setEmail("admin@mail.com");
 		admin.setPassword(encoder.encode("Admin1"));
 		admin.setRoles(rolesForAdmin);
+		admin.setStatus(EStatus.ACTIVE);
 
 		userRepository.save(admin);
 		// =============================================/
@@ -57,6 +59,7 @@ public class CommandLineRunnerUser implements CommandLineRunner {
 		user.setEmail("user@mail.com");
 		user.setPassword(encoder.encode("User1"));
 		user.setRoles(rolesForUser);
+		user.setStatus(EStatus.ACTIVE);
 
 		userRepository.save(user);
 		// =============================================/
@@ -71,6 +74,7 @@ public class CommandLineRunnerUser implements CommandLineRunner {
 		moderator.setEmail("moderator@mail.com");
 		moderator.setPassword(encoder.encode("Moderator1"));
 		moderator.setRoles(rolesForModerator);
+		moderator.setStatus(EStatus.ACTIVE);
 
 		userRepository.save(moderator);
 		// =============================================/
@@ -91,6 +95,7 @@ public class CommandLineRunnerUser implements CommandLineRunner {
 			dummy.setEmail("user" + i + "@mail.com");
 			dummy.setPassword(encoder.encode("User1"));
 			dummy.setRoles(rolesForUser);
+			dummy.setStatus(EStatus.ACTIVE);
 
 			userRepository.save(dummy);
 		}
