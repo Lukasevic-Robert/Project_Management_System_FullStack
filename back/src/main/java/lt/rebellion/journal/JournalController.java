@@ -1,5 +1,9 @@
 package lt.rebellion.journal;
 
+import java.io.IOException;
+
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,8 +18,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import lombok.extern.slf4j.Slf4j;
 
 
+@Slf4j
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/admin/journal")
@@ -37,5 +43,11 @@ public class JournalController {
 
 		return new ResponseEntity<>(journalService.getAllJournalEntries(pageable), HttpStatus.OK);
 	}
+	
+	@GetMapping("/export")
+	public HttpServletResponse exportToCSV(HttpServletResponse response) throws IOException {
+		 log.info("Simple log statement with inputs {}, {} and {}", 1, 2, 3);
+       return journalService.exportToCSV(response);
+    }
 
 }

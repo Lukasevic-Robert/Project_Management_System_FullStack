@@ -1,12 +1,13 @@
 import React, { useContext, useState, useEffect } from 'react';
 import '../Projects.css'
 import { makeStyles } from '@material-ui/core/styles';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@material-ui/core';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination, Button } from '@material-ui/core';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 import { ProjectContext } from '../context/ProjectContext.js';
-import { AuthContext } from '../context/AuthContext.js';
 import JournalService from '../services/JournalService';
+import SaveIcon from '@material-ui/icons/Save';
+
 
 const theme = createMuiTheme({
     palette: {
@@ -95,13 +96,17 @@ function Journal() {
         setRowsPerPageJournal(event.target.value);
         setPageJournal(0);
     };
+
+    const getJournalCSV = () => {
+        JournalService.requestJournalCSV();
+    }
     
     return (
 
         <ThemeProvider theme={theme}>
             <Paper className="table-container">
                 <TableContainer >
-                   
+                   <div>  <Button id="project-csv" onClick={getJournalCSV} variant="contained" color="primary" size="small" className={classes.button} startIcon={<SaveIcon />}>Save .csv</Button></div>
                     <Table className={classes.table} size="small" aria-label="a dense table">
                         <TableHead>
                             <TableRow id="table-head" >
