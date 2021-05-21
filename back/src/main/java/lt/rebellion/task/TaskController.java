@@ -86,10 +86,9 @@ public class TaskController {
 		journalService.newJournalEntry(Type.INFO, Category.TASK, Activity.UPDATED, message);
 		return taskService.updateTaskById(id, TaskUpdateRequestDTO);
 	}
-
-	@GetMapping("{id}/tasks/export")
-	public void exportToCSV(@PathVariable Long id, HttpServletResponse response) throws IOException {
-		taskService.exportToCSV(id, response);
-	}
-
+	
+	@GetMapping("/{id}/tasks/export")
+	public void exportToCSV(@PathVariable Long id,  HttpServletResponse response) throws IOException {
+        taskService.exportToCSV(id, response);
+    }
 }

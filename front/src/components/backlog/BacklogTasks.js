@@ -8,9 +8,6 @@ import swal from 'sweetalert';
 import { useHistory } from 'react-router';
 import ProjectService from "../../services/ProjectService";
 import { makeStyles } from '@material-ui/core/styles';
-import SortIcon from '@material-ui/icons/Sort';
-import FilterListIcon from '@material-ui/icons/FilterList';
-import SearchIcon from '@material-ui/icons/Search';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/DeleteForever';
 import { Box, Card, CardContent, Grid, LinearProgress, Typography } from '@material-ui/core';
@@ -291,7 +288,6 @@ const deleteFunction = (taskId, taskName) =>{
     }
 
     const getTasksCSV = (projectId) => {
-        console.log(projectId)
         TaskService.requestTasksCSV(projectId);
     }
 
@@ -377,7 +373,6 @@ const deleteFunction = (taskId, taskName) =>{
                                                                                 </div>
                                                                                 <div>
                                                                                     <DeleteIcon id="icon" onClick={() => deleteFunction(el.id, el.name)} style={{ fontSize: 'large', color: 'grey', cursor: 'pointer' }} />
-                                                                                         
                                                                                 </div>
                                                                             </div>
                                                                         </div>

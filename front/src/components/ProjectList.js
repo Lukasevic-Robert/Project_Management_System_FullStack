@@ -16,6 +16,7 @@ import SaveIcon from '@material-ui/icons/Save';
 import InputBase from '@material-ui/core/InputBase';
 import IconButton from '@material-ui/core/IconButton';
 import SearchIcon from '@material-ui/icons/Search';
+import ClearRoundedIcon from '@material-ui/icons/ClearRounded';
 
 
 
@@ -101,6 +102,9 @@ const useStyles = makeStyles({
     },
     iconButton: {
         padding: 10,
+        '&:hover': {
+            color: '#9c6ccc',
+        }
     },
 });
 
@@ -119,24 +123,20 @@ function ProjectList() {
     const [errorsFromBack, setErrorsFromBack] = useState([]);
     const [filtered, setFiltered] = useState(false);
     const [searchRequest, setSearchRequest] = useState('');
-    const [keyword, setKeyword] = useState('');
     const [searchSubmit, setSearchSubmit] = useState(false);
+    const [iconSwitcher, setIconSwitcher] = useState(false);
 
 
 
     // GET PROJECTS from database ==========================>
     useEffect(() => {
-
         if (searchSubmit) {
             if (searchRequest === '') {
-                setKeyword('');
                 getProjectByKeyword('');
             } else {
                 getProjectByKeyword();
             }
-        } else if (!searchSubmit && searchRequest !== '') {
-            setKeyword('');
-        } else if (keyword !== '') {
+        } else if (searchRequest !== '') {
             getProjectByKeyword();
         } else if (!filtered) {
             getProjects();
@@ -149,7 +149,9 @@ function ProjectList() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [page, rowsPerPage, refreshProject, filtered])
 
-
+    useEffect(() => {
+        setIconSwitcher(false);
+    }, [searchRequest])
 
     const getProjects = async () => {
 
@@ -288,7 +290,6 @@ function ProjectList() {
 
     const changeFiltered = () => {
         setPage(0);
-        setKeyword('');
         setFiltered(!filtered);
     }
 
@@ -297,11 +298,18 @@ function ProjectList() {
     }
 
     const handleSearch = (event) => {
-        setKeyword(event.target.value);
+        if (event.target.value === '') {
+            setRefreshProject(!refreshProject);
+        }
         setSearchRequest(event.target.value);
     }
     const handleSearchSubmit = (event) => {
         event.preventDefault();
+        if (searchRequest === '') {
+            setIconSwitcher(false);
+        } else {
+            setIconSwitcher(true);
+        }
         setSearchSubmit(true);
         if (page > 0) {
             setPage(0);
@@ -310,10 +318,9 @@ function ProjectList() {
         }
     }
     const getProjectByKeyword = async (empty) => {
-        await ProjectService.getProjectByKeyword(empty === '' ? '' : keyword, empty === '' ? 0 : page, rowsPerPage).then((response) => {
+        await ProjectService.getProjectByKeyword(empty === '' ? '' : searchRequest, empty === '' ? 0 : page, rowsPerPage).then((response) => {
             console.log('getProjectByKeyword ' + searchSubmit);
 
-            setSearchRequest('');
             setResponseData(response.data);
             setProjects(response.data.content);
             setElementCount(response.data.totalElements);
@@ -325,6 +332,11 @@ function ProjectList() {
                     error.message ||
                     error.toString())
             })
+    }
+
+    const handleClear = () => {
+        setSearchRequest('');
+        setRefreshProject(!refreshProject);
     }
 
     return (
@@ -347,12 +359,17 @@ function ProjectList() {
                                 onChange={handleSearch}
                                 value={searchRequest}
                             />
-                            <IconButton type="submit" className={classes.iconButton} color="primary" aria-label="search">
-                                <SearchIcon />
-                            </IconButton>
+                            {iconSwitcher
+                                ? (<IconButton onClick={handleClear} className={classes.iconButton} color="primary">
+                                    <ClearRoundedIcon />
+                                </IconButton>)
+                                : (<IconButton type="submit" className={classes.iconButton} color="primary" aria-label="search">
+                                    <SearchIcon />
+                                </IconButton>)}
+
                         </Paper>
                         <Button id="filter-project-by-user" onClick={changeFiltered} className={classes.filterProjects} variant="outlined"><span style={{ fontFamily: 'M PLUS 1p', fontSize: 15 }}>{!filtered ? <>Only My Projects</> : <>Show All Projects</>}</span></Button>
-                        <Button id="project-csv" onClick={getProjectCSV} variant="contained" color="primary" size="small" className={classes.button} startIcon={<SaveIcon />}>Save .csv</Button>
+                        <Button id="project-csv" onClick={getProjectCSV} variant="contained" color="primary" size="small" className={classes.button} startIcon={<SaveIcon />}>Save all .csv</Button>
                     </div>
                     <Table className={classes.table} size="small" aria-label="a dense table">
                         <TableHead>
@@ -363,7 +380,7 @@ function ProjectList() {
                                 <TableCell id="table-cell" align="center">TOTAL TASKS</TableCell>
                                 <TableCell id="table-cell" align="center">TODO TASKS</TableCell>
                                 {projectBoss && (
-                                    <TableCell id="table-cell" align="right">ACTIONS</TableCell>)}
+                                    <TableCell id="table-cell" align="right" style={{paddingRight:35}}>ACTIONS</TableCell>)}
                             </TableRow>
                         </TableHead>
                         <TableBody>
