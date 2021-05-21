@@ -8,6 +8,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+
+import org.springframework.beans.factory.annotation.Autowired;
+
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.data.domain.Page;
@@ -34,7 +37,14 @@ import lt.rebellion.DTO.MessageResponse;
 import lt.rebellion.DTO.SignupRequest;
 import lt.rebellion.exception.ApiError;
 import lt.rebellion.exception.NotFoundException;
+
+import lt.rebellion.journal.Activity;
+import lt.rebellion.journal.Category;
+import lt.rebellion.journal.JournalService;
+import lt.rebellion.journal.Type;
+
 import lt.rebellion.model.EStatus;
+
 import lt.rebellion.role.ERole;
 import lt.rebellion.role.Role;
 import lt.rebellion.role.RoleRepository;
@@ -50,6 +60,9 @@ public class UserService {
 	private UserRepository userRepository;
 	private RoleRepository roleRepository;
 	private PasswordEncoder encoder;
+	
+	@Autowired
+	private JournalService journalService;
 
 	// Handles authenticate request
 
@@ -71,11 +84,18 @@ public class UserService {
 			response.put("roles", roles);
 			return ResponseEntity.ok(response);
 
+
 		} catch (BadCredentialsException e) {
+	journalService.newJournalEntry(request.getEmail(), Type.ERROR, Category.USER, Activity.UNSUCCESSFUL_LOGIN,
+					"User log in unsuccessful");
 			return new ResponseEntity<>("Invalid email/password combination", HttpStatus.FORBIDDEN);
 		} catch (LockedException e) {
+      	journalService.newJournalEntry(request.getEmail(), Type.ERROR, Category.USER, Activity.UNSUCCESSFUL_LOGIN,
+					"User log in unsuccessful");
 			return new ResponseEntity<>("User account is locked", HttpStatus.LOCKED);
 		} catch (AuthenticationException e) {
+      	journalService.newJournalEntry(request.getEmail(), Type.ERROR, Category.USER, Activity.UNSUCCESSFUL_LOGIN,
+					"User log in unsuccessful");
 			e.printStackTrace();
 			return new ResponseEntity<>("Bad Request. Try again or contact Administrator", HttpStatus.FORBIDDEN);
 		}

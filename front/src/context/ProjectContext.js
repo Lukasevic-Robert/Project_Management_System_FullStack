@@ -15,10 +15,16 @@ const ProjectContextProvider = ({ children }) => {
     const [activeProject, setActiveProject] = useState(JSON.parse(localStorage.getItem('activeProject')));
     const [location, setLocation] = useState('');
     const [refreshProject, setRefreshProject] = useState(false);
+    const [rowsPerPageJournal, setRowsPerPageJournal] = useState(5);
+    const [pageJournal, setPageJournal] = useState(0);
+    const [refreshJournal, setRefreshJournal] = useState(false);
+
 
     useEffect(() => {
         setRowsPerPage(5);
         setPage(0);
+        setRowsPerPageJournal(5);
+        setPageJournal(0);
     }, [refreshContext])
 
     return (
@@ -33,7 +39,10 @@ const ProjectContextProvider = ({ children }) => {
                 refreshActive, setRefreshActive,
                 refreshBacklog, setRefreshBacklog,
                 activeProject, setActiveProject,
-                refreshProject, setRefreshProject
+                refreshProject, setRefreshProject,
+                rowsPerPageJournal, setRowsPerPageJournal,
+                pageJournal, setPageJournal,
+                refreshJournal, setRefreshJournal
 
             }}
         >

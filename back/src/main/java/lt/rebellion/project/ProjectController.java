@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
+import lt.rebellion.journal.Activity;
+import lt.rebellion.journal.Category;
+import lt.rebellion.journal.JournalService;
+import lt.rebellion.journal.Type;
 
 
 @RestController
@@ -35,6 +40,8 @@ public class ProjectController {
 
 	private final ProjectService projectService;
 
+	@Autowired
+	private JournalService journalService;
 	
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping("/page")
@@ -64,6 +71,10 @@ public class ProjectController {
 	@PostMapping
 	@PreAuthorize("hasRole('ROLE_MODERATOR') or hasRole('ROLE_ADMIN')")
 	public ProjectDTO createProject(@Valid @NotBlank @RequestBody ProjectRequestDTO projectRequestDTO){
+		String message="Project: "+projectRequestDTO.getName()+" was created";
+		journalService.newJournalEntry(Type.INFO, Category.PROJECT, Activity.CREATED,
+				message);
+
 		return projectService.createProject(projectRequestDTO);
 	}
 	
@@ -71,6 +82,9 @@ public class ProjectController {
 	@PutMapping("/{id}")
 	@PreAuthorize("hasRole('ROLE_MODERATOR') or hasRole('ROLE_ADMIN')")
 	public ProjectDTO updateProjectById(@PathVariable @NotBlank Long id, @Valid @RequestBody ProjectRequestDTO projectRequestDTO){
+		String message="Project with id: "+id+" was updated";
+		journalService.newJournalEntry(Type.INFO, Category.PROJECT, Activity.UPDATED,
+				message);
 		return projectService.updateProject(id, projectRequestDTO);
 	}
 	
@@ -78,6 +92,9 @@ public class ProjectController {
 	@DeleteMapping("/{id}")
 	@PreAuthorize("hasRole('ROLE_MODERATOR') or hasRole('ROLE_ADMIN')")
 	public void deleteProjectById(@PathVariable @NotBlank Long id){
+		String message="Project with id: "+id+" was deleted";
+		journalService.newJournalEntry(Type.INFO, Category.PROJECT, Activity.DELETED,
+				message);
 		 projectService.deleteProjectById(id);
 	}
 	

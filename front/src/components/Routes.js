@@ -14,7 +14,9 @@ import { AuthContext } from '../context/AuthContext';
 import ActiveBoard from './dashboard/ActiveBoard';
 import CreateTask from './tasks/CreateTask';
 import BacklogTasks from './backlog/BacklogTasks';
+import Journal from './Journal';
 import CreateUser from './CreateUser.js'
+
 
 
 const AdminRoute = ({ component: Component, ...rest }) => {
@@ -73,6 +75,7 @@ function Routes() {
                     <AuthenticatedRoute path="/user" component={BoardUser} />
 
                     <AdminRoute exact path="/admin" component={BoardAdmin} />
+
                     <AdminRoute path="/admin/create-user/:id" component={CreateUser} />
 
                     <AuthenticatedRoute path="/profile" component={Profile} />
@@ -88,6 +91,8 @@ function Routes() {
                     <AuthenticatedRoute path="/tasks/:id/:taskid" component={CreateTask} />
 
                     <AuthenticatedRoute path="/backlog/:id" component={BacklogTasks} />
+
+                    <AuthenticatedRoute path="/admin/journal" component={Journal} />
 
                 </Switch>
             </div>

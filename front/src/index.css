@@ -94,8 +94,9 @@ body, html, .App, #root, .auth-wrapper {
 
 .dndContainer .column {
   width: 31%;
-  background-color: #f7f4f4;
+  background-color: #f3f2f2;
   box-shadow: 2px 20px 20px rgba(27, 28, 43, 0.2);
+
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -167,6 +168,7 @@ body, html, .App, #root, .auth-wrapper {
 .item.low {
   border-right: 10px solid rgb(0, 128, 0, 0.7);
 }
+
 
 .activeBoard {
   margin-top: -70px;
@@ -272,3 +274,6 @@ body, html, .App, #root, .auth-wrapper {
 .itemBacklog.low {
   border-left: 10px solid rgb(0, 128, 0, 0.7);
 }
+
+.swalFont{
+font-size:x-large;}

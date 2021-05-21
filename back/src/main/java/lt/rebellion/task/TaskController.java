@@ -7,7 +7,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +22,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
+import lt.rebellion.journal.Activity;
+import lt.rebellion.journal.Category;
+import lt.rebellion.journal.JournalService;
+import lt.rebellion.journal.Type;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -28,6 +34,9 @@ import lombok.RequiredArgsConstructor;
 public class TaskController {
 
 	private final TaskService taskService;
+
+	@Autowired
+	private JournalService journalService;
 
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping("/tasks")
@@ -57,11 +66,15 @@ public class TaskController {
 	@DeleteMapping("/tasks/{id}")
 	public void deleteTaskById(@PathVariable Long id) {
 		taskService.deleteTaskById(id);
+		String message = "Task with id: " + id + " was deleted";
+		journalService.newJournalEntry(Type.INFO, Category.TASK, Activity.DELETED, message);
 	}
 
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping("/tasks")
 	public Task createTaskByProjectId(@RequestBody @Valid @NotBlank TaskCreateRequestDTO taskRequestDTO) {
+		String message = "Task: " + taskRequestDTO.getName() + " was created";
+		journalService.newJournalEntry(Type.INFO, Category.TASK, Activity.CREATED, message);
 		return taskService.createTask(taskRequestDTO);
 	}
 
@@ -69,6 +82,8 @@ public class TaskController {
 	@PutMapping("/tasks/{id}")
 	public Task updateTaskById(@PathVariable Long id,
 			@RequestBody @Valid @NotBlank TaskUpdateRequestDTO TaskUpdateRequestDTO) {
+		String message = "Task with id: " + id + " was updated";
+		journalService.newJournalEntry(Type.INFO, Category.TASK, Activity.UPDATED, message);
 		return taskService.updateTaskById(id, TaskUpdateRequestDTO);
 	}
 	
@@ -76,5 +91,4 @@ public class TaskController {
 	public void exportToCSV(@PathVariable Long id,  HttpServletResponse response) throws IOException {
         taskService.exportToCSV(id, response);
     }
-
 }

@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,11 +25,18 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
+import lt.rebellion.journal.Activity;
+import lt.rebellion.journal.Category;
+import lt.rebellion.journal.JournalService;
+import lt.rebellion.journal.Type;
 
 @Component
 public class JwtTokenProvider {
 
 	private static final Logger LOG = LoggerFactory.getLogger(JwtTokenProvider.class);
+	
+	@Autowired
+	private JournalService journalService;
 
 	private final UserDetailsService userDetailsService;
 
@@ -55,6 +63,9 @@ public class JwtTokenProvider {
 		Claims claims = Jwts.claims().setSubject(username);
 		Date now = new Date();
 		Date validity = new Date(now.getTime() + validityInMilliseconds * 1000);
+		
+		journalService.newJournalEntry(username, Type.INFO, Category.USER, Activity.SUCCESSFUL_LOGIN,
+				"User log in successful");
 
 		return Jwts.builder().setClaims(claims).setIssuedAt(now).setExpiration(validity)
 				.signWith(SignatureAlgorithm.HS256, secretKey).compact();

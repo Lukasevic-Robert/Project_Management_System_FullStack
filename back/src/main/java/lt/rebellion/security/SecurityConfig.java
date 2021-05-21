@@ -8,8 +8,10 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
 
 import lombok.AllArgsConstructor;
 
@@ -21,7 +23,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	private final JwtConfigurer jwtConfigurer;
 	private AuthEntryPointJwt authEntryPointJwt;
-
 
 	@Bean
 	protected PasswordEncoder passwordEncoder() {
@@ -36,20 +37,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.cors().and()
-			.csrf().disable()
-			.exceptionHandling()
-			.authenticationEntryPoint(authEntryPointJwt)
-		.and()
-			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-		.and()
-			.authorizeRequests()
-			.antMatchers("/", "/swagger-ui/").permitAll()
-			.antMatchers("/api/auth/**").permitAll()
-			.antMatchers("/api/v1/**").authenticated()
-			.anyRequest().authenticated()
-		.and()
-			.apply(jwtConfigurer);
-
+		http.cors().and().csrf().disable().exceptionHandling().authenticationEntryPoint(authEntryPointJwt).and()
+				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
+				.antMatchers("/", "/swagger-ui/").permitAll().antMatchers("/api/auth/**").permitAll()
+				.antMatchers("/api/v1/**").authenticated().anyRequest().authenticated().and().apply(jwtConfigurer);
 	}
 }
