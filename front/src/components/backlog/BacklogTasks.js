@@ -8,9 +8,6 @@ import swal from 'sweetalert';
 import { useHistory } from 'react-router';
 import ProjectService from "../../services/ProjectService";
 import { makeStyles } from '@material-ui/core/styles';
-import SortIcon from '@material-ui/icons/Sort';
-import FilterListIcon from '@material-ui/icons/FilterList';
-import SearchIcon from '@material-ui/icons/Search';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/DeleteForever';
 import { Button, DialogTitle, DialogActions, Dialog, Box, Card, CardContent, Grid, LinearProgress, Typography } from '@material-ui/core';
@@ -294,7 +291,6 @@ const BacklogTasks = ({ match }) => {
     }
 
     const getTasksCSV = (projectId) => {
-        console.log(projectId)
         TaskService.requestTasksCSV(projectId);
     }
 
@@ -388,7 +384,7 @@ const BacklogTasks = ({ match }) => {
                                                                                         onClose={handleClose}
                                                                                         aria-labelledby="alert-dialog-title"
                                                                                         aria-describedby="alert-dialog-description">
-                                                                                        <DialogTitle id="alert-dialog-title">{`Are you sure you want to delete project: ${deleteName}?`}</DialogTitle>
+                                                                                        <DialogTitle id="alert-dialog-title">{`Are you sure you want to delete task: ${deleteName}?`}</DialogTitle>
 
                                                                                         <DialogActions>
                                                                                             <Button onClick={handleClose} color="primary">CANCEL</Button>

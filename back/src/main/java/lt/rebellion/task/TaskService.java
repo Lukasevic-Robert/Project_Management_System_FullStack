@@ -40,6 +40,7 @@ public class TaskService {
 	private final UserService userService;
 	private final RoleRepository roleRepository;
 
+
 	public List<Task> getAllTasks() {
 		List<Task> tasks = taskRepository.findAll();
 		return tasks;

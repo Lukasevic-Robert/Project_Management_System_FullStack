@@ -6,18 +6,17 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lt.rebellion.role.Role;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserResponseDTO {
+public class UserRequestDTO {
 
-	private Long id;
 	private String firstName;
 	private String lastName;
 	private String email;
+	private String password;
 	private String status;
-	private Set<Role> roles;
+	private Set<String> roles;
 }

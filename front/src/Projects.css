@@ -1,8 +1,8 @@
-#delete-project-button{
+#delete-project-button, #delete-user-button{
     background-color: #92ddea;
 }
 
-#delete-project-button:hover{
+#delete-project-button:hover, #delete-user-button:hover{
     background-color: #7eb8da;
 }
 

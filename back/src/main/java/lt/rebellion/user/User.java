@@ -5,6 +5,8 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -16,6 +18,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lt.rebellion.baseEntity.BaseEntity;
+import lt.rebellion.model.EStatus;
 import lt.rebellion.project.Project;
 import lt.rebellion.role.Role;
 
@@ -38,6 +41,10 @@ public class User extends BaseEntity {
 
 	@Column(name = "password")
 	private String password;
+	
+	@Enumerated(EnumType.STRING)
+	@Column(name = "status")
+	private EStatus status = EStatus.PENDING;
 
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "user_roles",

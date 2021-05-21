@@ -3,8 +3,9 @@ import React, { useContext } from 'react';
 import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import { Switch, Route, Redirect } from "react-router-dom";
 import Login from "./Login.js";
+import Register from './Register.js'
 import BoardUser from './BoardUser.js';
-import BoardAdmin from './BoardAdmin.js';
+import BoardAdmin from './adminBoard/BoardAdmin.js';
 import Profile from './Profile.js';
 import ProjectList from './ProjectList.js';
 import CreateProject from './CreateProject.js';
@@ -13,6 +14,7 @@ import { AuthContext } from '../context/AuthContext';
 import ActiveBoard from './dashboard/ActiveBoard';
 import CreateTask from './tasks/CreateTask';
 import BacklogTasks from './backlog/BacklogTasks';
+import CreateUser from './CreateUser.js'
 
 
 const AdminRoute = ({ component: Component, ...rest }) => {
@@ -66,10 +68,12 @@ function Routes() {
 
                     <Route exact path='/' component={Login} />
                     <Route path="/signin" component={Login} />
+                    <Route path="/signup" component={Register} />
 
                     <AuthenticatedRoute path="/user" component={BoardUser} />
 
-                    <AdminRoute path="/admin" component={BoardAdmin} />
+                    <AdminRoute exact path="/admin" component={BoardAdmin} />
+                    <AdminRoute path="/admin/create-user/:id" component={CreateUser} />
 
                     <AuthenticatedRoute path="/profile" component={Profile} />
 

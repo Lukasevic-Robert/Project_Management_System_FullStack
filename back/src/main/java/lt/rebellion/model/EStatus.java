@@ -7,5 +7,7 @@ public enum EStatus {
 	DONE,
 	ACTIVE,
 	BACKLOG,
-	HISTORY
+	HISTORY,
+	INACTIVE,
+	PENDING
 }
