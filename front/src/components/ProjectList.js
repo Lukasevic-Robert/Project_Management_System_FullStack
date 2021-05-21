@@ -302,11 +302,18 @@ function ProjectList() {
     }
 
     const handleSearch = (event) => {
+        if (event.target.value === '') {
+            setRefreshProject(!refreshProject);
+        }
         setSearchRequest(event.target.value);
     }
     const handleSearchSubmit = (event) => {
         event.preventDefault();
-        setIconSwitcher(true);
+        if (searchRequest === '') {
+            setIconSwitcher(false);
+        } else {
+            setIconSwitcher(true);
+        }
         setSearchSubmit(true);
         if (page > 0) {
             setPage(0);
@@ -377,7 +384,7 @@ function ProjectList() {
                                 <TableCell id="table-cell" align="center">TOTAL TASKS</TableCell>
                                 <TableCell id="table-cell" align="center">TODO TASKS</TableCell>
                                 {projectBoss && (
-                                    <TableCell id="table-cell" align="right">ACTIONS</TableCell>)}
+                                    <TableCell id="table-cell" align="right" style={{paddingRight:35}}>ACTIONS</TableCell>)}
                             </TableRow>
                         </TableHead>
                         <TableBody>

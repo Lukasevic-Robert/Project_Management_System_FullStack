@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { useHistory, Redirect } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -78,7 +78,6 @@ const API_URL = "http://localhost:8080/api/auth/";
 export default function SignIn() {
 
     const value = useContext(AuthContext);
-    const history = useHistory();
     const classes = useStyles();
 
     const [firstName, setFirstName] = useState('');
@@ -157,7 +156,7 @@ export default function SignIn() {
             <Container component="main" maxWidth="xs">
                 <CssBaseline />
                 <div className={classes.paper}>
-                    {successMessage ? (<div className="alert alert-success" style={{ marginTop: 200 }} role="alert">{successMessage}<span>&ensp;</span><Link href="/signin" variant="body2">{"Press here to Sign In!"}</Link></div>)
+                    {successMessage ? (<div className="alert alert-success" style={{ marginTop: 200, textAlign: 'center' }} role="alert"><span>{successMessage}</span> <br/> <span style={{color : 'red'}}>Admin must confirm your registration.</span><br/><Link href="/signin" variant="body2">{"Press here to Sign In!"}</Link></div>)
                         : (<><Avatar color="secondary" className={classes.avatar}>
                             <LockOutlinedIcon />
                         </Avatar>
@@ -175,7 +174,7 @@ export default function SignIn() {
                                     label="First Name"
                                     name="fname"
                                     value={firstName}
-                                    validators={['required', 'matchRegexp:^([A-Za-z]+ )+[A-Za-z]+$|^[A-Za-z]+$']}
+                                    validators={['required', `matchRegexp:^[A-Z][a-z]+$`]}
                                     errorMessages={['This field is required', 'Last Name must be a valid']}
                                     onChange={handleFirstNameChange}
                                     autoFocus
@@ -191,7 +190,7 @@ export default function SignIn() {
                                     label="Last Name"
                                     name="lname"
                                     value={lastName}
-                                    validators={['required', 'matchRegexp:^([A-Za-z]+ )+[A-Za-z]+$|^[A-Za-z]+$']}
+                                    validators={['required', `matchRegexp:^[A-Z][a-z]+$`]}
                                     errorMessages={['This field is required', 'Last Name must be a valid']}
                                     onChange={handleLastNameChange}
 
@@ -223,7 +222,7 @@ export default function SignIn() {
                                     type="password"
                                     id="password-register"
                                     value={password}
-                                    validators={['required']}
+                                    validators={['required', `matchRegexp:^(?=.{8,}$)(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9]).*$`]}
                                     errorMessages={['This field is required']}
                                     onChange={handlePasswordChange}
                                 // autoComplete="current-password"
@@ -240,7 +239,7 @@ export default function SignIn() {
                                     id="repeat-password-register"
                                     value={repeatPassword}
                                     error={!validForm}
-                                    validators={['isPasswordMatch', 'required']}
+                                    validators={['isPasswordMatch', 'required', `matchRegexp:^(?=.{8,}$)(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9]).*$`]}
                                     errorMessages={['Password mismatch', 'This field is required']}
                                     onChange={handleRepeatPasswordChange}
                                 // autoComplete="current-password"

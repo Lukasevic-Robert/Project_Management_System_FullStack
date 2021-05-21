@@ -72,7 +72,7 @@ function Routes() {
 
                     <AuthenticatedRoute path="/user" component={BoardUser} />
 
-                    <AdminRoute path="/admin" component={BoardAdmin} />
+                    <AdminRoute exact path="/admin" component={BoardAdmin} />
                     <AdminRoute path="/admin/create-user/:id" component={CreateUser} />
 
                     <AuthenticatedRoute path="/profile" component={Profile} />

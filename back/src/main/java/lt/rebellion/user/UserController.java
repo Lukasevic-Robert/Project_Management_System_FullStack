@@ -1,7 +1,9 @@
 package lt.rebellion.user;
 
+import java.io.IOException;
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
@@ -69,5 +71,10 @@ public class UserController {
 	public void deleteUserById(@PathVariable Long id) {
 		userService.deleteUserById(id);
 	}
+	
+	@GetMapping("/export")
+	public HttpServletResponse exportToCSV(HttpServletResponse response) throws IOException {
+       return userService.exportToCSV(response);
+    }
 	
 }

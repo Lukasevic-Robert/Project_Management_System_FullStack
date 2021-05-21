@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link, useHistory } from "react-router-dom";
 import UserService from "../services/UserService";
 import swal from 'sweetalert';
@@ -70,9 +70,12 @@ function CreateUser({ match }) {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
-    const [status, setStatus] = useState('');
+    const [status, setStatus] = useState('ACTIVE');
     const [password, setPassword] = useState('');
-    const [roles, setRoles] = useState([]);
+    const [repeatPassword, setRepeatPassword] = useState('');
+    const [role, setRole] = useState('ROLE_USER');
+    const [validForm, setValidForm] = useState(true);
+    const [successMessage, setSuccessMessage] = useState();
 
     useEffect(() => {
 
@@ -86,7 +89,8 @@ function CreateUser({ match }) {
                 setLastName(user.lastName);
                 setEmail(user.email);
                 setStatus(user.status);
-                setRoles(user.roles);
+                setRole(user.roles[0].name);
+            
             })
                 .catch((error) => {
                     getErrorMessage();
@@ -96,11 +100,32 @@ function CreateUser({ match }) {
 
     }, [])
 
+    useEffect(() => {
+        if (password !== repeatPassword) {
+            setValidForm(false);
+        } else {
+            setValidForm(true);
+        }
+
+        ValidatorForm.addValidationRule('isPasswordMatch', (value) => { // bad solution, need to find better one
+            if (validForm) {
+                return false;
+            }
+            return true;
+        });
+
+        return () => {
+            ValidatorForm.removeValidationRule('isPasswordMatch');
+        }
+
+    }, [password, repeatPassword])
+
     const saveOrUpdateUser = (e) => {
         e.preventDefault();
-
-
-        let user = { firstName: firstName, lastName: lastName, password: password, status: status, roles: roles };
+        let roleName = [];
+        roleName.push(role);
+     
+        let user = { firstName: firstName, lastName: lastName, email: email, password: password, status: status, roles: roleName };
         if (id === '-1') {
             UserService.createUpdateUser(user, 0).then(res => {
                 getSuccessMessage("added");
@@ -145,13 +170,23 @@ function CreateUser({ match }) {
 
     const getTitle = () => {
         if (id === '-1') {
-            return <h3 className="text-center">Add a new user</h3>
+            return <h3 className="text-center">Add new user</h3>
         }
         else {
-            return <h3 className="text-center">Update the user</h3>
+            return <h3 className="text-center">Update user</h3>
         }
     }
 
+    const handleEmailChange = (e) => {
+        setEmail(e.target.value);
+    }
+    const handlePasswordChange = (e) => {
+        setPassword(e.target.value);
+    }
+
+    const handleRepeatPasswordChange = (e) => {
+        setRepeatPassword(e.target.value);
+    }
 
     const changeFirstName = (event) => {
         setFirstName(event.target.value);
@@ -162,6 +197,10 @@ function CreateUser({ match }) {
     const changeLastName = (event) => {
         setLastName(event.target.value);
     }
+    const changeRole = (event) => {
+        setRole(event.target.value);
+    }
+
     return (
         <ThemeProvider theme={theme}>
             <Container component="main" maxWidth="xs" className={classes.root}>
@@ -178,7 +217,7 @@ function CreateUser({ match }) {
                         value={firstName}
                         inputProps={{ maxLength: 50 }}
                         // autoComplete="email"
-                        validators={['required', 'matchRegexp:^([A-Za-z0-9]+ )+[A-Za-z0-9]+$|^[A-Za-z0-9]+$']}
+                        validators={['required', `matchRegexp:^[A-Z][a-z]+$`]}
                         errorMessages={['this field is required']}
                         onChange={changeFirstName}
                         autoFocus
@@ -194,11 +233,27 @@ function CreateUser({ match }) {
                         name="lastName"
                         value={lastName}
                         // autoComplete="email"
-                        validators={['required']}
+                        validators={['required', `matchRegexp:^[A-Z][a-z]+$`]}
                         errorMessages={['this field is required']}
                         onChange={changeLastName}
                     />
-                    {id !== '-1' ? <FormControl required id="form-control">
+                    <TextValidator
+                        variant="outlined"
+                        required
+                        margin="normal"
+                        // required
+                        fullWidth
+                        id="email-create-user"
+                        label="Email Address"
+                        name="email"
+                        value={email}
+                        // autoComplete="email"
+                        validators={['required', 'isEmail']}
+                        errorMessages={['This field is required', 'Email is not valid']}
+                        onChange={handleEmailChange}
+                    />
+
+                    <FormControl required id="form-control">
                         <InputLabel id="demo-simple-select-label">Status</InputLabel>
                         <Select
                             labelId="demo-simple-select-label"
@@ -206,18 +261,64 @@ function CreateUser({ match }) {
                             value={status}
                             onChange={changeStatus}
                         >
-                            <MenuItem style={{ color: '#cf932b', backgroundColor: 'transparent' }} value={`PENDING`}><span style={{ color: '#cf932b' }}>PENDING</span></MenuItem>
-                            <MenuItem style={{ color: '#cf932b', backgroundColor: 'transparent' }} value={`ACTIVE`}><span style={{ color: '#cf932b' }}>ACTIVE</span></MenuItem>
-                            <MenuItem style={{ color: '#63cf7f', backgroundColor: 'transparent' }} value={`DONE`}><span style={{ color: '#63cf7f' }}>INACTIVE</span></MenuItem>
+                            <MenuItem style={{ color: '#63cf7f', backgroundColor: 'transparent' }} value={`ACTIVE`}><span style={{ color: '#63cf7f' }}>ACTIVE</span></MenuItem>
+                            <MenuItem style={{ color: '#cf932b', backgroundColor: 'transparent' }} value={`PENDING`}><span style={{ color: '#cf932b' }}>PENDING</span></MenuItem>                          
+                            <MenuItem style={{ color: '#e03b24', backgroundColor: 'transparent' }} value={`INACTIVE`}><span style={{ color: '#e03b24' }}>INACTIVE</span></MenuItem>
 
                         </Select>
-                    </FormControl> : ''}
+                    </FormControl>
+                    <FormControl required id="form-control">
+                        <InputLabel id="demo-simple-select-label">Role</InputLabel>
+                        <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={role}
+                            onChange={changeRole}
+                        >
+                            <MenuItem style={{ backgroundColor: 'transparent' }} value={`ROLE_USER`}><span>USER</span></MenuItem>
+                            <MenuItem style={{ color: '#2e6fd9', backgroundColor: 'transparent' }} value={`ROLE_MODERATOR`}><span style={{ color: '#2e6fd9' }}>MODERATOR</span></MenuItem>
+                            <MenuItem style={{ color: '#9545d8', backgroundColor: 'transparent' }} value={`ROLE_ADMIN`}><span style={{ color: '#9545d8' }}>ADMIN</span></MenuItem>
+
+                        </Select>
+                    </FormControl>
+
+                    {id === '-1' && (<><TextValidator
+                        variant="outlined"
+                        required
+                        margin="normal"
+                        // required
+                        fullWidth
+                        name="password"
+                        label="Password"
+                        type="password"
+                        id="password-create-user"
+                        value={password}
+                        validators={['required', `matchRegexp:^(?=.{8,}$)(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9]).*$`]}
+                        errorMessages={['This field is required']}
+                        onChange={handlePasswordChange}
+                    // autoComplete="current-password"
+                    />
+                    <TextValidator
+                        variant="outlined"
+                        required
+                        margin="normal"
+                        // required
+                        fullWidth
+                        name="repeatPassword"
+                        label="Repeat password"
+                        type="password"
+                        id="repeat-password-create-user"
+                        value={repeatPassword}
+                        error={!validForm}
+                        validators={['isPasswordMatch', 'required', `matchRegexp:^(?=.{8,}$)(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9]).*$`]}
+                        errorMessages={['Password mismatch', 'This field is required']}
+                        onChange={handleRepeatPasswordChange}/></>)}
 
                     <Button id="submit-user-update-create-form" className={classes.colorWhite} variant="contained" color="primary" type="submit" style={{ marginRight: '10px' }}>Submit</Button>
                     <Link to={'/admin'} style={{ textDecoration: 'none' }}><Button id="cancel-user-update-create-form" className={classes.colorWhite} variant="contained" color="secondary">Cancel</Button></Link>
                 </ValidatorForm>
             </Container>
-        </ThemeProvider>
+        </ThemeProvider >
     )
 }
 export default CreateUser

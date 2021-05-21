@@ -1,5 +1,6 @@
 package lt.rebellion.user;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -7,8 +8,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +24,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.supercsv.io.CsvBeanWriter;
+import org.supercsv.io.ICsvBeanWriter;
+import org.supercsv.prefs.CsvPreference;
 
 import lombok.AllArgsConstructor;
 import lt.rebellion.DTO.LoginRequest;
@@ -121,30 +126,19 @@ public class UserService {
 	}
 
 	public List<User> getAllUsers() {
-		List<User> users = userRepository.findAll();
+		List<User> users = userRepository.findAllActivated();
 		return users;
 	}
 
 	public Page<UserResponseDTO> getAllPaginatedUsers(Pageable pageable) {
-
-		Page<User> allUsers = userRepository.findAll(pageable);
-		List<UserResponseDTO> allUsersDTOs = allUsers.stream().map(u -> toUserResponseDTO(u))
-				.collect(Collectors.toList());
-		Page<UserResponseDTO> backToPage = new PageImpl<UserResponseDTO>(allUsersDTOs, pageable,
-				allUsers.getTotalElements());
-
-		return backToPage;
+		Page<UserResponseDTO> allUsers = userRepository.findAll(pageable).map(this::toUserResponseDTO);
+		return allUsers;
 	}
 
 	public Page<UserResponseDTO> getPaginatedUsersByKeyword(Pageable pageable, String keyword) {
-
-		Page<User> allUsers = userRepository.findPaginatedUsersByKeyword(pageable, keyword);
-		List<UserResponseDTO> allUsersDTOs = allUsers.stream().map(u -> toUserResponseDTO(u))
-				.collect(Collectors.toList());
-		Page<UserResponseDTO> backToPage = new PageImpl<UserResponseDTO>(allUsersDTOs, pageable,
-				allUsers.getTotalElements());
-
-		return backToPage;
+		Page<UserResponseDTO> allUsers = userRepository.findPaginatedUsersByKeyword(pageable, keyword.toUpperCase())
+				.map(this::toUserResponseDTO);
+		return allUsers;
 	}
 
 	public ResponseEntity<?> createUpdateUserById(Long id, UserRequestDTO userRequestDTO) {
@@ -152,13 +146,13 @@ public class UserService {
 		Set<String> strRoles = userRequestDTO.getRoles();
 		strRoles.forEach(role -> {
 			switch (role) {
-			case "ADMIN":
+			case "ROLE_ADMIN":
 				Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
 						.orElseThrow(() -> new NotFoundException("Error: Role is not found."));
 				roles.add(adminRole);
 
 				break;
-			case "MODERATOR":
+			case "ROLE_MODERATOR":
 				Role modRole = roleRepository.findByName(ERole.ROLE_MODERATOR)
 						.orElseThrow(() -> new NotFoundException("Error: Role is not found."));
 				roles.add(modRole);
@@ -176,19 +170,17 @@ public class UserService {
 				return ResponseEntity.badRequest().body(new ApiError("Error: Email is already in use!"));
 			} else {
 				EStatus status = EStatus.valueOf(userRequestDTO.getStatus());
-				User user = new User(userRequestDTO.getFirstName(),
-						userRequestDTO.getLastName(),
-						userRequestDTO.getEmail(),
-						encoder.encode(userRequestDTO.getPassword()));
+				User user = new User(userRequestDTO.getFirstName(), userRequestDTO.getLastName(),
+						userRequestDTO.getEmail(), encoder.encode(userRequestDTO.getPassword()));
 				user.setStatus(status);
 				user.setRoles(roles);
 				userRepository.save(user);
 				return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
 			}
 		} else {
-			
+
 			User user = userRepository.findById(id).get();
-			if(!user.equals(userRepository.findByEmail(userRequestDTO.getEmail()).get())) {
+			if (!user.equals(userRepository.findByEmail(userRequestDTO.getEmail()).get())) {
 				return ResponseEntity.badRequest().body(new ApiError("Error: Email is already in use!"));
 			}
 			user.setFirstName(userRequestDTO.getFirstName());
@@ -201,7 +193,7 @@ public class UserService {
 			return ResponseEntity.ok(new MessageResponse("User updated successfully!"));
 		}
 	}
-	
+
 	public void deleteUserById(Long id) {
 		validateUserId(id);
 		userRepository.deleteById(id);
@@ -209,6 +201,26 @@ public class UserService {
 
 	public User getUserById(Long id) {
 		return userRepository.findById(id).orElseThrow(() -> new NotFoundException("User Not Found"));
+	}
+	
+	public HttpServletResponse exportToCSV(HttpServletResponse response) throws IOException {
+
+		response.setContentType("text/csv");
+		
+		List<User> users = userRepository.findAll();
+		List<UserResponseDTO> usersDTO = users.stream().map(this::toUserResponseDTO)
+				.collect(Collectors.toList());
+
+		ICsvBeanWriter csvWriter = new CsvBeanWriter(response.getWriter(), CsvPreference.STANDARD_PREFERENCE);
+		String[] csvHeader = { "User ID", "First Name", "Last Name", "Email", "Status", "Roles"};
+		String[] nameMapping = { "id", "firstName", "lastName", "email", "status", "roles" };
+		csvWriter.writeHeader(csvHeader);
+
+		for (UserResponseDTO user : usersDTO) {
+			csvWriter.write(user, nameMapping);
+		}
+		csvWriter.close();
+		return response;
 	}
 
 	public UserDTO userToDTO(User user) {
@@ -220,7 +232,7 @@ public class UserService {
 				user.getEmail(), user.getStatus().name(), user.getRoles());
 		return userResponseDTO;
 	}
-	
+
 	public boolean validateUserId(Long id) {
 		userRepository.findById(id).orElseThrow(() -> new NotFoundException("User Not Found"));
 		return true;
