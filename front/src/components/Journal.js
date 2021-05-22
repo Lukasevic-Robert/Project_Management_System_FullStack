@@ -36,6 +36,11 @@ const useStyles = makeStyles({
     colorWhite: {
         color: 'white'
     },
+    button: {
+        margin: theme.spacing(1),
+        color: 'white',
+        marginLeft: 'auto'
+    },
     filterProjects: {
         marginLeft: 10,
         textTransform: 'none',
@@ -81,11 +86,11 @@ function Journal() {
                 // setUsersId(response.data.content.users.id);
             },
             error => {
-                
+
             }
         );
     }
-   
+
 
     // PAGINATION =========================================>
     const handleChangePage = (event, newPage) => {
@@ -100,13 +105,13 @@ function Journal() {
     const getJournalCSV = () => {
         JournalService.requestJournalCSV();
     }
-    
+
     return (
 
         <ThemeProvider theme={theme}>
             <Paper className="table-container">
                 <TableContainer >
-                   <div>  <Button id="project-csv" onClick={getJournalCSV} variant="contained" color="primary" size="small" className={classes.button} startIcon={<SaveIcon />}>Save .csv</Button></div>
+                    <div style={{ display: 'flex' }}>  <Button id="journal-csv" onClick={getJournalCSV} variant="contained" color="primary" size="small" className={classes.button} startIcon={<SaveIcon />}>Save All .csv</Button></div>
                     <Table className={classes.table} size="small" aria-label="a dense table">
                         <TableHead>
                             <TableRow id="table-head" >
@@ -115,8 +120,8 @@ function Journal() {
                                 <TableCell id="table-cell" align="center">TIME</TableCell>
                                 <TableCell id="table-cell" align="center">TYPE</TableCell>
                                 <TableCell id="table-cell" align="center">CATEGORY</TableCell>
-                                    <TableCell id="table-cell" align="center">ACTIVITY</TableCell>
-                                    <TableCell id="table-cell" align="center">MESSAGE</TableCell>
+                                <TableCell id="table-cell" align="center">ACTIVITY</TableCell>
+                                <TableCell id="table-cell" align="center">MESSAGE</TableCell>
 
                             </TableRow>
                         </TableHead>
@@ -124,18 +129,18 @@ function Journal() {
                             {
                                 (entries).map((row) => (
 
-                                    <TableRow key={row.entryID} className={classes.tableRow}>
+                                    <TableRow key={row.entryID} style={row.type === 'ERROR' ? { backgroundColor: '#ffebee' } : { backgroundColor: '#e8f5e9' }} className={classes.tableRow}>
 
                                         <TableCell className={classes.projectName}><span>{row.entryID}</span></TableCell>
 
-                                        <TableCell className={classes.description} align="center">{row.email}</TableCell>
-                                        
+                                        <TableCell className={classes.description} align="center"><span>{row.email}</span></TableCell>
+
                                         <TableCell align="center">{row.time.replace("T", " ").substr(0, 19)}</TableCell>
-                                        
-                                        <TableCell align="center">{row.type}</TableCell>
+
+                                        <TableCell align="center" style={row.type === 'ERROR' ? { color: '#f44336' } : { color: '#4caf50' }}>{row.type}</TableCell>
 
                                         <TableCell align="center">{row.category}</TableCell>
-                                        <TableCell align="center">{row.activity}</TableCell> 
+                                        <TableCell align="center" style={row.type === 'ERROR' ? { color: '#f44336' } : { color: '#4caf50' }}>{row.activity}</TableCell>
                                         <TableCell align="center">{row.message}</TableCell>
 
                                     </TableRow>

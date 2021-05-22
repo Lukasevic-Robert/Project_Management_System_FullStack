@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletResponse;
@@ -60,7 +59,7 @@ public class UserService {
 	private UserRepository userRepository;
 	private RoleRepository roleRepository;
 	private PasswordEncoder encoder;
-	
+
 	@Autowired
 	private JournalService journalService;
 
@@ -84,17 +83,16 @@ public class UserService {
 			response.put("roles", roles);
 			return ResponseEntity.ok(response);
 
-
 		} catch (BadCredentialsException e) {
-	journalService.newJournalEntry(request.getEmail(), Type.ERROR, Category.USER, Activity.UNSUCCESSFUL_LOGIN,
+			journalService.newJournalEntry(request.getEmail(), Type.ERROR, Category.USER, Activity.UNSUCCESSFUL_LOGIN,
 					"User log in unsuccessful");
 			return new ResponseEntity<>("Invalid email/password combination", HttpStatus.FORBIDDEN);
 		} catch (LockedException e) {
-      	journalService.newJournalEntry(request.getEmail(), Type.ERROR, Category.USER, Activity.UNSUCCESSFUL_LOGIN,
+			journalService.newJournalEntry(request.getEmail(), Type.ERROR, Category.USER, Activity.UNSUCCESSFUL_LOGIN,
 					"User log in unsuccessful");
 			return new ResponseEntity<>("User account is locked", HttpStatus.LOCKED);
 		} catch (AuthenticationException e) {
-      	journalService.newJournalEntry(request.getEmail(), Type.ERROR, Category.USER, Activity.UNSUCCESSFUL_LOGIN,
+			journalService.newJournalEntry(request.getEmail(), Type.ERROR, Category.USER, Activity.UNSUCCESSFUL_LOGIN,
 					"User log in unsuccessful");
 			e.printStackTrace();
 			return new ResponseEntity<>("Bad Request. Try again or contact Administrator", HttpStatus.FORBIDDEN);
@@ -222,17 +220,16 @@ public class UserService {
 	public User getUserById(Long id) {
 		return userRepository.findById(id).orElseThrow(() -> new NotFoundException("User Not Found"));
 	}
-	
+
 	public HttpServletResponse exportToCSV(HttpServletResponse response) throws IOException {
 
 		response.setContentType("text/csv");
-		
+
 		List<User> users = userRepository.findAll();
-		List<UserResponseDTO> usersDTO = users.stream().map(this::toUserResponseDTO)
-				.collect(Collectors.toList());
+		List<UserResponseDTO> usersDTO = users.stream().map(this::toUserResponseDTO).collect(Collectors.toList());
 
 		ICsvBeanWriter csvWriter = new CsvBeanWriter(response.getWriter(), CsvPreference.STANDARD_PREFERENCE);
-		String[] csvHeader = { "User ID", "First Name", "Last Name", "Email", "Status", "Roles"};
+		String[] csvHeader = { "User ID", "First Name", "Last Name", "Email", "Status", "Roles" };
 		String[] nameMapping = { "id", "firstName", "lastName", "email", "status", "roles" };
 		csvWriter.writeHeader(csvHeader);
 
