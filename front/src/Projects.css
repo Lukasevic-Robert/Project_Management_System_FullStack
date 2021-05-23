@@ -1,14 +1,32 @@
-#delete-project-button, #delete-user-button{
+/* #delete-project-button, #delete-user-button{
     background-color: #92ddea;
 }
 
 #delete-project-button:hover, #delete-user-button:hover{
     background-color: #7eb8da;
+} */
+
+
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  -webkit-text-fill-color: rgb(255, 255, 255);
+  -webkit-box-shadow: 0 0 0px 1000px rgba(0, 0, 0, 0) inset;
+  transition: background-color 5000s ease-in-out 0s;
+
 }
 
 #color-white{
     color:white;
    background-color: white;
+
 }
 #table-head{
     height:50px; 
@@ -16,7 +34,7 @@
 
 #table-cell{
     font-weight: 600;
-    color: #7eb8da;
+    color: #ffc814;
 }
 
 #form-control{
@@ -29,4 +47,8 @@
 }
 #search-bar:focus-within{
     border-color: #7eb8da;
+}
+.MuiTablePagination-select, .MuiTablePagination-selectIcon{
+    color: white;
+    background-color:white;
 }

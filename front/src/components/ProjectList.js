@@ -27,9 +27,46 @@ const theme = createMuiTheme({
             main: '#be9ddf',
         },
         secondary: {
-            main: '#ffa5d8',
+            main: '#f6c1c7',
         },
     },
+    overrides: {
+        MuiTablePagination: {
+
+            root: {
+                color: 'white',
+                backgroundColor: 'transparent'
+            },
+            selectIcon: {
+                color: 'white',
+            },
+        },
+        MuiPaper: {
+            root: {
+                backgroundColor: '#4d81d8',
+                color: 'white'
+            }
+
+        },
+        MuiButton: {
+            contained: {
+                backgroundColor: '#d44a28',
+                // boxShadow: 'none',
+                '&:hover': {
+                    backgroundColor: 'transparent',
+                },
+            }
+
+        },
+        MuiFab: {
+            root: {
+                '&:hover': {
+                    backgroundColor: 'transparent',
+                    boxShadow: '1px 1px 5px black'
+                },
+            }
+        },
+    }
 });
 
 
@@ -40,6 +77,8 @@ const useStyles = makeStyles({
     },
     fab: {
         margin: 5,
+        backgroundColor: 'transparent',
+        boxShadow: 'none'
 
     },
     createButton: {
@@ -50,35 +89,37 @@ const useStyles = makeStyles({
         height: 60,
     },
     colorWhite: {
-        color: 'white'
+        color: 'white',
     },
     filterProjects: {
         marginLeft: 10,
         height: 40,
         textTransform: 'none',
-        backgroundColor: '#f5f4f4',
+     backgroundColor: '#ffc814',
         border: 'none',
-        '&:hover': {
-            backgroundColor: '#dddbdb',
-        }
+        color: 'white',
+      
     },
     description: {
         textOverflow: 'ellipsis',
         whiteSpace: 'nowrap',
         overflow: 'hidden',
-        maxWidth: '150px'
+        maxWidth: '150px',
+        color: 'white',
     },
     projectName: {
         textOverflow: 'ellipsis',
         whiteSpace: 'nowrap',
         overflow: 'hidden',
-        maxWidth: '150px'
+        maxWidth: '150px',
+        color: 'white',
     },
 
     button: {
         margin: theme.spacing(1),
         color: 'white',
-        marginLeft: 'auto'
+        marginLeft: 'auto',
+        backgroundColor: '#ffc814'
     },
     margin: {
         margin: theme.spacing(1),
@@ -92,18 +133,20 @@ const useStyles = makeStyles({
         height: 40,
         border: '1px solid #dddbdb',
         boxShadow: 'none',
+        backgroundColor: 'transparent',
     },
     input: {
+        color: 'white',
         marginLeft: theme.spacing(1),
         flex: 1,
         fontSize: 14,
         fontWeight: '500',
-        fontFamily: 'Fira Sans'
+        fontFamily: 'Fira Sans',
     },
     iconButton: {
         padding: 10,
         '&:hover': {
-            color: '#9c6ccc',
+            color: '#be9ddf',
         }
     },
 });
@@ -199,7 +242,7 @@ function ProjectList() {
 
     // DELETE a project ==================================>
 
-    const deleteFunction = (id, projectName) =>{
+    const deleteFunction = (id, projectName) => {
         swal({
             text: `Are you sure you want to delete project: ${projectName}?`,
             // text: "You won't be able to revert this!",
@@ -208,9 +251,9 @@ function ProjectList() {
             buttons: ["Cancel", "Yes, delete it!"],
             // buttons: true,
             dangerMode: true,
-            }).then( async (isConfirm)=>{
-              if (isConfirm) {
-                await  ProjectService.deleteProject(id).then(res => {
+        }).then(async (isConfirm) => {
+            if (isConfirm) {
+                await ProjectService.deleteProject(id).then(res => {
                     getSuccessMessage("deleted");
                     if (projects.length === 1 && page > 0) {
                         setPage(page - 1);
@@ -221,8 +264,8 @@ function ProjectList() {
                         getErrorMessage();
                     }
                     );
-              }
-            })  
+            }
+        })
     }
 
 
@@ -240,7 +283,7 @@ function ProjectList() {
     // const emptyRows = rowsPerPage - Math.min(rowsPerPage, projects.length - page * rowsPerPage);
     // end paging
 
- 
+
 
     const handleRedirect = (row) => {
 
@@ -342,11 +385,11 @@ function ProjectList() {
     return (
 
         <ThemeProvider theme={theme}>
-            <Paper className="table-container">
-                <TableContainer >
+            <Paper style={{ backgroundColor: value.state.checkedA ? '#695586' : 'transparent', border: 'none', boxShadow: 'none', marginTop: '-70px'}} className="table-container">
+                <TableContainer  >
                     <div className="projectHeadingStyle">
                         {projectBoss && (
-                            <Button id="project-create-button" onClick={() => history.push(`/projects/-1`)} size="medium" variant="contained" color="primary" className={classes.createButton}>
+                            <Button id="project-create-button" onClick={() => history.push(`/projects/-1`)} size="medium" variant="contained" className={classes.createButton}>
                                 <AddIcon style={{ marginLeft: -10 }} className={classes.colorWhite} id="add-project-button" /> Add New Project
                             </Button>)}
                     </div>
@@ -360,16 +403,16 @@ function ProjectList() {
                                 value={searchRequest}
                             />
                             {iconSwitcher
-                                ? (<IconButton onClick={handleClear} className={classes.iconButton} color="primary">
+                                ? (<IconButton onClick={handleClear} className={classes.iconButton} style={{ color: 'white'}}>
                                     <ClearRoundedIcon />
                                 </IconButton>)
-                                : (<IconButton type="submit" className={classes.iconButton} color="primary" aria-label="search">
+                                : (<IconButton type="submit" className={classes.iconButton} style={{ color: 'white'}} aria-label="search">
                                     <SearchIcon />
                                 </IconButton>)}
 
                         </Paper>
-                        <Button id="filter-project-by-user" onClick={changeFiltered} className={classes.filterProjects} variant="outlined"><span style={{ fontFamily: 'M PLUS 1p', fontSize: 15 }}>{!filtered ? <>Only My Projects</> : <>Show All Projects</>}</span></Button>
-                        <Button id="project-csv" onClick={getProjectCSV} variant="contained" color="primary" size="small" className={classes.button} startIcon={<SaveIcon />}>Save all .csv</Button>
+                        <Button id="filter-project-by-user" onClick={changeFiltered} className={classes.filterProjects} variant="contained"><span style={{ fontFamily: 'M PLUS 1p', fontSize: 15 }}>{!filtered ? <>Only My Projects</> : <>Show All Projects</>}</span></Button>
+                        <Button id="project-csv" onClick={getProjectCSV} variant="contained" size="small" className={classes.button} startIcon={<SaveIcon />}>Save all .csv</Button>
                     </div>
                     <Table className={classes.table} size="small" aria-label="a dense table">
                         <TableHead>
@@ -380,40 +423,31 @@ function ProjectList() {
                                 <TableCell id="table-cell" align="center">TOTAL TASKS</TableCell>
                                 <TableCell id="table-cell" align="center">TODO TASKS</TableCell>
                                 {projectBoss && (
-                                    <TableCell id="table-cell" align="right" style={{paddingRight:35}}>ACTIONS</TableCell>)}
+                                    <TableCell id="table-cell" align="right" style={{ paddingRight: 35 }}>ACTIONS</TableCell>)}
                             </TableRow>
                         </TableHead>
-                        <TableBody>
+                        <TableBody className="table-body">
                             {
                                 (projects).map((row) => (
-
                                     <TableRow key={row.id} className={classes.tableRow}>
-
                                         <TableCell className={classes.projectName} onClick={() => handleRedirect(row)} style={{ cursor: 'pointer' }}><span>{row.name}</span></TableCell>
-
                                         <TableCell className={classes.description} align="center">{row.description}</TableCell>
-                                        <TableCell align="center"><span style={{ color: row.status === 'ACTIVE' ? '#cf932b' : '#63cf7f' }}>{row.status}</span></TableCell>
-                                        <TableCell align="center">{row.taskCount}</TableCell>
-                                        <TableCell align="center">{row.undoneTaskCount}</TableCell>
+                                        <TableCell align="center"><span style={{ color: row.status === 'ACTIVE' ? '#ff9b8a' : '#ccffbf' }}>{row.status}</span></TableCell>
+                                        <TableCell style={{ color: 'white' }} align="center">{row.taskCount}</TableCell>
+                                        <TableCell style={{ color: 'white' }} align="center">{row.undoneTaskCount}</TableCell>
                                         {projectBoss && (
                                             <TableCell align="right">
 
-                                                <Fab id="link-to-edit-projects1" size="small" color="secondary" onClick={() => history.push(`/projects/${row.id}`)} aria-label="Edit" className={classes.fab}>
+                                                <Fab id="link-to-edit-projects1" size="small" onClick={() => history.push(`/projects/${row.id}`)} aria-label="Edit" className={classes.fab}>
                                                     <EditIcon className={classes.colorWhite}></EditIcon>
                                                 </Fab>
-
-
                                                 <Fab id="delete-project-button" size="small" aria-label="Delete" className={classes.fab} onClick={() => deleteFunction(row.id, row.name)}>
                                                     <DeleteIcon className={classes.colorWhite} />
                                                 </Fab>
-
-                                                
                                             </TableCell>)}
-
                                     </TableRow>
                                 ))}
                         </TableBody>
-
                     </Table>
                 </TableContainer>
                 <TablePagination

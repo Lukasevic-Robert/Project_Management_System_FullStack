@@ -13,6 +13,10 @@ const AuthProvider = ({ children }) => {
     const [authUser, setAuthState] = useState(
         user ? JSON.parse(user) : {}  
     );
+    const [state, setState] = React.useState({
+        checkedA: true,
+        checkedB: true,
+      });
 
     const setAuthInfo =  user  => {
         localStorage.setItem('user', JSON.stringify(user));
@@ -56,7 +60,8 @@ const AuthProvider = ({ children }) => {
                 isAdmin,
                 isModerator,
                 isProjectBoss,
-                getCurrentUser
+                getCurrentUser,
+                state, setState
             }}
         >
             {children}

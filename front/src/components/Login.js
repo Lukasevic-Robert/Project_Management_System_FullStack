@@ -21,14 +21,75 @@ import { AuthContext } from '../context/AuthContext.js';
 
 
 const theme = createMuiTheme({
+  overrides: {
+    MuiFormHelperText: {
+      root: {
+          '&.Mui-error': {
+              color: '#ff9b8a'
+          }
+      }
+  },
+  MuiFormLabel: {
+      root: {
+          '&.Mui-error': {
+              color: '#ff9b8a'
+          }
+      },
+      asterisk: {
+          '&.Mui-error': {
+              color: '#ff9b8a'
+          }
+      }
+  },
+
+    MuiButton: {
+      contained: {
+        background: 'linear-gradient(to right, #ffc814 30%, transparent)',
+        backgroundColor: 'transparent',
+
+        // boxShadow: 'none',
+        '&:hover': {
+          backgroundColor: 'transparent',
+        },
+      }
+
+    },
+    MuiInputBase: {
+      root: {
+        backgroundColor: 'transparent',
+      }
+    },
+
+    MuiInputLabel: {
+      root: {
+        color: 'white',
+      },
+    },
+    MuiOutlinedInput: {
+      root: {
+          borderColor: 'white',
+          color: 'white',
+          '&.Mui-error': {
+              color: '#ff9b8a',
+              '& $notchedOutline': {
+                  borderColor: '#ff9b8a',
+              }
+          },
+      },
+      notchedOutline: {
+          borderColor: 'white',
+      },
+  },
+
+  },
   palette: {
     primary: {
-      main: '#7eb8da',
+      main: '#ffffff',
 
     },
     secondary: {
       light: '#92ddea',
-      main: '#ffa5d8',
+      main: '#ffc814',
       backgroundColor: '#fff',
     },
   },
@@ -37,7 +98,7 @@ const theme = createMuiTheme({
 
 function Copyright() {
   return (
-    <Typography variant="body2" color="textSecondary" align="center">
+    <Typography variant="body2" color="primary" align="center">
       {'Copyright © '}
       <Link color="inherit" href="https://github.com/Lukasevic-Robert/Project_Management_System_FullStack">
         Spring Rebellion
@@ -50,14 +111,15 @@ function Copyright() {
 
 const useStyles = makeStyles({
   paper: {
-    marginTop: theme.spacing(8),
+    marginTop: theme.spacing(4),
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
+    backgroundColor: 'transparent',
+    color: '#ffc814'
   },
   form: {
     width: '100%', // Fix IE 11 issue.
@@ -110,7 +172,7 @@ export default function SignIn() {
             error.response.data.message) ||
           error.message ||
           error.toString();
-          console.log();
+        console.log();
         setMessage(error.response.data);
         setErrUnauthorized(error.response.status);
       })
@@ -119,13 +181,13 @@ export default function SignIn() {
 
   return (!value.isAuthenticated() ? (
     <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="xs">
+      <Container style={{ backgroundColor: value.state.checkedA ? '#695586' : 'transparent', padding:40, borderRadius: 5}} component="main" maxWidth="xs">
         <CssBaseline />
         <div className={classes.paper}>
-          <Avatar color="secondary" className={classes.avatar}>
+          <Avatar className={classes.avatar}>
             <LockOutlinedIcon />
           </Avatar>
-          <Typography component="h1" variant="h5">
+          <Typography color="primary" component="h1" variant="h5">
             Sign in
         </Typography>
 
@@ -167,11 +229,10 @@ export default function SignIn() {
               label="Remember me"
             /> */}
             <Button
-            id="login-submit"
+              id="login-submit"
               type="submit"
               fullWidth
               variant="contained"
-              color="primary"
               className={classes.submit}
             >
               <span className={classes.colorWhite}>Sign In</span>
@@ -196,5 +257,5 @@ export default function SignIn() {
         </Box>
       </Container>
     </ThemeProvider>
-  ) : (<Redirect to="/projects"/>));
+  ) : (<Redirect to="/projects" />));
 }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { Link, useHistory } from "react-router-dom";
 import UserService from "../services/UserService";
 import swal from 'sweetalert';
@@ -13,7 +13,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import { makeStyles } from '@material-ui/core/styles';
-
+import { AuthContext } from '../context/AuthContext.js';
 
 
 
@@ -21,24 +21,110 @@ import { makeStyles } from '@material-ui/core/styles';
 const theme = createMuiTheme({
 
     overrides: {
+        MuiFormHelperText: {
+            root: {
+                '&.Mui-error': {
+                    color: '#ff9b8a'
+                }
+            }
+        },
+        MuiFormLabel: {
+            root: {
+                '&.Mui-error': {
+                    color: '#ff9b8a'
+                }
+            },
+            asterisk: {
+                '&.Mui-error': {
+                    color: '#ff9b8a'
+                }
+            }
+        },
         MuiChip: {
             deleteIcon: {
-                color: '#be9ddf',
+                color: '#d44a28',
                 "&:hover": {
-                    color: '#8d6dad'
+                    color: '#91341d'
                 }
 
             }
         },
+        MuiInputBase: {
+            root: {
+                backgroundColor: 'transparent',
+            }
+        },
+
+        MuiInputLabel: {
+            root: {
+                color: 'white',
+            },
+        },
+        MuiOutlinedInput: {
+            root: {
+                borderColor: 'white',
+                color: 'white',
+                '&.Mui-error': {
+                    color: '#ff9b8a',
+                    '& $notchedOutline': {
+                        borderColor: '#ff9b8a',
+                    }
+                },
+            },
+            notchedOutline: {
+                borderColor: 'white',
+            },
+        },
+        MuiInput: {
+            underline: {
+                '&:before': {
+                    borderBottom: '1px solid white',
+                }
+            }
+        },
+        MuiSelect: {
+            icon: {
+                color: 'white',
+            },
+            selectMenu: {
+                backgroundColor: 'transparent',
+            },
+            listbox: {
+                backgroundColor: 'transparent',
+            },
+            menuPaper: {
+                backgroundColor: 'transparent',
+            },
+        },
+        MuiIconButton: {
+            label: {
+                color: 'white'
+            },
+        },
+        MuiMenu: {
+            paper: {
+                background: 'linear-gradient(to right, #27408b 30%, transparent)',
+                backgroundColor: 'transparent',
+            }
+        },
+        MuiButton:{
+            contained: {
+            backgroundColor: '#d44a28',
+            '&:hover':{
+                backgroundColor: 'transparent',
+            }
+        }
+    }
+
     },
     palette: {
         primary: {
-            main: '#7eb8da',
+            main: '#ffffff',
 
         },
         secondary: {
             light: '#92ddea',
-            main: '#be9ddf',
+            main: '#d44a28',
             backgroundColor: '#fff',
         },
         default: {
@@ -57,7 +143,11 @@ const useStyles = makeStyles((theme) => ({
     },
     colorWhite: {
         color: 'white',
-    }
+    },
+    submit:{
+      
+        backgroundColor: '#ffffff',
+}
 }));
 
 
@@ -75,7 +165,7 @@ function CreateUser({ match }) {
     const [repeatPassword, setRepeatPassword] = useState('');
     const [role, setRole] = useState('ROLE_USER');
     const [validForm, setValidForm] = useState(true);
-    const [successMessage, setSuccessMessage] = useState();
+    const {state} = useContext(AuthContext);
 
     useEffect(() => {
 
@@ -203,9 +293,9 @@ function CreateUser({ match }) {
 
     return (
         <ThemeProvider theme={theme}>
-            <Container component="main" maxWidth="xs" className={classes.root}>
+            <Container style={{ backgroundColor: state.checkedA ? '#695586' : 'transparent', padding:40, borderRadius: 5}}  component="main" maxWidth="xs" className={classes.root}>
                 <ValidatorForm id="create-update-user-form" onSubmit={saveOrUpdateUser}>
-                    <Typography color="secondary" component="h1" variant="h5">{getTitle()}</Typography>
+                    <Typography style={{ color: '#ffc814' }} component="h1" variant="h5">{getTitle()}</Typography>
                     <TextValidator
                         variant="outlined"
                         margin="normal"
@@ -218,7 +308,7 @@ function CreateUser({ match }) {
                         inputProps={{ maxLength: 50 }}
                         // autoComplete="email"
                         validators={['required', `matchRegexp:^[A-Z][a-z]+$`]}
-                        errorMessages={['this field is required']}
+                        errorMessages={['this field is required', 'Name is not valid']}
                         onChange={changeFirstName}
                         autoFocus
                     />
@@ -233,8 +323,8 @@ function CreateUser({ match }) {
                         name="lastName"
                         value={lastName}
                         // autoComplete="email"
-                        validators={['required', `matchRegexp:^[A-Z][a-z]+$`]}
-                        errorMessages={['this field is required']}
+                        validators={['required', `matchRegexp:^[A-Z][A-z]+$`]}
+                        errorMessages={['this field is required', 'Lastname is not valid']}
                         onChange={changeLastName}
                     />
                     <TextValidator
@@ -261,9 +351,9 @@ function CreateUser({ match }) {
                             value={status}
                             onChange={changeStatus}
                         >
-                            <MenuItem style={{ color: '#63cf7f', backgroundColor: 'transparent' }} value={`ACTIVE`}><span style={{ color: '#63cf7f' }}>ACTIVE</span></MenuItem>
-                            <MenuItem style={{ color: '#cf932b', backgroundColor: 'transparent' }} value={`PENDING`}><span style={{ color: '#cf932b' }}>PENDING</span></MenuItem>                          
-                            <MenuItem style={{ color: '#e03b24', backgroundColor: 'transparent' }} value={`INACTIVE`}><span style={{ color: '#e03b24' }}>INACTIVE</span></MenuItem>
+                            <MenuItem style={{ color: '#63cf7f', backgroundColor: 'transparent' }} value={`ACTIVE`}><span style={{ color: '#ccffbf' }}>ACTIVE</span></MenuItem>
+                            <MenuItem style={{ color: '#cf932b', backgroundColor: 'transparent' }} value={`PENDING`}><span style={{ color: '#ffc814' }}>PENDING</span></MenuItem>                          
+                            <MenuItem style={{ color: '#e03b24', backgroundColor: 'transparent' }} value={`INACTIVE`}><span style={{ color: '#fa7857' }}>INACTIVE</span></MenuItem>
 
                         </Select>
                     </FormControl>
@@ -275,9 +365,9 @@ function CreateUser({ match }) {
                             value={role}
                             onChange={changeRole}
                         >
-                            <MenuItem style={{ backgroundColor: 'transparent' }} value={`ROLE_USER`}><span>USER</span></MenuItem>
-                            <MenuItem style={{ color: '#2e6fd9', backgroundColor: 'transparent' }} value={`ROLE_MODERATOR`}><span style={{ color: '#2e6fd9' }}>MODERATOR</span></MenuItem>
-                            <MenuItem style={{ color: '#9545d8', backgroundColor: 'transparent' }} value={`ROLE_ADMIN`}><span style={{ color: '#9545d8' }}>ADMIN</span></MenuItem>
+                            <MenuItem style={{ backgroundColor: 'transparent' }} value={`ROLE_USER`}><span style={{ color: '#ffffff' }}>USER</span></MenuItem>
+                            <MenuItem style={{ color: '#2e6fd9', backgroundColor: 'transparent' }} value={`ROLE_MODERATOR`}><span style={{ color: '#000000' }}>MODERATOR</span></MenuItem>
+                            <MenuItem style={{ color: '#9545d8', backgroundColor: 'transparent' }} value={`ROLE_ADMIN`}><span style={{ color: '#7c169e' }}>ADMIN</span></MenuItem>
 
                         </Select>
                     </FormControl>
@@ -314,8 +404,8 @@ function CreateUser({ match }) {
                         errorMessages={['Password mismatch', 'This field is required']}
                         onChange={handleRepeatPasswordChange}/></>)}
 
-                    <Button id="submit-user-update-create-form" className={classes.colorWhite} variant="contained" color="primary" type="submit" style={{ marginRight: '10px' }}>Submit</Button>
-                    <Link to={'/admin'} style={{ textDecoration: 'none' }}><Button id="cancel-user-update-create-form" className={classes.colorWhite} variant="contained" color="secondary">Cancel</Button></Link>
+                    <Button id="submit-user-update-create-form" className={classes.submit} variant="contained"  type="submit" style={{ marginRight: '10px', color: '#0d47a1'}}>Submit</Button>
+                    <Link to={'/admin'} style={{ textDecoration: 'none' }}><Button id="cancel-user-update-create-form" className={classes.colorWhite} variant="contained">Cancel</Button></Link>
                 </ValidatorForm>
             </Container>
         </ThemeProvider >
