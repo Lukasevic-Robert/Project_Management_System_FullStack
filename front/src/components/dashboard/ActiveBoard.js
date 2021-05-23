@@ -9,9 +9,6 @@ import { useHistory } from 'react-router';
 import ProjectService from "../../services/ProjectService";
 import { Avatar } from "@material-ui/core"
 import { makeStyles } from '@material-ui/core/styles';
-import SortIcon from '@material-ui/icons/Sort';
-import FilterListIcon from '@material-ui/icons/FilterList';
-import SearchIcon from '@material-ui/icons/Search';
 import EditIcon from '@material-ui/icons/Edit';
 import Tooltip from "@material-ui/core/Tooltip";
 import ReplyIcon from '@material-ui/icons/Reply';
@@ -40,7 +37,6 @@ const ActiveBoard = ({ match }) => {
     const [activeTasks, setActiveTasks] = useState([]);
     const history = useHistory();
     const [initials, setInitials] = useState([]);
-    let randomColor = Math.floor(Math.random() * 16777215).toString(16);
     const [state, setState] = useState({
         "TODO": {
             title: "To do",
@@ -68,7 +64,6 @@ const ActiveBoard = ({ match }) => {
                         setActiveTasks(response.data);
                         mapByStatus(response.data);
                         getUsers();
-                     //   console.log(response.data)
                     }
                 })
                 .catch((error) => {
@@ -137,8 +132,7 @@ const ActiveBoard = ({ match }) => {
 
     // DRAG AND DROP logic
     const handleDragEnd = ({ destination, source, draggableId }) => {
-        // console.log("from",source)
-        // console.log("to", destination)
+     
         if (!destination) {
             return
         }
@@ -163,7 +157,6 @@ const ActiveBoard = ({ match }) => {
         })
             .catch((error) => {
                 getErrorMessage();
-                //  history.push('/api/v1/projects');
             }
             );
     }
@@ -188,8 +181,7 @@ const ActiveBoard = ({ match }) => {
                 return initials;
             })
             let project = res.data;
-            // let users = [];
-            // let userId = [];
+
             project.users.map((user) => {
                 let userInitials = user.firstName.charAt(0).trim() + user.lastName.charAt(0).trim();
                 setInitials(initials => {
@@ -206,12 +198,6 @@ const ActiveBoard = ({ match }) => {
             });
     }
 
-    const addTask = () => {
-        // history.push({
-
-        // }
-        //     `/tasks/:activeProjectID/-1`);
-    }
 
     // SEND TASK to backlog, update database and board    
     const sendToBacklog = async (task) => {
@@ -227,7 +213,6 @@ const ActiveBoard = ({ match }) => {
         })
             .catch((error) => {
                 getErrorMessage();
-                //  history.push('/api/v1/projects');
             }
             );
     }
@@ -252,7 +237,6 @@ const ActiveBoard = ({ match }) => {
                             <div key={key} className={"column"}>
                                 <div>
                                     <div style={{ display: 'flex', justifyContent: 'space-between' }}><h3>{data.title}</h3>
-                                        {/* <MoreVertIcon style={{ color: 'grey' }}></MoreVertIcon> */}
                                     </div>
 
                                     <Droppable droppableId={key}>

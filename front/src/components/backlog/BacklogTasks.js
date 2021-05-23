@@ -10,13 +10,15 @@ import ProjectService from "../../services/ProjectService";
 import { makeStyles } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/DeleteForever';
-import { Box, Card, CardContent, Grid, LinearProgress, Typography } from '@material-ui/core';
+import { Box, Card, CardContent, Grid, LinearProgress, Typography, Paper, Button, InputBase  } from '@material-ui/core';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 import { ProjectContext } from "../../context/ProjectContext";
 import SaveIcon from '@material-ui/icons/Save';
-import Button from '@material-ui/core/Button';
-
+import SearchIcon from '@material-ui/icons/Search';
+import SentimentVeryDissatisfiedIcon from '@material-ui/icons/SentimentVeryDissatisfied';
+import EventAvailableIcon from '@material-ui/icons/EventAvailable';
+import SentimentSatisfiedIcon from '@material-ui/icons/SentimentSatisfied';
 
 const theme = createMuiTheme({
     palette: {
@@ -47,22 +49,35 @@ const useStyles = makeStyles({
         display: 'flex',
         marginRight: '2%',
     },
+    search: {
+        padding: '2px 4px',
+        display: 'flex',
+        alignItems: 'center',
+        width: 200,
+        marginLeft: 10,
+        height: 40,
+        border: '1px solid #dddbdb',
+        boxShadow: 'none',
+    },
+    input: {
+        marginLeft: theme.spacing(1),
+        flex: 1,
+        fontSize: 14,
+        fontWeight: '500',
+        fontFamily: 'Fira Sans'
+    },  
 }
-
 );
 
 const BacklogTasks = ({ match }) => {
 
     const { activeProjectId, setLocation, refreshBacklog, setRefreshBacklog } = useContext(ProjectContext);
-
     const classes = useStyles();
     const [activeTasks, setActiveTasks] = useState([]);
     const [backlogTasks, setBacklogTasks] = useState([]);
     const [totalTasksCount, setTotalTasks] = useState(0);
     const [unfinishedTasksCount, setUnfinishedTasks] = useState(0);
     const history = useHistory();
-    const [initials, setInitials] = useState([]);
-    let randomColor = Math.floor(Math.random() * 16777215).toString(16);
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
 
@@ -76,7 +91,7 @@ const BacklogTasks = ({ match }) => {
             items: []
         }
     })
-
+  
     // GET ACTIVE AND BACKLOG TASKS from database 
 
     useEffect(() => {
@@ -182,6 +197,10 @@ const BacklogTasks = ({ match }) => {
             return
         }
         const itemCopy = { ...state[source.droppableId].items[source.index] }
+        // itemCopy.status
+        if(destination.droppableId==="ACTIVE"){itemCopy.status="TODO"}
+        if(destination.droppableId==="BACKLOG"){itemCopy.status="BACKLOG"}
+
         setState(prev => {
             prev = { ...prev }
             prev[source.droppableId].items.splice(source.index, 1)
@@ -194,16 +213,22 @@ const BacklogTasks = ({ match }) => {
     // SEND REQUEST to database to update task status    
     const updateTask = (taskId, newStatus) => {
         let totalTasks = activeTasks.concat(backlogTasks)
-
         let taskToUpdate = totalTasks.find(item => item.id === taskId);
         if (newStatus === 'BACKLOG') {
             taskToUpdate.status = newStatus;
+            setBacklogTasks([...backlogTasks,taskToUpdate]);
+            setActiveTasks(activeTasks.filter((task) => task.id !== taskId
+            ))
         }
         else {
             taskToUpdate.status = 'TODO';
+            setActiveTasks([...activeTasks,taskToUpdate]);
+            setBacklogTasks(backlogTasks.filter((task) => task.id !== taskId
+            ))
         }
 
         TaskService.updateTask(taskToUpdate, taskId).then(res => {
+            // setRefreshBacklog(!refreshBacklog);
         })
             .catch((error) => {
                 getErrorMessage();
@@ -222,25 +247,10 @@ const BacklogTasks = ({ match }) => {
         return errorMessage;
     }
 
-    // GET USERS LIST from database and set initials    
+    // GET PROJECT DATA    
     const getUsers = () => {
         ProjectService.getProjectById(activeProjectId).then((res) => {
-            setInitials(initials => {
-                initials = [...initials]
-                initials = [];
-                return initials;
-            })
             let project = res.data;
-
-            project.users.map((user) => {
-                let userInitials = user.firstName.charAt(0).trim() + user.lastName.charAt(0).trim();
-                setInitials(initials => {
-                    initials = [...initials]
-                    initials.push(userInitials);
-                    return initials;
-                })
-            })
-
             setTitle(project.name);
             setContent(project.description);
             setTotalTasks(project.tasks.length)
@@ -291,6 +301,27 @@ const deleteFunction = (taskId, taskName) =>{
         TaskService.requestTasksCSV(projectId);
     }
 
+// SEARCH TASKS
+const [searchRequest, setSearchRequest] = useState('');
+    const handleSearch=(event)=>{
+setSearchRequest(event.target.value);
+  setState((state)=>{
+    state = { ...state }
+    let activeNotDone= activeTasks.filter((item) => item.status !== "DONE");
+
+     state.ACTIVE.items=activeNotDone.filter((item) => {
+        return  item.name.toLowerCase().includes(event.target.value.toLowerCase())
+      });
+
+      state.BACKLOG.items=backlogTasks.filter((item) => {
+        return  item.name.toLowerCase().includes(event.target.value.toLowerCase())
+      });
+
+    return state;
+  });
+    }
+   
+
     return (
         <ThemeProvider theme={theme}>
         <div className="activeBoard">
@@ -336,10 +367,23 @@ const deleteFunction = (taskId, taskName) =>{
             </div>
             <Button id="task-csv" onClick={() => getTasksCSV(activeProjectId)} variant="contained" color="primary" size="small" className={classes.button} startIcon={<SaveIcon />}>Save .csv</Button>
             <div className="headingStyleBacklog2">  
+            <div style={{display:'flex'}}>
             <Button size="small" style={{color: '#4caf50'}}><AddIcon /><ViewTask task={{}} status='BACKLOG' projectId={activeProjectId} add={true} /></Button>
                 {/* <div style={{ display: 'flex', justifyContent: 'right' }}><AddIcon /><ViewTask task={{}} status='BACKLOG' projectId={activeProjectId} add={true} /> */}
                 {/* <SortIcon ></SortIcon>Sort<FilterListIcon></FilterListIcon>Filter<SearchIcon></SearchIcon>Search   */}
                 {/* </div> */}
+
+                <Paper id="search-bar" component="form" className={classes.search}>
+                            <InputBase id="search-input"
+                                className={classes.input}
+                                placeholder="Search..."
+                                inputProps={{ 'aria-label': 'search google maps' }}
+                                onChange={handleSearch}
+                                value={searchRequest}
+                            />
+                                    <SearchIcon  className={classes.iconButton} color="primary" aria-label="search"/>
+                        </Paper>
+                        </div>
                 <div> <Link to={`/active-board/${match.params.id}`}>
                     <button className="btn" style={{ backgroundColor: '#7eb8da', color: 'white' }}>Go to active board</button>
                 </Link> </div>
@@ -369,9 +413,26 @@ const deleteFunction = (taskId, taskName) =>{
                                                                         >
                                                                             <div className="boardTaskBacklog">
                                                                                 <div>
+                                                                                <div style={{paddingTop:'2%', paddingBottom:'2%'}}>
                                                                                     <ViewTask task={el} status='BACKLOG' projectId={activeProjectId} add={false} />
                                                                                 </div>
                                                                                 <div>
+<div style={{display:'flex', height:'100%'}}>
+                                                                                                                                                            
+<div className="calendar"> <EventAvailableIcon style={{ fontSize: 10 }}/>   Updated: {el.updated.replace("T", " ").substr(0, 16)}</div>
+</div></div>
+
+                                                                                </div>
+
+                                                                                <div style={{display:'flex', alignItems:'center'}}>
+
+
+                                                                                <div style={{color:'grey', fontSize:'smaller', justifyContent:'center'}}>
+     {el.status==='TODO'?<SentimentVeryDissatisfiedIcon/>:(el.status==='BACKLOG'? '':<SentimentSatisfiedIcon/>)}  
+       
+        {el.status==='IN_PROGRESS'? 'IN PROGRESS':(el.status==='TODO'?'TO DO':'')}
+          
+        </div>
                                                                                     <DeleteIcon id="icon" onClick={() => deleteFunction(el.id, el.name)} style={{ fontSize: 'large', color: 'grey', cursor: 'pointer' }} />
                                                                                 </div>
                                                                             </div>

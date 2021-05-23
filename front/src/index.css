@@ -69,7 +69,6 @@ body, html, .App, #root, .auth-wrapper {
 .boardTask {
   display: flex;
   justify-content: space-between;
-  /* background-color: hotpink; */
   margin-top: -2%;
   margin-right: -4%;
   vertical-align: bottom;
@@ -79,10 +78,8 @@ body, html, .App, #root, .auth-wrapper {
   display: flex;
   justify-content: center;
   color: rgba(104, 98, 98, 0.5);
-  /* text-align: center; */
   margin-bottom: 2%;
   font-size: small;
-  /* vertical-align: bottom; */
 }
 
 .dndContainer {
@@ -95,7 +92,7 @@ body, html, .App, #root, .auth-wrapper {
 .dndContainer .column {
   width: 31%;
   background-color: #f3f2f2;
-  box-shadow: 2px 20px 20px rgba(27, 28, 43, 0.2);
+  box-shadow: 2px 10px 10px rgba(27, 28, 43, 0.2);
 
   display: flex;
   flex-direction: column;
@@ -103,7 +100,6 @@ body, html, .App, #root, .auth-wrapper {
 }
 
 .dndContainer h3 {
-  /* background-color: #adaaaa; */
   text-align: left;
   padding: 1%;
   margin-left: 2%;
@@ -113,13 +109,10 @@ body, html, .App, #root, .auth-wrapper {
 
 .droppable-col {
   width: 100%;
-  /* background-color: #eb0a0a; */
   padding: 10px 10px 0 10px;
-  /* border-radius: 7px; */
   display: flex;
   flex-direction: column;
   min-height: 300px;
-  /* border: 1px solid rgb(180, 179, 179); */
 }
 
 .item {
@@ -172,7 +165,6 @@ body, html, .App, #root, .auth-wrapper {
 
 .activeBoard {
   margin-top: -70px;
-  background-color: rgb(236, 237, 238);
   height: 100%;
   width: 100%;
 }
@@ -184,8 +176,8 @@ body, html, .App, #root, .auth-wrapper {
 
 .dndContainerBacklog .column {
   width: 100%;
-  background-color: #f7f4f4;
-  box-shadow: 2px 20px 20px rgba(27, 28, 43, 0.2);
+  background-color: #fffefe;
+  box-shadow: 3px 10px 10px rgba(27, 28, 43, 0.2);
 }
 
 .droppable-col-Backlog {
@@ -195,7 +187,7 @@ body, html, .App, #root, .auth-wrapper {
 }
 
 .itemBacklog {
-  background-color: rgba(191, 195, 214, 0.1);
+  background-color: rgba(155, 196, 219, 0.1);
   box-shadow: 1px 2px 3px rgba(27, 28, 43, 0.2);
   border-radius: 1px;
   min-height: 30px;
@@ -205,13 +197,13 @@ body, html, .App, #root, .auth-wrapper {
   flex-direction: column;
   color: black;
   text-decoration: none;
-  padding: 1%;
 }
 
 .boardTaskBacklog {
   display: flex;
   justify-content: space-between;
-  vertical-align: bottom;
+  height: 100%;
+  padding-left: 1%;
 }
 
 .headingStyleBacklog {
@@ -277,3 +269,10 @@ body, html, .App, #root, .auth-wrapper {
 
 .swalFont{
 font-size:x-large;}
+
+.calendar{
+ font-size:10px;
+ color:rgb(148, 140, 140);
+ display: inline-block;
+ align-self:flex-end;
+}
