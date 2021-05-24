@@ -59,7 +59,7 @@ const theme = createMuiTheme({
     },
     MuiSwitch: {
 
-  backgroundColor: 'transparent',
+      backgroundColor: 'transparent',
 
     },
     MuiDrawer: {
@@ -156,7 +156,7 @@ export default function NavBar() {
   const { refreshContext, setRefreshContext, activeProjectId, projectName } = useContext(ProjectContext);
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
- 
+
 
   const handleChange = (event) => {
     setState({ ...state, [event.target.name]: event.target.checked });
@@ -205,6 +205,7 @@ export default function NavBar() {
               <Link id="nav-logo-link" style={{ color: 'white', fontSize: 20, fontFamily: 'Righteous' }} className="nav-link" to={() => isAuthenticated() ? "/projects" : "/signin"}><img style={{ width: 50 }} src={logo} alt="logo"></img> JawBreaker</Link>
             </Typography>
             <Switch
+              size="small"
               checked={state.checkedA}
               color="primary"
               onChange={handleChange}

@@ -181,7 +181,7 @@ function Journal() {
         <ThemeProvider theme={theme}>
             <Paper style={{ backgroundColor: state.checkedA ? '#695586' : 'transparent', border: 'none', boxShadow: 'none', marginTop: '-70px' }} className="table-container">
                 <TableContainer >
-                    <div style={{ display: 'flex' }}>  <Button id="journal-csv" onClick={getJournalCSV} variant="contained" color="primary" size="small" className={classes.button} startIcon={<SaveIcon />}>Save All .csv</Button></div>
+                    <div style={{ display: 'flex' }}>  <Button id="journal-csv" onClick={getJournalCSV} variant="contained"  size="small" className={classes.button} startIcon={<SaveIcon />}>Save All .csv</Button></div>
                     <Table className={classes.table} size="small" aria-label="a dense table">
                         <TableHead>
                             <TableRow id="table-head" >

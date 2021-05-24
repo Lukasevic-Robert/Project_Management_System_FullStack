@@ -11,7 +11,7 @@ body{
   background-image: url('./images/wallpaper/triangle-background-8-1.jpg');
 
   /* background-image: url('./images/wallpaper/triangle-background-9.jpg'); */
-  /* background-image: url('./images/wallpaper/triangle-background-14.png'); */
+  /*kground-image: url('./images/wallpaper/triangle-background-14.png'); */
   background-attachment: fixed;
 }
 
@@ -109,7 +109,7 @@ body, html, .App, #root, .auth-wrapper, .auth-inner {
 
 .dndContainer .column {
   width: 31%;
-  background-color: #f3f2f2;
+  background-color: 'transparent';
   box-shadow: 2px 20px 20px rgba(27, 28, 43, 0.2);
 
   display: flex;
@@ -187,7 +187,7 @@ body, html, .App, #root, .auth-wrapper, .auth-inner {
 
 .activeBoard {
   margin-top: -70px;
-  background-color: rgb(236, 237, 238);
+  background-color: 'transparent';
   height: 100%;
   width: 100%;
 }
@@ -197,10 +197,13 @@ body, html, .App, #root, .auth-wrapper, .auth-inner {
   padding: 2%;
 }
 
-.dndContainerBacklog .column {
+.dndContainerBacklog  {
   width: 100%;
-  background-color: #f7f4f4;
+  background-color: 'transparent';
   box-shadow: 2px 20px 20px rgba(27, 28, 43, 0.2);
+}
+.column{
+  background-color: transparent;
 }
 
 .droppable-col-Backlog {
@@ -210,17 +213,19 @@ body, html, .App, #root, .auth-wrapper, .auth-inner {
 }
 
 .itemBacklog {
-  background-color: rgba(191, 195, 214, 0.1);
+  background-color: transparent;
   box-shadow: 1px 2px 3px rgba(27, 28, 43, 0.2);
-  border-radius: 1px;
+  border-radius: 5px;
+  border: 1px solid white;
   min-height: 30px;
   width: 100%;
   display: flex;
   justify-content: left;
   flex-direction: column;
-  color: black;
+  color: white;
   text-decoration: none;
   padding: 1%;
+  margin-bottom: 5px;
 }
 
 .boardTaskBacklog {
