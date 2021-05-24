@@ -87,15 +87,15 @@ public class UserService {
 
 		} catch (BadCredentialsException e) {
 	journalService.newJournalEntry(request.getEmail(), Type.ERROR, Category.USER, Activity.UNSUCCESSFUL_LOGIN,
-					"User log in unsuccessful");
+					"User log in unsuccessful: invalid email/password combination");
 			return new ResponseEntity<>("Invalid email/password combination", HttpStatus.FORBIDDEN);
 		} catch (LockedException e) {
       	journalService.newJournalEntry(request.getEmail(), Type.ERROR, Category.USER, Activity.UNSUCCESSFUL_LOGIN,
-					"User log in unsuccessful");
+					"User log in unsuccessful: user account is locked");
 			return new ResponseEntity<>("User account is locked", HttpStatus.LOCKED);
 		} catch (AuthenticationException e) {
       	journalService.newJournalEntry(request.getEmail(), Type.ERROR, Category.USER, Activity.UNSUCCESSFUL_LOGIN,
-					"User log in unsuccessful");
+					"User log in unsuccessful: bad request");
 			e.printStackTrace();
 			return new ResponseEntity<>("Bad Request. Try again or contact Administrator", HttpStatus.FORBIDDEN);
 		}
@@ -106,6 +106,8 @@ public class UserService {
 	public ResponseEntity<?> registerUser(SignupRequest signUpRequest) {
 
 		if (userRepository.existsByEmail(signUpRequest.getEmail())) {
+			journalService.newJournalEntry(signUpRequest.getEmail(), Type.ERROR, Category.USER, Activity.UNSUCCESSFUL_SIGNUP,
+					"User sign up unsuccessful: email is already in use");
 			return ResponseEntity.badRequest().body(new ApiError("Error: Email is already in use!"));
 		}
 
@@ -119,7 +121,8 @@ public class UserService {
 		roles.add(userRole);
 		user.setRoles(roles);
 		userRepository.save(user);
-
+		journalService.newJournalEntry(signUpRequest.getEmail(), Type.INFO, Category.USER, Activity.SUCCESSFUL_SIGNUP,
+				"User sign up successful");
 		return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
 
 	}
