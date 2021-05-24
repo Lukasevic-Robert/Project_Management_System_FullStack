@@ -84,7 +84,6 @@ body, html, .App, #root, .auth-wrapper, .auth-inner {
 .boardTask {
   display: flex;
   justify-content: space-between;
-  /* background-color: hotpink; */
   margin-top: -2%;
   margin-right: -4%;
   vertical-align: bottom;
@@ -94,10 +93,8 @@ body, html, .App, #root, .auth-wrapper, .auth-inner {
   display: flex;
   justify-content: center;
   color: rgba(104, 98, 98, 0.5);
-  /* text-align: center; */
   margin-bottom: 2%;
   font-size: small;
-  /* vertical-align: bottom; */
 }
 
 .dndContainer {
@@ -111,14 +108,12 @@ body, html, .App, #root, .auth-wrapper, .auth-inner {
   width: 31%;
   background-color: 'transparent';
   box-shadow: 2px 20px 20px rgba(27, 28, 43, 0.2);
-
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
 
 .dndContainer h3 {
-  /* background-color: #adaaaa; */
   text-align: left;
   padding: 1%;
   margin-left: 2%;
@@ -128,13 +123,10 @@ body, html, .App, #root, .auth-wrapper, .auth-inner {
 
 .droppable-col {
   width: 100%;
-  /* background-color: #eb0a0a; */
   padding: 10px 10px 0 10px;
-  /* border-radius: 7px; */
   display: flex;
   flex-direction: column;
   min-height: 300px;
-  /* border: 1px solid rgb(180, 179, 179); */
 }
 
 .item {
@@ -213,6 +205,7 @@ body, html, .App, #root, .auth-wrapper, .auth-inner {
 }
 
 .itemBacklog {
+
   background-color: transparent;
   box-shadow: 1px 2px 3px rgba(27, 28, 43, 0.2);
   border-radius: 5px;
@@ -226,12 +219,14 @@ body, html, .App, #root, .auth-wrapper, .auth-inner {
   text-decoration: none;
   padding: 1%;
   margin-bottom: 5px;
+
 }
 
 .boardTaskBacklog {
   display: flex;
   justify-content: space-between;
-  vertical-align: bottom;
+  height: 100%;
+  padding-left: 1%;
 }
 
 .headingStyleBacklog {
@@ -297,3 +292,10 @@ body, html, .App, #root, .auth-wrapper, .auth-inner {
 
 .swalFont{
 font-size:x-large;}
+
+.calendar{
+ font-size:10px;
+ color:rgb(148, 140, 140);
+ display: inline-block;
+ align-self:flex-end;
+}

@@ -8,6 +8,8 @@ import { ProjectContext } from '../context/ProjectContext.js';
 import JournalService from '../services/JournalService';
 import SaveIcon from '@material-ui/icons/Save';
 import { AuthContext } from '../context/AuthContext.js';
+import swal from 'sweetalert';
+
 
 
 const theme = createMuiTheme({
@@ -146,6 +148,7 @@ function Journal() {
     useEffect(() => {
         getEntries();
     }, [pageJournal, rowsPerPageJournal, refreshJournal])
+
     const getEntries = async () => {
 
         await JournalService.getEntries(pageJournal, rowsPerPageJournal).then(
@@ -157,10 +160,20 @@ function Journal() {
             },
             error => {
 
+                getErrorMessage();
             }
         );
     }
-
+   
+    const getErrorMessage = () => {
+        const errorMessage = swal({
+            text: "Something went wrong! ",
+            button: "Ok",
+            icon: "warning",
+            dangerMode: true,
+        });
+        return errorMessage;
+    }
 
     // PAGINATION =========================================>
     const handleChangePage = (event, newPage) => {
