@@ -90,29 +90,12 @@ const useStyles = makeStyles({
     colorWhite: {
         color: 'white'
     },
-    filterProjects: {
-        marginLeft: 10,
-        height: 40,
-        textTransform: 'none',
-        backgroundColor: '#f5f4f4',
-        border: 'none',
-        '&:hover': {
-            backgroundColor: '#dddbdb',
-        }
-    },
-    description: {
-        textOverflow: 'ellipsis',
-        whiteSpace: 'nowrap',
-        overflow: 'hidden',
-        maxWidth: '150px'
-    },
 
     button: {
         margin: theme.spacing(1),
         color: 'white',
         marginLeft: 'auto',
         backgroundColor: '#ffc814'
-
     },
     margin: {
         margin: theme.spacing(1),

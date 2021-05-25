@@ -1,0 +1,1 @@
+INSERT INTO projects (name, description, status) values ('Lazdynu baseinas', 'kadanors', 'ACTIVE');

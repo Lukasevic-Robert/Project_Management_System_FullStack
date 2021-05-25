@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import _ from "lodash";
-import { Link } from "react-router-dom";
 import TaskService from "../../services/TaskService.js"
 import ViewTask from "../dashboard/ViewTask"
 import swal from 'sweetalert';
@@ -10,7 +9,7 @@ import ProjectService from "../../services/ProjectService";
 import { makeStyles } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/DeleteForever';
-import { Box, Card, CardContent, Grid, LinearProgress, Typography, Paper, Button, InputBase  } from '@material-ui/core';
+import { Box, Card, CardContent, Grid, LinearProgress, Typography, Paper, Button, InputBase, Fab } from '@material-ui/core';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 import { ProjectContext } from "../../context/ProjectContext";
@@ -19,6 +18,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import SentimentVeryDissatisfiedIcon from '@material-ui/icons/SentimentVeryDissatisfied';
 import EventAvailableIcon from '@material-ui/icons/EventAvailable';
 import SentimentSatisfiedIcon from '@material-ui/icons/SentimentSatisfied';
+import { AuthContext } from '../../context/AuthContext.js';
 
 const theme = createMuiTheme({
     palette: {
@@ -26,26 +26,77 @@ const theme = createMuiTheme({
             main: '#be9ddf',
         },
         secondary: {
-            main: '#ffa5d8',
+            main: '#f6c1c7',
         },
     },
+    overrides: {
+        MuiTablePagination: {
+
+            root: {
+                color: 'white',
+                backgroundColor: 'transparent'
+            },
+            selectIcon: {
+                color: 'white',
+            },
+        },
+        MuiPaper: {
+            root: {
+                backgroundColor: '#4d81d8',
+                color: 'white'
+            }
+
+        },
+        MuiButton: {
+            contained: {
+                // boxShadow: 'none',
+                backgroundColor: '#d44a28',
+                '&:hover': {
+                    backgroundColor: 'transparent',
+                },
+            }
+
+        },
+        MuiFab: {
+            root: {
+                '&:hover': {
+                    backgroundColor: 'transparent',
+                    boxShadow: '1px 1px 5px black'
+                },
+            }
+        },
+        MuiCard: {
+            root: {
+                backgroundColor: 'rgba(122, 67, 139, 0.397);',
+            }
+        }
+    }
 });
 
 const useStyles = makeStyles({
-    purple: {
-        backgroundColor: 'purple',
-        width: '25px',
-        height: '25px',
-        fontSize: '12px',
-        marginRight: '2px'
+    fab: {
+        marginLeft: 5,
+        marginRight: 5,
+        backgroundColor: 'transparent',
+        boxShadow: 'none'
+
     },
+    createButton: {
+        textTransform: 'none',
+        color: 'white',
+    },
+
     content: {
         wordWrap: 'break-word',
+    },
+    border: {
+        borderColor: 'white',
     },
     button: {
         margin: theme.spacing(1),
         color: 'white',
         marginLeft: 'auto',
+        backgroundColor: '#ffc814',
         display: 'flex',
         marginRight: '2%',
     },
@@ -58,20 +109,29 @@ const useStyles = makeStyles({
         height: 40,
         border: '1px solid #dddbdb',
         boxShadow: 'none',
+        backgroundColor: 'transparent',
     },
     input: {
+        color: 'white',
         marginLeft: theme.spacing(1),
         flex: 1,
         fontSize: 14,
         fontWeight: '500',
         fontFamily: 'Fira Sans'
-    },  
+    },
+    iconButton: {
+        color: 'white',
+        '&:hover': {
+            color: '#9c6ccc',
+        }
+    },
 }
 );
 
 const BacklogTasks = ({ match }) => {
 
     const { activeProjectId, setLocation, refreshBacklog, setRefreshBacklog } = useContext(ProjectContext);
+    const value = useContext(AuthContext);
     const classes = useStyles();
     const [activeTasks, setActiveTasks] = useState([]);
     const [backlogTasks, setBacklogTasks] = useState([]);
@@ -91,7 +151,7 @@ const BacklogTasks = ({ match }) => {
             items: []
         }
     })
-  
+
     // GET ACTIVE AND BACKLOG TASKS from database 
 
     useEffect(() => {
@@ -196,10 +256,12 @@ const BacklogTasks = ({ match }) => {
         if (destination.index === source.index && destination.droppableId === source.droppableId) {
             return
         }
+
         const itemCopy = { ...state[source.droppableId].items[source.index] }
         // itemCopy.status
-        if(destination.droppableId==="ACTIVE"){itemCopy.status="TODO"}
-        if(destination.droppableId==="BACKLOG"){itemCopy.status="BACKLOG"}
+    
+        if (destination.droppableId === "ACTIVE" ) { itemCopy.status = "TODO" }
+        if (destination.droppableId === "BACKLOG") { itemCopy.status = "BACKLOG" }
 
         setState(prev => {
             prev = { ...prev }
@@ -216,13 +278,13 @@ const BacklogTasks = ({ match }) => {
         let taskToUpdate = totalTasks.find(item => item.id === taskId);
         if (newStatus === 'BACKLOG') {
             taskToUpdate.status = newStatus;
-            setBacklogTasks([...backlogTasks,taskToUpdate]);
+            setBacklogTasks([...backlogTasks, taskToUpdate]);
             setActiveTasks(activeTasks.filter((task) => task.id !== taskId
             ))
         }
         else {
             taskToUpdate.status = 'TODO';
-            setActiveTasks([...activeTasks,taskToUpdate]);
+            setActiveTasks([...activeTasks, taskToUpdate]);
             setBacklogTasks(backlogTasks.filter((task) => task.id !== taskId
             ))
         }
@@ -263,29 +325,29 @@ const BacklogTasks = ({ match }) => {
     }
 
     // DELETE TASK
-const deleteFunction = (taskId, taskName) =>{
-    swal({
-        text: `Are you sure you want to delete task: ${taskName}?`,
-        // text: "You won't be able to revert this!",
-        icon: 'warning',
-        className: "swalFont",
-        buttons: ["Cancel", "Yes, delete it!"],
-        dangerMode: true,
-        }).then( async (isConfirm)=>{
-          if (isConfirm) {
-            await TaskService.deleteTask(taskId).then(res => {
-                getSuccessMessage("deleted");
-                setRefreshBacklog(!refreshBacklog);
-            })
-                .catch((error) => {
-                    getErrorMessage();
-                }
-                );
-            setTotalTasks(totalTasksCount - 1);
-            setUnfinishedTasks(unfinishedTasksCount - 1);
-          }
-        })  
-}
+    const deleteFunction = (taskId, taskName) => {
+        swal({
+            text: `Are you sure you want to delete task: ${taskName}?`,
+            // text: "You won't be able to revert this!",
+            icon: 'warning',
+            className: "swalFont",
+            buttons: ["Cancel", "Yes, delete it!"],
+            dangerMode: true,
+        }).then(async (isConfirm) => {
+            if (isConfirm) {
+                await TaskService.deleteTask(taskId).then(res => {
+                    getSuccessMessage("deleted");
+                    setRefreshBacklog(!refreshBacklog);
+                })
+                    .catch((error) => {
+                        getErrorMessage();
+                    }
+                    );
+                setTotalTasks(totalTasksCount - 1);
+                setUnfinishedTasks(unfinishedTasksCount - 1);
+            }
+        })
+    }
 
     const getSuccessMessage = (status) => {
         const successMessage = swal({
@@ -301,79 +363,84 @@ const deleteFunction = (taskId, taskName) =>{
         TaskService.requestTasksCSV(projectId);
     }
 
-// SEARCH TASKS
-const [searchRequest, setSearchRequest] = useState('');
-    const handleSearch=(event)=>{
-setSearchRequest(event.target.value);
-  setState((state)=>{
-    state = { ...state }
-    let activeNotDone= activeTasks.filter((item) => item.status !== "DONE");
+    // SEARCH TASKS
+    const [searchRequest, setSearchRequest] = useState('');
+    const handleSearch = (event) => {
+        setSearchRequest(event.target.value);
+        setState((state) => {
+            state = { ...state }
+            let activeNotDone = activeTasks.filter((item) => item.status !== "DONE");
 
-     state.ACTIVE.items=activeNotDone.filter((item) => {
-        return  item.name.toLowerCase().includes(event.target.value.toLowerCase())
-      });
+            state.ACTIVE.items = activeNotDone.filter((item) => {
+                return item.name.toLowerCase().includes(event.target.value.toLowerCase())
+            });
 
-      state.BACKLOG.items=backlogTasks.filter((item) => {
-        return  item.name.toLowerCase().includes(event.target.value.toLowerCase())
-      });
+            state.BACKLOG.items = backlogTasks.filter((item) => {
+                return item.name.toLowerCase().includes(event.target.value.toLowerCase())
+            });
 
-    return state;
-  });
+            return state;
+        });
     }
-   
+
 
     return (
         <ThemeProvider theme={theme}>
-        <div className="activeBoard">
-            <div style={{ fontSize: 'larger', fontWeight: 'bold', marginLeft: '20px', paddingTop: '10px'}}>
-                {title}
-            </div>
+            <div className="activeBoard" style={{ backgroundColor: value.state.checkedA ? '#695586' : 'transparent', height: '100%', padding:40  }}>
+                <div style={{ color: 'white', fontSize: '20px', paddingLeft: '40px', marginLeft: '10px', paddingTop: '10px', paddingBottom: '10px' }}>
+                    <span>{title}</span>
+                </div>
 
-            <div className="container-fluid containerDashboard">
-                <div className="row">
-                    <div className="col col-7">
-                        <Card style={{ height: '100%' }} >
+                <div className="container-fluid containerDashboard" style={{paddingLeft: '40px', paddingRight: '40px'}} >
+                    <div className="row">
+                        <div className="col col-7">
+                            <Card style={{ backgroundColor: 'rgba(122, 67, 139, 0.397)', border: value.state.checkedA ? '1px solid #fff' : '', height: '100%'  }} >
+                                <CardContent>
+                                    <Typography className={classes.content} variant="body2">{content}</Typography>
+                                </CardContent>
+                            </Card>
+                        </div>
+                        <div className="col col-2">
+                            <Card style={{ backgroundColor: 'rgba(122, 67, 139, 0.397)', border: value.state.checkedA ? '1px solid #fff' : '', height: '100%'  }} >
+                                <CardContent>
+                                    <Grid container style={{ justifyContent: 'space-between' }}>
+                                        <Grid item><Typography variant="caption">TOTAL TASKS</Typography>
+                                            <Typography variant="h5">{totalTasksCount}</Typography>
+                                        </Grid>
+                                    </Grid>
+                                </CardContent>
+                            </Card>
+                        </div>
+                        <div className="col col-3">  <Card style={{ backgroundColor: 'rgba(122, 67, 139, 0.397)', border: value.state.checkedA ? '1px solid #fff' : '', height: '100%'  }}>
                             <CardContent>
-                                <Typography className={classes.content} color="textPrimary" variant="body2">{content}</Typography>
-                            </CardContent>
-                        </Card>
-                    </div>
-                    <div className="col col-2">
-                        <Card style={{ height: '100%' }} >
-                            <CardContent>
-                                <Grid container style={{ justifyContent: 'space-between' }}>
-                                    <Grid item><Typography color="textSecondary" variant="caption">TOTAL TASKS</Typography>
-                                        <Typography color="textPrimary" variant="h5">{totalTasksCount}</Typography>
+                                <Grid container style={{ justifyContent: 'space-between' }} >
+                                    <Grid item><Typography variant="caption">TASKS PROGRESS</Typography>
+                                        <Typography variant="h5">{totalTasksCount && (Math.round(100 - unfinishedTasksCount / totalTasksCount * 100))}%</Typography>
+                                        <Box >
+                                            <LinearProgress style={{ height: '5px'}}
+                                                value={totalTasksCount ? (100 - unfinishedTasksCount / totalTasksCount * 100) : 0} variant="determinate" />
+                                        </Box>
                                     </Grid>
                                 </Grid>
                             </CardContent>
                         </Card>
-                    </div>
-                    <div className="col col-3">  <Card style={{ height: '100%' }} >
-                        <CardContent>
-                            <Grid container style={{ justifyContent: 'space-between' }}>
-                                <Grid item><Typography color="textSecondary" variant="caption">TASKS PROGRESS</Typography>
-                                    <Typography color="textPrimary" variant="h5">{totalTasksCount && (Math.round(100 - unfinishedTasksCount / totalTasksCount * 100))}%</Typography>
-                                    <Box >
-                                        <LinearProgress style={{ height: '5px', color: 'black' }}
-                                            value={totalTasksCount ? (100 - unfinishedTasksCount / totalTasksCount * 100) : 0} variant="determinate" />
-                                    </Box>
-                                </Grid>
-                            </Grid>
-                        </CardContent>
-                    </Card>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <Button id="task-csv" onClick={() => getTasksCSV(activeProjectId)} variant="contained" color="primary" size="small" className={classes.button} startIcon={<SaveIcon />}>Save .csv</Button>
-            <div className="headingStyleBacklog2">  
-            <div style={{display:'flex'}}>
-            <Button size="small" style={{color: '#4caf50'}}><AddIcon /><ViewTask task={{}} status='BACKLOG' projectId={activeProjectId} add={true} /></Button>
-                {/* <div style={{ display: 'flex', justifyContent: 'right' }}><AddIcon /><ViewTask task={{}} status='BACKLOG' projectId={activeProjectId} add={true} /> */}
-                {/* <SortIcon ></SortIcon>Sort<FilterListIcon></FilterListIcon>Filter<SearchIcon></SearchIcon>Search   */}
-                {/* </div> */}
 
-                <Paper id="search-bar" component="form" className={classes.search}>
+                <div style={{ backgroundColor: value.state.checkedA ? '#695586' : 'transparent' }}>
+                    <div className="projectHeadingStyle" >  <Button id="task-csv" onClick={() => getTasksCSV(activeProjectId)} variant="contained" size="small" className={classes.button} startIcon={<SaveIcon />}>Save .csv</Button></div>
+
+                    <div className="headingStyleBacklog2" >
+                        <Button id="project-create-button2" style={{ height: 40 }} className={classes.createButton} size="medium" variant="contained">
+                            <AddIcon style={{ marginLeft: -10 }} className={classes.colorWhite} id="add-project-button2" />
+                            <ViewTask task={{}} status='BACKLOG' projectId={activeProjectId} add={true} />
+                        </Button>
+                        {/* <div style={{ display: 'flex', justifyContent: 'right' }}><AddIcon /><ViewTask task={{}} status='BACKLOG' projectId={activeProjectId} add={true} /> */}
+                        {/* <SortIcon ></SortIcon>Sort<FilterListIcon></FilterListIcon>Filter<SearchIcon></SearchIcon>Search   */}
+                        {/* </div> */}
+
+                        <Paper id="search-bar" component="form" className={classes.search}>
                             <InputBase id="search-input"
                                 className={classes.input}
                                 placeholder="Search..."
@@ -381,83 +448,84 @@ setSearchRequest(event.target.value);
                                 onChange={handleSearch}
                                 value={searchRequest}
                             />
-                                    <SearchIcon  className={classes.iconButton} color="primary" aria-label="search"/>
+                            <SearchIcon className={classes.iconButton} aria-label="search" />
                         </Paper>
-                        </div>
-                <div> <Link to={`/active-board/${match.params.id}`}>
-                    <button className="btn" style={{ backgroundColor: '#7eb8da', color: 'white' }}>Go to active board</button>
-                </Link> </div>
-            </div>
-            <div className={"dndContainerBacklog"}>
-                <DragDropContext onDragEnd={handleDragEnd}>
-                    {_.map(state, (data, key) => {
-                        return (
-                            <div key={key} className={"column"}>
-                                <div>
-                                    <div><Typography color="textPrimary" variant="h6" style={{padding: 10}}>{data.title}</Typography>
-                                    </div>
-                                    <Droppable droppableId={key}>
-                                        {(provided, snapshot) => {
-                                            return (
-                                                <div ref={provided.innerRef}{...provided.droppableProps} className={"droppable-col-Backlog"}>
-                                                    {data.items.map((el, index) => {
-                                                        return (
-                                                            <Draggable key={el.id} index={index} draggableId={el.id}>
-                                                                {(provided, snapshot) => {
-                                                                    return (
-                                                                        <div
-                                                                            className={`itemBacklog ${snapshot.isDragging && "dragging"} ${el.priority === "MEDIUM" ? "medium" : (el.priority === "LOW" ? "low" : "high")}`}
-                                                                            ref={provided.innerRef}
-                                                                            {...provided.draggableProps}
-                                                                            {...provided.dragHandleProps}
-                                                                        >
-                                                                            <div className="boardTaskBacklog">
-                                                                                <div>
-                                                                                <div style={{paddingTop:'2%', paddingBottom:'2%'}}>
-                                                                                    <ViewTask task={el} status='BACKLOG' projectId={activeProjectId} add={false} />
-                                                                                </div>
-                                                                                <div>
-<div style={{display:'flex', height:'100%'}}>
-                                                                                                                                                            
-<div className="calendar"> <EventAvailableIcon style={{ fontSize: 10 }}/>   Updated: {el.updated.replace("T", " ").substr(0, 16)}</div>
-</div></div>
-
-                                                                                </div>
-
-                                                                                <div style={{display:'flex', alignItems:'center'}}>
+                        <Button className={classes.button} onClick={() => history.push(`/active-board/${match.params.id}`)} variant="contained">Go to active board</Button>
+                    </div>
+                </div>
 
 
-                                                                                <div style={{color:'grey', fontSize:'smaller', justifyContent:'center'}}>
-     {el.status==='TODO'?<SentimentVeryDissatisfiedIcon/>:(el.status==='BACKLOG'? '':<SentimentSatisfiedIcon/>)}  
-       
-        {el.status==='IN_PROGRESS'? 'IN PROGRESS':(el.status==='TODO'?'TO DO':'')}
-          
-        </div>
-                                                                                    <DeleteIcon id="icon" onClick={() => deleteFunction(el.id, el.name)} style={{ fontSize: 'large', color: 'grey', cursor: 'pointer' }} />
+
+                <div className={"dndContainerBacklog"} style={{ backgroundColor: value.state.checkedA ? '#695586' : 'transparent' }}>
+                    <DragDropContext onDragEnd={handleDragEnd}>
+                        {_.map(state, (data, key) => {
+                            return (
+                                <div key={key} className={"column"} style={{ backgroundColor: value.state.checkedA ? '#917dad' : 'transparent'}}>
+                                    <div>
+                                        <div><Typography color="textPrimary" variant="h6" style={{ padding: 10, color: '#ffc814', paddingLeft: 30 }}>{data.title}</Typography>
+                                        </div>
+                                        <Droppable droppableId={key} >
+                                            {(provided, snapshot) => {
+                                                return (
+                                                    <div ref={provided.innerRef}{...provided.droppableProps} className={"droppable-col-Backlog"} >
+                                                        {data.items.map((el, index) => {
+                                                            return (
+                                                                <Draggable key={el.id} index={index} draggableId={el.id}>
+                                                                    {(provided, snapshot) => {
+                                                                        return (
+                                                                            <div 
+                                                                                className={`itemBacklog ${snapshot.isDragging && "dragging"} ${ value.state.checkedA ? classes.border : ''} ${el.priority === "MEDIUM" ? "medium" : (el.priority === "LOW" ? "low" : "high")}`}
+                                                                                ref={provided.innerRef}
+                                                                                {...provided.draggableProps}
+                                                                                {...provided.dragHandleProps}
+                                                                            >
+                                                                                <div className="boardTaskBacklog">
+                                                                                    <div>
+                                                                                        <div style={{ paddingTop: '2%', paddingBottom: '2%' }}>
+                                                                                            <span> <ViewTask task={el} status='BACKLOG' projectId={activeProjectId} add={false} /></span>
+                                                                                        </div>
+                                                                                        <div>
+                                                                                            <div style={{ display: 'flex', height: '100%' }}>
+                                                                                                <div className="calendar"> <EventAvailableIcon style={{ fontSize: 10 }} />   Updated: {el.updated.replace("T", " ").substr(0, 16)}</div>
+                                                                                            </div>
+                                                                                        </div>
+
+                                                                                    </div>
+
+                                                                                    <div style={{ display: 'flex', alignItems: 'center' }}>
+
+
+                                                                                        <div style={{ color: el.status === 'TODO' ? '#fa7857' : '#ccffbf', justifyContent: 'start' }}>
+                                                                                            {el.status === 'TODO' ? <SentimentVeryDissatisfiedIcon /> : (el.status === 'BACKLOG' ? '' : <SentimentSatisfiedIcon />)}
+
+                                                                                            <span>{el.status === 'IN_PROGRESS' ? 'IN PROGRESS' : (el.status === 'TODO' ? 'TO DO' : '')}</span>
+
+                                                                                        </div>
+                                                                                        <Fab size="small" className={classes.fab}> <DeleteIcon id="icon" onClick={() => deleteFunction(el.id, el.name)} style={{ color: 'white' }} /></Fab>
+                                                                                    </div>
                                                                                 </div>
                                                                             </div>
-                                                                        </div>
-                                                                    )
-                                                                }}
-                                                            </Draggable>
-                                                        )
-                                                    })}
-                                                    {provided.placeholder}
-                                                </div>
-                                            )
-                                        }}
-                                    </Droppable>
-                                    <hr />
+                                                                        )
+                                                                    }}
+                                                                </Draggable>
+                                                            )
+                                                        })}
+                                                        {provided.placeholder}
+                                                    </div>
+                                                )
+                                            }}
+                                        </Droppable>
+                                        <hr />
+                                    </div>
+
                                 </div>
+                            )
+                        })}
+                    </DragDropContext>
 
-                            </div>
-                        )
-                    })}
-                </DragDropContext>
-        
+                </div>
+
             </div>
-
-        </div>
         </ThemeProvider>
     )
 }

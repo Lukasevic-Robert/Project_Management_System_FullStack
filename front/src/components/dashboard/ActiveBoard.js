@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import _ from "lodash";
-import { Link } from "react-router-dom";
 import TaskService from "../../services/TaskService.js"
 import ViewTask from "./ViewTask"
 import swal from 'sweetalert';
@@ -13,11 +12,32 @@ import EditIcon from '@material-ui/icons/Edit';
 import Tooltip from "@material-ui/core/Tooltip";
 import ReplyIcon from '@material-ui/icons/Reply';
 import AddIcon from '@material-ui/icons/Add';
-import Typography from '@material-ui/core/Typography';
+import { Typography, Fab } from '@material-ui/core';
+import { createMuiTheme } from '@material-ui/core/styles';
 import { ProjectContext } from '../../context/ProjectContext';
 import { AuthContext } from '../../context/AuthContext';
+import { ThemeProvider } from '@material-ui/styles';
 
-
+const theme = createMuiTheme({
+    palette: {
+        primary: {
+            main: '#be9ddf',
+        },
+        secondary: {
+            main: '#f6c1c7',
+        },
+    },
+    overrides: {
+        MuiFab: {
+            root: {
+                '&:hover': {
+                    backgroundColor: 'transparent',
+                    boxShadow: '1px 1px 5px black'
+                },
+            }
+        },
+    },
+});
 const useStyles = makeStyles({
     purple: {
         backgroundColor: 'purple',
@@ -25,13 +45,23 @@ const useStyles = makeStyles({
         height: '30px',
         fontSize: '12px',
         marginRight: '2px'
-    }
+    },
+    fab: {
+        marginLeft: 5,
+        marginRight: 5,
+        backgroundColor: 'transparent',
+        boxShadow: 'none'
+
+    },
+    border: {
+        borderColor: 'white',
+    },
 }
 );
 
 const ActiveBoard = ({ match }) => {
     const { projectName, setLocation, refreshActive} = useContext(ProjectContext);
-    const { isProjectBoss } = useContext(AuthContext);
+    const value = useContext(AuthContext);
     const activeProjectID = match.params.id;
     const classes = useStyles();
     const [activeTasks, setActiveTasks] = useState([]);
@@ -218,11 +248,12 @@ const ActiveBoard = ({ match }) => {
     }
 
     return (
-        <div className="activeBoard">
+        <ThemeProvider theme={theme}>
+        <div className="activeBoard" style={{ backgroundColor: value.state.checkedA ? '#695586' : 'transparent', height: '100%'  }}>
             <div className="boardHeadingStyle">
                 <div style={{ fontSize: 'larger', fontWeight: 'bold' }}>
-                    <Typography style={{ textTransform: 'uppercase' }} component="h1" variant="h5">{projectName}
-                      {isProjectBoss() && (<Link id="link-to-edit-projects2" to={`/projects/${activeProjectID}`}><EditIcon style={{ size: 'large', color: '#be9ddf', marginBottom: '5%' }}></EditIcon></Link>)}
+                    <Typography style={{ textTransform: 'uppercase', color: 'white'}} component="h1" variant="h5">{projectName}
+                      {value.isProjectBoss() && (<Fab size="small" onClick={() => history.push(`/projects/${activeProjectID}`)} className={classes.fab}><EditIcon style={{ size: 'large', color: 'white', marginBottom: '5%' }}></EditIcon></Fab>)}
                     </Typography>
                 </div>
 
@@ -234,9 +265,9 @@ const ActiveBoard = ({ match }) => {
                     {_.map(state, (data, key) => {
                         return (
 
-                            <div key={key} className={"column"}>
+                            <div key={key} className={"column"} style={{ backgroundColor: value.state.checkedA ? '#917dad' : 'transparent'}}>
                                 <div>
-                                    <div style={{ display: 'flex', justifyContent: 'space-between' }}><h3>{data.title}</h3>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between' }}><h3><span style={{color: 'white'}}>{data.title}</span></h3>
                                     </div>
 
                                     <Droppable droppableId={key}>
@@ -253,15 +284,15 @@ const ActiveBoard = ({ match }) => {
                                                                 {(provided, snapshot) => {
                                                                     return (
                                                                         <div
-                                                                            className={`item ${snapshot.isDragging && "dragging"} ${el.priority === "MEDIUM" ? "medium" : (el.priority === "LOW" ? "low" : "high")}`}
+                                                                            className={`item ${snapshot.isDragging && "dragging"} ${ value.state.checkedA ? classes.border : ''} ${el.priority === "MEDIUM" ? "medium" : (el.priority === "LOW" ? "low" : "high")}`}
                                                                             ref={provided.innerRef}
                                                                             {...provided.draggableProps}
                                                                             {...provided.dragHandleProps}
                                                                         >
-                                                                            <div className="boardTask">
+                                                                            <div className="boardTask" style={{color: 'white'}}>
                                                                                 <ViewTask task={el} projectId={activeProjectID} add={false} />
                                                                                 <Tooltip title="Move back to backlog">
-                                                                                    <ReplyIcon id="move-back-to-backlog" onClick={() => sendToBacklog(el)} style={{ marginBottom: "px", cursor: 'pointer', fontSize: 'medium', color: 'rgba(27, 28, 43, 0.3' }}></ReplyIcon>
+                                                                                    <ReplyIcon id="move-back-to-backlog" onClick={() => sendToBacklog(el)} style={{ marginBottom: "px", cursor: 'pointer', fontSize: 'medium', color: 'white' }}></ReplyIcon>
                                                                                 </Tooltip>
 
                                                                             </div>
@@ -286,7 +317,7 @@ const ActiveBoard = ({ match }) => {
                                     </Droppable>
                                 </div>
 
-                                <div className="addTask" style={{ cursor: 'pointer' }} > <ViewTask status={key} task={{}} projectId={activeProjectID} add={true} /> <AddIcon style={{ fontSize: 'medium', verticalAlign: 'bottom', height: '100%' }}></AddIcon></div>
+                                <div className="addTask" style={{ cursor: 'pointer', color: 'white'}} > <ViewTask status={key} task={{}} projectId={activeProjectID} add={true} /> <AddIcon style={{ fontSize: 'medium', verticalAlign: 'bottom', height: '100%' }}></AddIcon></div>
 
                             </div>
                         )
@@ -295,6 +326,7 @@ const ActiveBoard = ({ match }) => {
             </div>
 
         </div>
+        </ThemeProvider>
     )
 }
 

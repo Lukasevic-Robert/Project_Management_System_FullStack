@@ -8,7 +8,7 @@ body{
   /* background-image: url('./images/wallpaper/triangle-background-6.jpg'); */
   /* background-image: url('./images/wallpaper/triangle-background-7.jpg'); */
   /* background-image: url('./images/wallpaper/triangle-background-8-1.jpg'); */
-  background-image: url('./images/wallpaper/triangle-background-8-1.jpg');
+  background-image: url('./images/wallpaper/triangle-background-8-1-2.jpg');
 
   /* background-image: url('./images/wallpaper/triangle-background-9.jpg'); */
   /*kground-image: url('./images/wallpaper/triangle-background-14.png'); */
@@ -131,10 +131,11 @@ body, html, .App, #root, .auth-wrapper, .auth-inner {
 
 .item {
   margin-bottom: 10px;
-  background-color: rgba(191, 195, 214, 0.1);
+  border: 1px solid rgb(255, 255, 0, 0.2);
+  background-color:rgba(122, 67, 139, 0.397);
   box-shadow: 1px 2px 3px rgba(27, 28, 43, 0.2);
   padding: 10px;
-  border-radius: 1px;
+  border-radius: 5px;
   min-height: 50px;
   display: flex;
   justify-content: left;
@@ -165,15 +166,15 @@ body, html, .App, #root, .auth-wrapper, .auth-inner {
 }
 
 .item.medium {
-  border-right: 10px solid rgb(255, 255, 0, 0.7);
+  border-right: 10px solid #ffc814;
 }
 
 .item.high {
-  border-right: 10px solid rgb(255, 0, 0, 0.7);
+  border-right: 10px solid #d44a28;
 }
 
 .item.low {
-  border-right: 10px solid rgb(0, 128, 0, 0.7);
+  border-right: 10px solid #239641;
 }
 
 
@@ -191,8 +192,7 @@ body, html, .App, #root, .auth-wrapper, .auth-inner {
 
 .dndContainerBacklog  {
   width: 100%;
-  background-color: 'transparent';
-  box-shadow: 2px 20px 20px rgba(27, 28, 43, 0.2);
+  /* box-shadow: 2px 20px 20px rgba(27, 28, 43, 0.2); */
 }
 .column{
   background-color: transparent;
@@ -206,10 +206,10 @@ body, html, .App, #root, .auth-wrapper, .auth-inner {
 
 .itemBacklog {
 
-  background-color: transparent;
-  box-shadow: 1px 2px 3px rgba(27, 28, 43, 0.2);
+  box-shadow: 1px 2px 3px rgba(27, 28, 43, 0.507);
   border-radius: 5px;
-  border: 1px solid white;
+  border: 1px solid rgb(255, 255, 0, 0.2);
+  background-color:rgba(122, 67, 139, 0.397);
   min-height: 30px;
   width: 100%;
   display: flex;
@@ -217,7 +217,7 @@ body, html, .App, #root, .auth-wrapper, .auth-inner {
   flex-direction: column;
   color: white;
   text-decoration: none;
-  padding: 1%;
+  padding: 5px;
   margin-bottom: 5px;
 
 }
@@ -255,8 +255,9 @@ body, html, .App, #root, .auth-wrapper, .auth-inner {
   display: flex;
   justify-content: space-between;
   margin-bottom: -10px;
-  margin-left: 2%;
-  margin-right: 2%;
+  margin-left: 3%;
+  margin-right: 1%;
+  margin-top: -20px;
   
 }
 
@@ -279,15 +280,15 @@ body, html, .App, #root, .auth-wrapper, .auth-inner {
 }
 
 .itemBacklog.medium {
-  border-left: 10px solid rgb(255, 255, 0, 0.7);
+  border-left: 10px solid #ffc814;
 }
 
 .itemBacklog.high {
-  border-left: 10px solid rgb(255, 0, 0, 0.7);
+  border-left: 10px solid #d44a28;
 }
 
 .itemBacklog.low {
-  border-left: 10px solid rgb(0, 128, 0, 0.7);
+  border-left: 10px solid #239641;
 }
 
 .swalFont{
@@ -295,7 +296,7 @@ font-size:x-large;}
 
 .calendar{
  font-size:10px;
- color:rgb(148, 140, 140);
+ color:#fdffba;
  display: inline-block;
  align-self:flex-end;
 }

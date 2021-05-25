@@ -14,7 +14,7 @@ const AuthProvider = ({ children }) => {
         user ? JSON.parse(user) : {}  
     );
     const [state, setState] = React.useState({
-        checkedA: true,
+        checkedA: false,
         checkedB: true,
       });
 
