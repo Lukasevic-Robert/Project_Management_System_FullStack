@@ -6,8 +6,6 @@ import TaskService from "../../services/TaskService.js"
 import ViewTask from "./ViewTask"
 import swal from 'sweetalert';
 import { useHistory } from 'react-router';
-import ProjectService from "../../services/ProjectService";
-import { Avatar } from "@material-ui/core"
 import { makeStyles } from '@material-ui/core/styles';
 import EditIcon from '@material-ui/icons/Edit';
 import Tooltip from "@material-ui/core/Tooltip";
@@ -63,7 +61,6 @@ const ActiveBoard = ({ match }) => {
                     if (isMounted) {
                         setActiveTasks(response.data);
                         mapByStatus(response.data);
-                        getUsers();
                     }
                 })
                 .catch((error) => {
@@ -172,32 +169,6 @@ const ActiveBoard = ({ match }) => {
         return errorMessage;
     }
 
-    // GET USERS LIST from database and set initials    
-    const getUsers = () => {
-        ProjectService.getProjectById(activeProjectID).then((res) => {
-            setInitials(initials => {
-                initials = [...initials]
-                initials = [];
-                return initials;
-            })
-            let project = res.data;
-
-            project.users.map((user) => {
-                let userInitials = user.firstName.charAt(0).trim() + user.lastName.charAt(0).trim();
-                setInitials(initials => {
-                    initials = [...initials]
-                    initials.push(userInitials);
-                    return initials;
-                })
-            })
-            // setProject({ title: project.name, status: project.status, content: project.description, personName: users, userListId: userId });
-        })
-            .catch((error) => {
-                getErrorMessage();
-                history.push('/projects');
-            });
-    }
-
 
     // SEND TASK to backlog, update database and board    
     const sendToBacklog = async (task) => {
@@ -226,8 +197,6 @@ const ActiveBoard = ({ match }) => {
                     </Typography>
                 </div>
 
-                {/* <div style={{ fontSize: 'smaller' }}><SortIcon></SortIcon>Sort
-                <FilterListIcon></FilterListIcon>Filter<SearchIcon></SearchIcon>Search</div> */}
             </div>
             <div className={"dndContainer"}>
                 <DragDropContext onDragEnd={handleDragEnd}>
@@ -259,20 +228,13 @@ const ActiveBoard = ({ match }) => {
                                                                             {...provided.dragHandleProps}
                                                                         >
                                                                             <div className="boardTask">
-                                                                                <ViewTask task={el} projectId={activeProjectID} add={false} />
+                                                                                <ViewTask task={el} projectId={activeProjectID} add={false}/>
                                                                                 <Tooltip title="Move back to backlog">
                                                                                     <ReplyIcon id="move-back-to-backlog" onClick={() => sendToBacklog(el)} style={{ marginBottom: "px", cursor: 'pointer', fontSize: 'medium', color: 'rgba(27, 28, 43, 0.3' }}></ReplyIcon>
                                                                                 </Tooltip>
 
                                                                             </div>
 
-                                                                            <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-                                                                                {
-                                                                                    initials.map((item, index) => (
-                                                                                        <Avatar className={classes.purple} key={index}>{item}</Avatar>
-                                                                                    ))
-                                                                                }
-                                                                            </div>
                                                                         </div>
                                                                     )
                                                                 }}

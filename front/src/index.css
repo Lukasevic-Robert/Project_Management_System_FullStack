@@ -72,6 +72,7 @@ body, html, .App, #root, .auth-wrapper {
   margin-top: -2%;
   margin-right: -4%;
   vertical-align: bottom;
+  min-height: 70px;
 }
 
 .addTask {
@@ -131,6 +132,9 @@ body, html, .App, #root, .auth-wrapper {
 
 .item div {
   padding: 1%;
+  width: 100%;
+  word-wrap: break-word;
+  min-height: 60px;
 }
 
 .item :nth-child(2) {

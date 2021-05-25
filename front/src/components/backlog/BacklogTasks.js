@@ -10,7 +10,7 @@ import ProjectService from "../../services/ProjectService";
 import { makeStyles } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/DeleteForever';
-import { Box, Card, CardContent, Grid, LinearProgress, Typography, Paper, Button, InputBase  } from '@material-ui/core';
+import { Box, Card, CardContent, Grid, LinearProgress, Typography, Paper, Button, InputBase } from '@material-ui/core';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 import { ProjectContext } from "../../context/ProjectContext";
@@ -65,7 +65,7 @@ const useStyles = makeStyles({
         fontSize: 14,
         fontWeight: '500',
         fontFamily: 'Fira Sans'
-    },  
+    },
 }
 );
 
@@ -91,7 +91,7 @@ const BacklogTasks = ({ match }) => {
             items: []
         }
     })
-  
+
     // GET ACTIVE AND BACKLOG TASKS from database 
 
     useEffect(() => {
@@ -198,8 +198,10 @@ const BacklogTasks = ({ match }) => {
         }
         const itemCopy = { ...state[source.droppableId].items[source.index] }
         // itemCopy.status
-        if(destination.droppableId==="ACTIVE"){itemCopy.status="TODO"}
-        if(destination.droppableId==="BACKLOG"){itemCopy.status="BACKLOG"}
+        if (destination.droppableId === "ACTIVE" && itemCopy.status === "BACKLOG") {
+            itemCopy.status = "TODO"
+        }
+        if (destination.droppableId === "BACKLOG") { itemCopy.status = "BACKLOG" }
 
         setState(prev => {
             prev = { ...prev }
@@ -207,34 +209,37 @@ const BacklogTasks = ({ match }) => {
             prev[destination.droppableId].items.splice(destination.index, 0, itemCopy)
             return prev
         })
-        updateTask(draggableId, destination.droppableId)
+        updateTask(draggableId, destination.droppableId, source.droppableId)
     }
 
     // SEND REQUEST to database to update task status    
-    const updateTask = (taskId, newStatus) => {
+    const updateTask = (taskId, newStatus, oldStatus) => {
         let totalTasks = activeTasks.concat(backlogTasks)
         let taskToUpdate = totalTasks.find(item => item.id === taskId);
+      
         if (newStatus === 'BACKLOG') {
             taskToUpdate.status = newStatus;
-            setBacklogTasks([...backlogTasks,taskToUpdate]);
+            setBacklogTasks([...backlogTasks, taskToUpdate]);
             setActiveTasks(activeTasks.filter((task) => task.id !== taskId
             ))
         }
-        else {
+        else if (oldStatus === 'BACKLOG' && newStatus === 'ACTIVE') {
             taskToUpdate.status = 'TODO';
-            setActiveTasks([...activeTasks,taskToUpdate]);
+            setActiveTasks([...activeTasks, taskToUpdate]);
             setBacklogTasks(backlogTasks.filter((task) => task.id !== taskId
             ))
         }
 
-        TaskService.updateTask(taskToUpdate, taskId).then(res => {
-            // setRefreshBacklog(!refreshBacklog);
-        })
-            .catch((error) => {
-                getErrorMessage();
-                history.push('/projects');
-            }
-            );
+        if (oldStatus !== newStatus) {
+            TaskService.updateTask(taskToUpdate, taskId).then(res => {
+                // setRefreshBacklog(!refreshBacklog);
+            })
+                .catch((error) => {
+                    getErrorMessage();
+                    history.push('/projects');
+                }
+                );
+        }
     }
 
     const getErrorMessage = () => {
@@ -263,29 +268,29 @@ const BacklogTasks = ({ match }) => {
     }
 
     // DELETE TASK
-const deleteFunction = (taskId, taskName) =>{
-    swal({
-        text: `Are you sure you want to delete task: ${taskName}?`,
-        // text: "You won't be able to revert this!",
-        icon: 'warning',
-        className: "swalFont",
-        buttons: ["Cancel", "Yes, delete it!"],
-        dangerMode: true,
-        }).then( async (isConfirm)=>{
-          if (isConfirm) {
-            await TaskService.deleteTask(taskId).then(res => {
-                getSuccessMessage("deleted");
-                setRefreshBacklog(!refreshBacklog);
-            })
-                .catch((error) => {
-                    getErrorMessage();
-                }
-                );
-            setTotalTasks(totalTasksCount - 1);
-            setUnfinishedTasks(unfinishedTasksCount - 1);
-          }
-        })  
-}
+    const deleteFunction = (taskId, taskName) => {
+        swal({
+            text: `Are you sure you want to delete task: ${taskName}?`,
+            // text: "You won't be able to revert this!",
+            icon: 'warning',
+            className: "swalFont",
+            buttons: ["Cancel", "Yes, delete it!"],
+            dangerMode: true,
+        }).then(async (isConfirm) => {
+            if (isConfirm) {
+                await TaskService.deleteTask(taskId).then(res => {
+                    getSuccessMessage("deleted");
+                    setRefreshBacklog(!refreshBacklog);
+                })
+                    .catch((error) => {
+                        getErrorMessage();
+                    }
+                    );
+                setTotalTasks(totalTasksCount - 1);
+                setUnfinishedTasks(unfinishedTasksCount - 1);
+            }
+        })
+    }
 
     const getSuccessMessage = (status) => {
         const successMessage = swal({
@@ -301,163 +306,172 @@ const deleteFunction = (taskId, taskName) =>{
         TaskService.requestTasksCSV(projectId);
     }
 
-// SEARCH TASKS
-const [searchRequest, setSearchRequest] = useState('');
-    const handleSearch=(event)=>{
-setSearchRequest(event.target.value);
-  setState((state)=>{
-    state = { ...state }
-    let activeNotDone= activeTasks.filter((item) => item.status !== "DONE");
+    // SEARCH TASKS
+    const [searchRequest, setSearchRequest] = useState('');
+    const handleSearch = (event) => {
+        setSearchRequest(event.target.value);
+        setState((state) => {
+            state = { ...state }
+            let activeNotDone = activeTasks.filter((item) => item.status !== "DONE");
 
-     state.ACTIVE.items=activeNotDone.filter((item) => {
-        return  item.name.toLowerCase().includes(event.target.value.toLowerCase())
-      });
+            state.ACTIVE.items = activeNotDone.filter((item) => {
+                return item.name.toLowerCase().includes(event.target.value.toLowerCase())
+            });
 
-      state.BACKLOG.items=backlogTasks.filter((item) => {
-        return  item.name.toLowerCase().includes(event.target.value.toLowerCase())
-      });
+            state.BACKLOG.items = backlogTasks.filter((item) => {
+                return item.name.toLowerCase().includes(event.target.value.toLowerCase())
+            });
 
-    return state;
-  });
+            return state;
+        });
     }
-   
+
+
+
 
     return (
         <ThemeProvider theme={theme}>
-        <div className="activeBoard">
-            <div style={{ fontSize: 'larger', fontWeight: 'bold', marginLeft: '20px', paddingTop: '10px'}}>
-                {title}
-            </div>
+            <div className="activeBoard">
+                <div style={{ fontSize: 'larger', fontWeight: 'bold', marginLeft: '20px', paddingTop: '10px' }}>
+                    {title}
+                </div>
 
-            <div className="container-fluid containerDashboard">
-                <div className="row">
-                    <div className="col col-7">
-                        <Card style={{ height: '100%' }} >
-                            <CardContent>
-                                <Typography className={classes.content} color="textPrimary" variant="body2">{content}</Typography>
-                            </CardContent>
-                        </Card>
-                    </div>
-                    <div className="col col-2">
-                        <Card style={{ height: '100%' }} >
+                <div className="container-fluid containerDashboard">
+                    <div className="row">
+                        <div className="col col-7">
+                            <Card style={{ height: '100%' }} >
+                                <CardContent>
+                                    <Typography className={classes.content} color="textPrimary" variant="body2">{content}</Typography>
+                                </CardContent>
+                            </Card>
+                        </div>
+                        <div className="col col-2">
+                            <Card style={{ height: '100%' }} >
+                                <CardContent>
+                                    <Grid container style={{ justifyContent: 'space-between' }}>
+                                        <Grid item><Typography color="textSecondary" variant="caption">TOTAL TASKS</Typography>
+                                            <Typography color="textPrimary" variant="h5">{totalTasksCount}</Typography>
+                                        </Grid>
+                                    </Grid>
+                                </CardContent>
+                            </Card>
+                        </div>
+                        <div className="col col-3">  <Card style={{ height: '100%' }} >
                             <CardContent>
                                 <Grid container style={{ justifyContent: 'space-between' }}>
-                                    <Grid item><Typography color="textSecondary" variant="caption">TOTAL TASKS</Typography>
-                                        <Typography color="textPrimary" variant="h5">{totalTasksCount}</Typography>
+                                    <Grid item><Typography color="textSecondary" variant="caption">TASKS PROGRESS</Typography>
+                                        <Typography color="textPrimary" variant="h5">{totalTasksCount && (Math.round(100 - unfinishedTasksCount / totalTasksCount * 100))}%</Typography>
+                                        <Box >
+                                            <LinearProgress style={{ height: '5px', color: 'black' }}
+                                                value={totalTasksCount ? (100 - unfinishedTasksCount / totalTasksCount * 100) : 0} variant="determinate" />
+                                        </Box>
                                     </Grid>
                                 </Grid>
                             </CardContent>
                         </Card>
-                    </div>
-                    <div className="col col-3">  <Card style={{ height: '100%' }} >
-                        <CardContent>
-                            <Grid container style={{ justifyContent: 'space-between' }}>
-                                <Grid item><Typography color="textSecondary" variant="caption">TASKS PROGRESS</Typography>
-                                    <Typography color="textPrimary" variant="h5">{totalTasksCount && (Math.round(100 - unfinishedTasksCount / totalTasksCount * 100))}%</Typography>
-                                    <Box >
-                                        <LinearProgress style={{ height: '5px', color: 'black' }}
-                                            value={totalTasksCount ? (100 - unfinishedTasksCount / totalTasksCount * 100) : 0} variant="determinate" />
-                                    </Box>
-                                </Grid>
-                            </Grid>
-                        </CardContent>
-                    </Card>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <Button id="task-csv" onClick={() => getTasksCSV(activeProjectId)} variant="contained" color="primary" size="small" className={classes.button} startIcon={<SaveIcon />}>Save .csv</Button>
-            <div className="headingStyleBacklog2">  
-            <div style={{display:'flex'}}>
-            <Button size="small" style={{color: '#4caf50'}}><AddIcon /><ViewTask task={{}} status='BACKLOG' projectId={activeProjectId} add={true} /></Button>
-                {/* <div style={{ display: 'flex', justifyContent: 'right' }}><AddIcon /><ViewTask task={{}} status='BACKLOG' projectId={activeProjectId} add={true} /> */}
-                {/* <SortIcon ></SortIcon>Sort<FilterListIcon></FilterListIcon>Filter<SearchIcon></SearchIcon>Search   */}
-                {/* </div> */}
+                <Button id="task-csv" onClick={() => getTasksCSV(activeProjectId)} variant="contained" color="primary" size="small" className={classes.button} startIcon={<SaveIcon />}>Save .csv</Button>
+                <div className="headingStyleBacklog2">
+                    <div style={{ display: 'flex' }}>
+                        <Button size="small" style={{ color: '#4caf50' }}><AddIcon /><ViewTask task={{}} status='BACKLOG' projectId={activeProjectId} add={true} /></Button>
+                        {/* <div style={{ display: 'flex', justifyContent: 'right' }}><AddIcon /><ViewTask task={{}} status='BACKLOG' projectId={activeProjectId} add={true} /> */}
+                        {/* <SortIcon ></SortIcon>Sort<FilterListIcon></FilterListIcon>Filter<SearchIcon></SearchIcon>Search   */}
+                        {/* </div> */}
 
-                <Paper id="search-bar" component="form" className={classes.search}>
+                        <Paper id="search-bar" component="form" className={classes.search}>
                             <InputBase id="search-input"
                                 className={classes.input}
                                 placeholder="Search..."
                                 inputProps={{ 'aria-label': 'search google maps' }}
                                 onChange={handleSearch}
                                 value={searchRequest}
+                                onKeyPress={(ev) => {
+                                    if (ev.key === 'Enter') {
+                                        ev.preventDefault();
+                                    }
+                                }}
                             />
-                                    <SearchIcon  className={classes.iconButton} color="primary" aria-label="search"/>
+                            <SearchIcon className={classes.iconButton} color="primary" aria-label="search" />
                         </Paper>
-                        </div>
-                <div> <Link to={`/active-board/${match.params.id}`}>
-                    <button className="btn" style={{ backgroundColor: '#7eb8da', color: 'white' }}>Go to active board</button>
-                </Link> </div>
-            </div>
-            <div className={"dndContainerBacklog"}>
-                <DragDropContext onDragEnd={handleDragEnd}>
-                    {_.map(state, (data, key) => {
-                        return (
-                            <div key={key} className={"column"}>
-                                <div>
-                                    <div><Typography color="textPrimary" variant="h6" style={{padding: 10}}>{data.title}</Typography>
-                                    </div>
-                                    <Droppable droppableId={key}>
-                                        {(provided, snapshot) => {
-                                            return (
-                                                <div ref={provided.innerRef}{...provided.droppableProps} className={"droppable-col-Backlog"}>
-                                                    {data.items.map((el, index) => {
-                                                        return (
-                                                            <Draggable key={el.id} index={index} draggableId={el.id}>
-                                                                {(provided, snapshot) => {
-                                                                    return (
-                                                                        <div
-                                                                            className={`itemBacklog ${snapshot.isDragging && "dragging"} ${el.priority === "MEDIUM" ? "medium" : (el.priority === "LOW" ? "low" : "high")}`}
-                                                                            ref={provided.innerRef}
-                                                                            {...provided.draggableProps}
-                                                                            {...provided.dragHandleProps}
-                                                                        >
-                                                                            <div className="boardTaskBacklog">
-                                                                                <div>
-                                                                                <div style={{paddingTop:'2%', paddingBottom:'2%'}}>
-                                                                                    <ViewTask task={el} status='BACKLOG' projectId={activeProjectId} add={false} />
-                                                                                </div>
-                                                                                <div>
-<div style={{display:'flex', height:'100%'}}>
-                                                                                                                                                            
-<div className="calendar"> <EventAvailableIcon style={{ fontSize: 10 }}/>   Updated: {el.updated.replace("T", " ").substr(0, 16)}</div>
-</div></div>
-
-                                                                                </div>
-
-                                                                                <div style={{display:'flex', alignItems:'center'}}>
 
 
-                                                                                <div style={{color:'grey', fontSize:'smaller', justifyContent:'center'}}>
-     {el.status==='TODO'?<SentimentVeryDissatisfiedIcon/>:(el.status==='BACKLOG'? '':<SentimentSatisfiedIcon/>)}  
-       
-        {el.status==='IN_PROGRESS'? 'IN PROGRESS':(el.status==='TODO'?'TO DO':'')}
-          
-        </div>
-                                                                                    <DeleteIcon id="icon" onClick={() => deleteFunction(el.id, el.name)} style={{ fontSize: 'large', color: 'grey', cursor: 'pointer' }} />
+                    </div>
+                    <div> <Link to={`/active-board/${match.params.id}`}>
+                        <button className="btn" style={{ backgroundColor: '#7eb8da', color: 'white' }}>Go to active board</button>
+                    </Link> </div>
+                </div>
+                <div className={"dndContainerBacklog"}>
+                    <DragDropContext onDragEnd={handleDragEnd}>
+                        {_.map(state, (data, key) => {
+                            return (
+                                <div key={key} className={"column"}>
+                                    <div>
+                                        <div><Typography color="textPrimary" variant="h6" style={{ padding: 10 }}>{data.title}</Typography>
+                                        </div>
+                                        <Droppable droppableId={key}>
+                                            {(provided, snapshot) => {
+                                                return (
+                                                    <div ref={provided.innerRef}{...provided.droppableProps} className={"droppable-col-Backlog"}>
+                                                        {data.items.map((el, index) => {
+                                                            return (
+                                                                <Draggable key={el.id} index={index} draggableId={el.id}>
+                                                                    {(provided, snapshot) => {
+                                                                        return (
+                                                                            <div
+                                                                                className={`itemBacklog ${snapshot.isDragging && "dragging"} ${el.priority === "MEDIUM" ? "medium" : (el.priority === "LOW" ? "low" : "high")}`}
+                                                                                ref={provided.innerRef}
+                                                                                {...provided.draggableProps}
+                                                                                {...provided.dragHandleProps}
+                                                                            >
+                                                                                <div className="boardTaskBacklog">
+                                                                                    <div>
+                                                                                        <div style={{ paddingTop: '2%', paddingBottom: '2%' }}>
+                                                                                            <ViewTask task={el} status='BACKLOG' projectId={activeProjectId} add={false} />
+                                                                                        </div>
+                                                                                        <div>
+                                                                                            <div style={{ display: 'flex', height: '100%' }}>
+
+                                                                                                <div className="calendar"> <EventAvailableIcon style={{ fontSize: 10 }} />   Updated: {el.updated.replace("T", " ").substr(0, 16)}</div>
+                                                                                            </div></div>
+
+                                                                                    </div>
+
+                                                                                    <div style={{ display: 'flex', alignItems: 'center' }}>
+
+
+                                                                                        <div style={{ color: 'grey', fontSize: 'smaller', justifyContent: 'center' }}>
+                                                                                            {el.status === 'TODO' ? <SentimentVeryDissatisfiedIcon /> : (el.status === 'BACKLOG' ? '' : <SentimentSatisfiedIcon />)}
+
+                                                                                            {el.status === 'IN_PROGRESS' ? 'IN PROGRESS' : (el.status === 'TODO' ? 'TO DO' : '')}
+
+                                                                                        </div>
+                                                                                        <DeleteIcon id="icon" onClick={() => deleteFunction(el.id, el.name)} style={{ fontSize: 'large', color: 'grey', cursor: 'pointer' }} />
+                                                                                    </div>
                                                                                 </div>
                                                                             </div>
-                                                                        </div>
-                                                                    )
-                                                                }}
-                                                            </Draggable>
-                                                        )
-                                                    })}
-                                                    {provided.placeholder}
-                                                </div>
-                                            )
-                                        }}
-                                    </Droppable>
-                                    <hr />
+                                                                        )
+                                                                    }}
+                                                                </Draggable>
+                                                            )
+                                                        })}
+                                                        {provided.placeholder}
+                                                    </div>
+                                                )
+                                            }}
+                                        </Droppable>
+                                        <hr />
+                                    </div>
+
                                 </div>
+                            )
+                        })}
+                    </DragDropContext>
 
-                            </div>
-                        )
-                    })}
-                </DragDropContext>
-        
+                </div>
+
             </div>
-
-        </div>
         </ThemeProvider>
     )
 }
