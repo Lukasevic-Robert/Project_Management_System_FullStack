@@ -216,8 +216,7 @@ const BacklogTasks = ({ match }) => {
     const updateTask = (taskId, newStatus, oldStatus) => {
         let totalTasks = activeTasks.concat(backlogTasks)
         let taskToUpdate = totalTasks.find(item => item.id === taskId);
-        console.log("new" + newStatus)
-        console.log("old" + oldStatus)
+      
         if (newStatus === 'BACKLOG') {
             taskToUpdate.status = newStatus;
             setBacklogTasks([...backlogTasks, taskToUpdate]);
@@ -241,7 +240,6 @@ const BacklogTasks = ({ match }) => {
                 }
                 );
         }
-
     }
 
     const getErrorMessage = () => {
