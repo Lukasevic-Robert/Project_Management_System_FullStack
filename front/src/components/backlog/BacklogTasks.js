@@ -263,8 +263,9 @@ const BacklogTasks = ({ match }) => {
 
         const itemCopy = { ...state[source.droppableId].items[source.index] }
         // itemCopy.status
-    
-        if (destination.droppableId === "ACTIVE" ) { itemCopy.status = "TODO" }
+        if (destination.droppableId === "ACTIVE" && itemCopy.status === "BACKLOG") {
+            itemCopy.status = "TODO"
+        }
         if (destination.droppableId === "BACKLOG") { itemCopy.status = "BACKLOG" }
 
         setState(prev => {
@@ -273,34 +274,37 @@ const BacklogTasks = ({ match }) => {
             prev[destination.droppableId].items.splice(destination.index, 0, itemCopy)
             return prev
         })
-        updateTask(draggableId, destination.droppableId)
+        updateTask(draggableId, destination.droppableId, source.droppableId)
     }
 
     // SEND REQUEST to database to update task status    
-    const updateTask = (taskId, newStatus) => {
+    const updateTask = (taskId, newStatus, oldStatus) => {
         let totalTasks = activeTasks.concat(backlogTasks)
         let taskToUpdate = totalTasks.find(item => item.id === taskId);
+      
         if (newStatus === 'BACKLOG') {
             taskToUpdate.status = newStatus;
             setBacklogTasks([...backlogTasks, taskToUpdate]);
             setActiveTasks(activeTasks.filter((task) => task.id !== taskId
             ))
         }
-        else {
+        else if (oldStatus === 'BACKLOG' && newStatus === 'ACTIVE') {
             taskToUpdate.status = 'TODO';
             setActiveTasks([...activeTasks, taskToUpdate]);
             setBacklogTasks(backlogTasks.filter((task) => task.id !== taskId
             ))
         }
 
-        TaskService.updateTask(taskToUpdate, taskId).then(res => {
-            // setRefreshBacklog(!refreshBacklog);
-        })
-            .catch((error) => {
-                getErrorMessage();
-                history.push('/projects');
-            }
-            );
+        if (oldStatus !== newStatus) {
+            TaskService.updateTask(taskToUpdate, taskId).then(res => {
+                // setRefreshBacklog(!refreshBacklog);
+            })
+                .catch((error) => {
+                    getErrorMessage();
+                    history.push('/projects');
+                }
+                );
+        }
     }
 
     const getErrorMessage = () => {
@@ -387,7 +391,6 @@ const BacklogTasks = ({ match }) => {
         });
     }
 
-
     return (
         <ThemeProvider theme={theme}>
             <div className="activeBoard" style={{  height: '100%', padding:40}}>
@@ -401,15 +404,18 @@ const BacklogTasks = ({ match }) => {
                             <Card style={{ height: '100%'  }} >
                                 <CardContent>
                                     <Typography className={classes.content} variant="body2">{content}</Typography>
+
                                 </CardContent>
                             </Card>
                         </div>
                         <div className="col col-2">
+
                             <Card style={{ height: '100%'  }} >
                                 <CardContent>
                                     <Grid container style={{ justifyContent: 'space-between' }}>
                                         <Grid item><Typography variant="caption">TOTAL TASKS</Typography>
                                             <Typography variant="h5">{totalTasksCount}</Typography>
+
                                         </Grid>
                                     </Grid>
                                 </CardContent>
@@ -422,6 +428,7 @@ const BacklogTasks = ({ match }) => {
                                         <Typography variant="h5">{totalTasksCount && (Math.round(100 - unfinishedTasksCount / totalTasksCount * 100))}%</Typography>
                                         <Box >
                                             <LinearProgress style={{ height: '5px'}}
+
                                                 value={totalTasksCount ? (100 - unfinishedTasksCount / totalTasksCount * 100) : 0} variant="determinate" />
                                         </Box>
                                     </Grid>
@@ -431,7 +438,6 @@ const BacklogTasks = ({ match }) => {
                         </div>
                     </div>
                 </div>
-
                 <div>
                     <div className="projectHeadingStyle" >  <Button id="task-csv" onClick={() => getTasksCSV(activeProjectId)} variant="contained" size="small" className={classes.button} startIcon={<SaveIcon />}>Save .csv</Button></div>
 
@@ -440,6 +446,7 @@ const BacklogTasks = ({ match }) => {
                             <AddIcon style={{ marginLeft: -10 }} className={classes.colorWhite} id="add-task-button2" />
                             <ViewTask task={{}} status='BACKLOG' projectId={activeProjectId} add={true} />
                         </Button>
+
                         {/* <div style={{ display: 'flex', justifyContent: 'right' }}><AddIcon /><ViewTask task={{}} status='BACKLOG' projectId={activeProjectId} add={true} /> */}
                         {/* <SortIcon ></SortIcon>Sort<FilterListIcon></FilterListIcon>Filter<SearchIcon></SearchIcon>Search   */}
                         {/* </div> */}
@@ -451,6 +458,11 @@ const BacklogTasks = ({ match }) => {
                                 inputProps={{ 'aria-label': 'search google maps' }}
                                 onChange={handleSearch}
                                 value={searchRequest}
+                                onKeyPress={(ev) => {
+                                    if (ev.key === 'Enter') {
+                                        ev.preventDefault();
+                                    }
+                                }}
                             />
                             <SearchIcon className={classes.iconButton} aria-label="search" />
                         </Paper>
@@ -472,18 +484,22 @@ const BacklogTasks = ({ match }) => {
                                             {(provided, snapshot) => {
                                                 return (
                                                     <div ref={provided.innerRef}{...provided.droppableProps} className={"droppable-col-Backlog"} >
+
                                                         {data.items.map((el, index) => {
                                                             return (
                                                                 <Draggable key={el.id} index={index} draggableId={el.id}>
                                                                     {(provided, snapshot) => {
                                                                         return (
+
                                                                             <div 
                                                                                 className={`itemBacklog ${snapshot.isDragging && "dragging"} ${ value.state.checkedA ? classes.border : ''} ${el.priority === "MEDIUM" ? "medium" : (el.priority === "LOW" ? "low" : "high")}`}
+
                                                                                 ref={provided.innerRef}
                                                                                 {...provided.draggableProps}
                                                                                 {...provided.dragHandleProps}
                                                                             >
                                                                                 <div className="boardTaskBacklog">
+
                                                                                     <div>
                                                                                         <div style={{ paddingTop: '2%', paddingBottom: '2%' }}>
                                                                                             <span> <ViewTask task={el} status='BACKLOG' projectId={activeProjectId} add={false} /></span>
@@ -506,6 +522,7 @@ const BacklogTasks = ({ match }) => {
 
                                                                                         </div>
                                                                                         <Fab size="small" className={classes.fab}> <DeleteIcon id="icon" onClick={() => deleteFunction(el.id, el.name)} style={{ color: 'white' }} /></Fab>
+
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
