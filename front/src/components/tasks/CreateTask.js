@@ -347,7 +347,7 @@ const CreateTask = ({ handleClose, taskStatus, taskId, projectId, add }) => {
                             inputProps={{ maxLength: 50 }}
                             // autoComplete="email"
                             validators={['required', 'matchRegexp:^([A-Za-z0-9,.!]+ )+[A-Za-z0-9,.!]+$|^[A-Za-z0-9,.!]+$']}
-                            errorMessages={['this field is required']}
+                            errorMessages={['this field is required', 'Task name must be valid']}
                             onChange={changeTitle}
                             autoFocus
                         />
