@@ -308,7 +308,7 @@ function CreateUser({ match }) {
                         inputProps={{ maxLength: 50 }}
                         // autoComplete="email"
                         validators={['required', `matchRegexp:^[A-Z][a-z]+$`]}
-                        errorMessages={['this field is required', 'Name is not valid']}
+                        errorMessages={['this field is required', 'Firstname is not valid']}
                         onChange={changeFirstName}
                         autoFocus
                     />
@@ -383,8 +383,8 @@ function CreateUser({ match }) {
                         type="password"
                         id="password-create-user"
                         value={password}
-                        validators={['required', `matchRegexp:^(?=.{8,}$)(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9]).*$`]}
-                        errorMessages={['This field is required']}
+                        validators={['required', `matchRegexp:^(?=.{6,}$)(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9]).*$`]}
+                        errorMessages={['This field is required', `Password must contain at least one digit, uppercase and lowercase letter - min 6 characters long`]}
                         onChange={handlePasswordChange}
                     // autoComplete="current-password"
                     />
@@ -400,7 +400,7 @@ function CreateUser({ match }) {
                         id="repeat-password-create-user"
                         value={repeatPassword}
                         error={!validForm}
-                        validators={['isPasswordMatch', 'required', `matchRegexp:^(?=.{8,}$)(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9]).*$`]}
+                        validators={['isPasswordMatch', 'required', `matchRegexp:^(?=.{6,}$)(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9]).*$`]}
                         errorMessages={['Password mismatch', 'This field is required']}
                         onChange={handleRepeatPasswordChange}/></>)}
 
