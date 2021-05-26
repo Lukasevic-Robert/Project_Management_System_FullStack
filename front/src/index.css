@@ -203,6 +203,7 @@ body, html, .App, #root, .auth-wrapper {
   text-decoration: none;
 }
 
+
 .boardTaskBacklog {
   display: flex;
   justify-content: space-between;

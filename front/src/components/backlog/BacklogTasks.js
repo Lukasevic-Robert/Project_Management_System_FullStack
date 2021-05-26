@@ -426,8 +426,9 @@ const BacklogTasks = ({ match }) => {
                                                                                 {...provided.dragHandleProps}
                                                                             >
                                                                                 <div className="boardTaskBacklog">
-                                                                                    <div>
-                                                                                        <div style={{ paddingTop: '2%', paddingBottom: '2%' }}>
+                                                                                    <div style={{width:'80%', wordWrap: 'break-word'}}>
+                                                                                        <div style={{ paddingTop: '2%', paddingBottom: '2%'
+ }}>
                                                                                             <ViewTask task={el} status='BACKLOG' projectId={activeProjectId} add={false} />
                                                                                         </div>
                                                                                         <div>
@@ -438,16 +439,17 @@ const BacklogTasks = ({ match }) => {
 
                                                                                     </div>
 
-                                                                                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                                                    <div style={{ display: 'flex', alignItems: 'center', width:'20%', justifyContent:'flex-end' }}>
 
 
-                                                                                        <div style={{ color: 'grey', fontSize: 'smaller', justifyContent: 'center' }}>
+                                                                                        <div style={{ color: 'grey', fontSize: 'smaller', justifyContent: 'flex-end' }}>
                                                                                             {el.status === 'TODO' ? <SentimentVeryDissatisfiedIcon /> : (el.status === 'BACKLOG' ? '' : <SentimentSatisfiedIcon />)}
 
                                                                                             {el.status === 'IN_PROGRESS' ? 'IN PROGRESS' : (el.status === 'TODO' ? 'TO DO' : '')}
 
                                                                                         </div>
-                                                                                        <DeleteIcon id="icon" onClick={() => deleteFunction(el.id, el.name)} style={{ fontSize: 'large', color: 'grey', cursor: 'pointer' }} />
+            <div style={{justifyContent: 'flex-end'}}>                                                                        <DeleteIcon id="icon" onClick={() => deleteFunction(el.id, el.name)} style={{ fontSize: 'large', color: 'grey', cursor: 'pointer' }} />
+            </div>    
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
