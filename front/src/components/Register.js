@@ -214,7 +214,7 @@ export default function SignIn() {
 
     return (!value.isAuthenticated() ? (
         <ThemeProvider theme={theme}>
-            <Container style={{ backgroundColor: value.state.checkedA ? '#695586' : 'transparent', padding:40, borderRadius: 5}} component="main" maxWidth="xs">
+            <Container style={{  backgroundColor: value.state.checkedA ? 'rgba(13, 17, 31, 0.514)' : 'transparent', padding:40, marginTop: -10, borderRadius: 5}} component="main" maxWidth="xs">
                 <CssBaseline />
                 <div className={classes.paper}>
                     {successMessage ? (<Typography style={{ marginTop: 200, textAlign: 'center', backgroundColor: 'transparent', border:'none' }} role="alert"><span style={{fontSize: '24px', color: 'white'}}>{successMessage}</span> <br /> <span style={{ color: '#ffc814', fontSize: '15px'}}>Admin must confirm your registration.</span><br /><Link href="/signin" variant="body2">{"Press here to Sign In!"}</Link></Typography>)
@@ -236,7 +236,7 @@ export default function SignIn() {
                                     name="fname"
                                     value={firstName}
                                     validators={['required', `matchRegexp:^[A-Z][a-z]+$`]}
-                                    errorMessages={['This field is required', 'Last Name must be a valid']}
+                                    errorMessages={['This field is required', 'Firstname must be a valid']}
                                     onChange={handleFirstNameChange}
                                     autoFocus
 
@@ -252,7 +252,7 @@ export default function SignIn() {
                                     name="lname"
                                     value={lastName}
                                     validators={['required', `matchRegexp:^[A-Z][a-z]+$`]}
-                                    errorMessages={['This field is required', 'Last Name must be a valid']}
+                                    errorMessages={['This field is required', 'Lastname must be a valid']}
                                     onChange={handleLastNameChange}
 
                                 />

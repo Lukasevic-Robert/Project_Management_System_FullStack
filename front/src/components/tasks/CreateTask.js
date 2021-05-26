@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Link } from "react-router-dom";
 import UserService from "../../services/UserService.js";
 import TaskService from "../../services/TaskService.js"
 import swal from 'sweetalert';
@@ -13,13 +12,9 @@ import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
-import Checkbox from '@material-ui/core/Checkbox';
-import Input from '@material-ui/core/Input';
-import ListItemText from '@material-ui/core/ListItemText';
 import { useHistory } from 'react-router';
 import { makeStyles } from '@material-ui/core/styles';
 import { ProjectContext } from '../../context/ProjectContext';
-import { AuthContext } from '../../context/AuthContext.js';
 
 const theme = createMuiTheme({
     overrides: {
@@ -159,16 +154,13 @@ const useStyles = makeStyles((theme) => ({
 
 const CreateTask = ({ handleClose, taskStatus, taskId, projectId, add }) => {
     const { location, setRefreshActive, refreshActive, refreshBacklog, setRefreshBacklog } = useContext(ProjectContext);
-    const {state} = useContext(AuthContext);
     const classes = useStyles();
     const history = useHistory();
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [status, setStatus] = useState('');
     const [priority, setPriority] = useState('');
-    const [personName, setPersonName] = useState([]);
     const [userList, setUserList] = useState([]);
-    const [userListId, setUserListId] = useState([]);
     const [userData, setUserData] = useState([]);
 
 
@@ -336,7 +328,7 @@ const CreateTask = ({ handleClose, taskStatus, taskId, projectId, add }) => {
     return (
         <div>
             <ThemeProvider theme={theme}>
-                <Container  style={{ backgroundColor: state.checkedA ? '#695586' : 'transparent', padding:40, borderRadius: 5}} component="main" className={classes.container}>
+                <Container  style={{ padding:40, borderRadius: 5}} component="main" className={classes.container}>
 
                     <ValidatorForm onSubmit={saveOrUpdatetask}>
 
@@ -354,7 +346,7 @@ const CreateTask = ({ handleClose, taskStatus, taskId, projectId, add }) => {
                             value={name}
                             inputProps={{ maxLength: 50 }}
                             // autoComplete="email"
-                            validators={['required', 'matchRegexp:^([A-Za-z0-9]+ )+[A-Za-z0-9]+$|^[A-Za-z0-9]+$']}
+                            validators={['required', 'matchRegexp:^([A-Za-z0-9,.!]+ )+[A-Za-z0-9,.!]+$|^[A-Za-z0-9,.!]+$']}
                             errorMessages={['this field is required']}
                             onChange={changeTitle}
                             autoFocus
@@ -428,7 +420,7 @@ const CreateTask = ({ handleClose, taskStatus, taskId, projectId, add }) => {
                             </Select>
                         </FormControl> */}
 
-                        <Button id="submit-task-update-create-form" className={classes.submit} variant="contained"  type="submit" style={{ marginRight: '10px', color: '#0d47a1' }}>Submit</Button>
+                        <Button id="submit-task-update-create-form" className={classes.submit} variant="contained"  type="submit" style={{ marginRight: '10px', color: '#d1a411' }}>Submit</Button>
                         <Button id="cancel-task-update-create-form" onClick={() => handleCancel()} className={classes.colorWhite} variant="contained">Cancel</Button>
                     </ValidatorForm>
                 </Container>

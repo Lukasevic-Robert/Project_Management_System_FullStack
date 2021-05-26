@@ -12,7 +12,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import Tooltip from "@material-ui/core/Tooltip";
 import ReplyIcon from '@material-ui/icons/Reply';
 import AddIcon from '@material-ui/icons/Add';
-import { Typography, Fab } from '@material-ui/core';
+import { Typography, Fab, Button } from '@material-ui/core';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { ProjectContext } from '../../context/ProjectContext';
 import { AuthContext } from '../../context/AuthContext';
@@ -36,6 +36,16 @@ const theme = createMuiTheme({
                 },
             }
         },
+        MuiButton: {
+            contained: {
+                // boxShadow: 'none',
+                backgroundColor: '#d44a28',
+                '&:hover': {
+                    backgroundColor: 'transparent',
+                },
+            }
+
+        },
     },
 });
 const useStyles = makeStyles({
@@ -55,6 +65,14 @@ const useStyles = makeStyles({
     },
     border: {
         borderColor: 'white',
+    },
+    button: {
+        margin: theme.spacing(1),
+        color: 'white',
+        marginLeft: 'auto',
+        backgroundColor: '#ffc814',
+        display: 'flex',
+      
     },
 }
 );
@@ -249,13 +267,14 @@ const ActiveBoard = ({ match }) => {
 
     return (
         <ThemeProvider theme={theme}>
-        <div className="activeBoard" style={{ backgroundColor: value.state.checkedA ? '#695586' : 'transparent', height: '100%'  }}>
+        <div className="activeBoard" style={{  height: '100%'  }}>
             <div className="boardHeadingStyle">
                 <div style={{ fontSize: 'larger', fontWeight: 'bold' }}>
                     <Typography style={{ textTransform: 'uppercase', color: 'white'}} component="h1" variant="h5">{projectName}
                       {value.isProjectBoss() && (<Fab size="small" onClick={() => history.push(`/projects/${activeProjectID}`)} className={classes.fab}><EditIcon style={{ size: 'large', color: 'white', marginBottom: '5%' }}></EditIcon></Fab>)}
-                    </Typography>
+                    </Typography>                  
                 </div>
+                <Button id="to-backlog" className={classes.button} onClick={() => history.push(`/backlog/${match.params.id}`)} variant="contained">Go to backlog</Button>
 
                 {/* <div style={{ fontSize: 'smaller' }}><SortIcon></SortIcon>Sort
                 <FilterListIcon></FilterListIcon>Filter<SearchIcon></SearchIcon>Search</div> */}
@@ -265,7 +284,7 @@ const ActiveBoard = ({ match }) => {
                     {_.map(state, (data, key) => {
                         return (
 
-                            <div key={key} className={"column"} style={{ backgroundColor: value.state.checkedA ? '#917dad' : 'transparent'}}>
+                            <div key={key} className={"column"} style={{ backgroundColor: value.state.checkedA ? 'rgba(13, 17, 31, 0.514)' : 'transparent', boxShadow: '2px 20px 20px rgba(27, 28, 43, 0.514)'}}>
                                 <div>
                                     <div style={{ display: 'flex', justifyContent: 'space-between' }}><h3><span style={{color: 'white'}}>{data.title}</span></h3>
                                     </div>

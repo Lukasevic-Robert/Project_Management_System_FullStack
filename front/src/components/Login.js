@@ -180,7 +180,7 @@ export default function SignIn() {
 
   return (!value.isAuthenticated() ? (
     <ThemeProvider theme={theme}>
-      <Container style={{ backgroundColor: value.state.checkedA ? '#695586' : 'transparent', padding:40, borderRadius: 5}} component="main" maxWidth="xs">
+      <Container style={{ backgroundColor: value.state.checkedA ? 'rgba(13, 17, 31, 0.514)' : 'transparent', padding:40, borderRadius: 5}} component="main" maxWidth="xs">
         <CssBaseline />
         <div className={classes.paper}>
           <Avatar className={classes.avatar}>

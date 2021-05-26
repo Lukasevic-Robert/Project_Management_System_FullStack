@@ -192,7 +192,7 @@ function Journal() {
     return (
 
         <ThemeProvider theme={theme}>
-            <Paper style={{ backgroundColor: state.checkedA ? '#695586' : 'transparent', border: 'none', boxShadow: 'none', marginTop: '-70px' }} className="table-container">
+            <Paper style={{ backgroundColor: state.checkedA ? 'rgba(13, 17, 31, 0.514)' : 'transparent', border: 'none', boxShadow: 'none', marginTop: '-70px' }} className="table-container">
                 <TableContainer >
                     <div style={{ display: 'flex' }}>  <Button id="journal-csv" onClick={getJournalCSV} variant="contained"  size="small" className={classes.button} startIcon={<SaveIcon />}>Save All .csv</Button></div>
                     <Table className={classes.table} size="small" aria-label="a dense table">
@@ -212,7 +212,7 @@ function Journal() {
                             {
                                 (entries).map((row) => (
 
-                                    <TableRow key={row.entryID} style={row.type === 'ERROR' ? { backgroundColor: 'transparent', background:'linear-gradient(to right, #ff9b8a , transparent 50%, #ff9b8a)' } : { backgroundColor: ''}} className={classes.tableRow}>
+                                    <TableRow key={row.entryID} style={row.type === 'ERROR' ? {backgroundColor: 'rgba(179, 11, 11, 0.397)'} : {backgroundColor: ''}} className={classes.tableRow}>
 
                                         <TableCell style={{ color: 'white' }} className={classes.projectName}><span>{row.entryID}</span></TableCell>
 
@@ -220,10 +220,10 @@ function Journal() {
 
                                         <TableCell style={{ color: 'white' }} align="center">{row.time.replace("T", " ").substr(0, 19)}</TableCell>
 
-                                        <TableCell align="center" style={row.type === 'ERROR' ? { color: '#732d21' } : { color: '#ccffbf' }}><span>{row.type}</span></TableCell>
+                                        <TableCell align="center" style={row.type === 'ERROR' ? { color: '#fa9a89' } : { color: '#ccffbf' }}><span>{row.type}</span></TableCell>
 
                                         <TableCell style={{ color: 'white' }} align="center">{row.category}</TableCell>
-                                        <TableCell align="center" style={row.type === 'ERROR' ? { color: '#732d21', } : { color: '#ccffbf' }}><span>{row.activity}</span></TableCell>
+                                        <TableCell align="center" style={row.type === 'ERROR' ? { color: '#fa9a89', } : { color: '#ccffbf' }}><span>{row.activity}</span></TableCell>
                                         <TableCell style={{ color: 'white' }} align="center">{row.message}</TableCell>
 
                                     </TableRow>

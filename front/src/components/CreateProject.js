@@ -338,7 +338,7 @@ function CreateProject({ match }) {
     }
     return (
         <ThemeProvider theme={theme}>
-                <Container style={{ backgroundColor: state.checkedA ? '#695586' : 'transparent', padding:40, borderRadius: 5}} component="main" maxWidth="xs" className={classes.root}>
+                <Container style={{ backgroundColor: state.checkedA ? 'rgba(13, 17, 31, 0.514)' : 'transparent', padding:40, borderRadius: 5}} component="main" maxWidth="xs" className={classes.root}>
                     <ValidatorForm id="create-update-project-form" onSubmit={saveOrUpdateProject}>
                         <Typography style={{ color: '#ffc814' }} component="h1" variant="h5">{getTitle()}</Typography>
                         <TextValidator
@@ -404,7 +404,7 @@ function CreateProject({ match }) {
                                 )}
                             />
                         </FormControl>
-                        <Button id="submit-project-update-create-form" variant="contained" className={classes.submit}  type="submit" style={{ marginRight: '10px', color: '#0d47a1'}}>Submit</Button>
+                        <Button id="submit-project-update-create-form" variant="contained" className={classes.submit}  type="submit" style={{ marginRight: '10px', color: '#ffc814'}}>Submit</Button>
                         <Link to={activeProjectId && (location === 'active' ? `/active-board/${activeProjectId}` : '/projects')} style={{ textDecoration: 'none' }}><Button id="cancel-project-update-create-form" className={classes.colorWhite} variant="contained" >Cancel</Button></Link>
                     </ValidatorForm>
                 </Container>

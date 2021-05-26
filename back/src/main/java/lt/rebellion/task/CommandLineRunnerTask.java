@@ -11,7 +11,7 @@ import lt.rebellion.model.EStatus;
 import lt.rebellion.project.Project;
 import lt.rebellion.project.ProjectRepository;
 
-@Component
+//@Component
 @Order(3)
 @AllArgsConstructor
 public class CommandLineRunnerTask implements CommandLineRunner {

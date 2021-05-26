@@ -293,7 +293,7 @@ function CreateUser({ match }) {
 
     return (
         <ThemeProvider theme={theme}>
-            <Container style={{ backgroundColor: state.checkedA ? '#695586' : 'transparent', padding:40, borderRadius: 5}}  component="main" maxWidth="xs" className={classes.root}>
+            <Container style={{ backgroundColor: state.checkedA ? 'rgba(13, 17, 31, 0.514)' : 'transparent', padding:40, borderRadius: 5}}  component="main" maxWidth="xs" className={classes.root}>
                 <ValidatorForm id="create-update-user-form" onSubmit={saveOrUpdateUser}>
                     <Typography style={{ color: '#ffc814' }} component="h1" variant="h5">{getTitle()}</Typography>
                     <TextValidator
@@ -404,7 +404,7 @@ function CreateUser({ match }) {
                         errorMessages={['Password mismatch', 'This field is required']}
                         onChange={handleRepeatPasswordChange}/></>)}
 
-                    <Button id="submit-user-update-create-form" className={classes.submit} variant="contained"  type="submit" style={{ marginRight: '10px', color: '#0d47a1'}}>Submit</Button>
+                    <Button id="submit-user-update-create-form" className={classes.submit} variant="contained"  type="submit" style={{ marginRight: '10px', color: '#d1a411'}}>Submit</Button>
                     <Link to={'/admin'} style={{ textDecoration: 'none' }}><Button id="cancel-user-update-create-form" className={classes.colorWhite} variant="contained">Cancel</Button></Link>
                 </ValidatorForm>
             </Container>

@@ -67,7 +67,10 @@ const theme = createMuiTheme({
         },
         MuiCard: {
             root: {
-                backgroundColor: 'rgba(122, 67, 139, 0.397);',
+                // backgroundColor: 'rgba(122, 67, 139, 0.397);',
+                // backgroundColor: 'rgba(13, 17, 31, 0.514)',
+                backgroundColor: 'transparent',
+                boxShadow: 'none'
             }
         }
     }
@@ -90,7 +93,8 @@ const useStyles = makeStyles({
         wordWrap: 'break-word',
     },
     border: {
-        borderColor: 'white',
+
+        borderColor: 'rgba(255, 243, 187, 0.699)',
     },
     button: {
         margin: theme.spacing(1),
@@ -386,22 +390,22 @@ const BacklogTasks = ({ match }) => {
 
     return (
         <ThemeProvider theme={theme}>
-            <div className="activeBoard" style={{ backgroundColor: value.state.checkedA ? '#695586' : 'transparent', height: '100%', padding:40  }}>
-                <div style={{ color: 'white', fontSize: '20px', paddingLeft: '40px', marginLeft: '10px', paddingTop: '10px', paddingBottom: '10px' }}>
+            <div className="activeBoard" style={{  height: '100%', padding:40}}>
+                <div style={{ color: 'white', fontSize: '20px', paddingLeft: '40px', marginLeft: '10px', paddingTop: '10px', paddingBottom: '10px'}}>
                     <span>{title}</span>
                 </div>
 
-                <div className="container-fluid containerDashboard" style={{paddingLeft: '40px', paddingRight: '40px'}} >
-                    <div className="row">
+                <div className="container-fluid containerDashboard" style={{paddingLeft: '40px', paddingRight: '45px'}} >
+                    <div className="row" style={{backgroundColor: value.state.checkedA ? 'rgba(13, 17, 31, 0.514)' : 'transparent', borderTop: '1px solid white'  }}>
                         <div className="col col-7">
-                            <Card style={{ backgroundColor: 'rgba(122, 67, 139, 0.397)', border: value.state.checkedA ? '1px solid #fff' : '', height: '100%'  }} >
+                            <Card style={{ height: '100%'  }} >
                                 <CardContent>
                                     <Typography className={classes.content} variant="body2">{content}</Typography>
                                 </CardContent>
                             </Card>
                         </div>
                         <div className="col col-2">
-                            <Card style={{ backgroundColor: 'rgba(122, 67, 139, 0.397)', border: value.state.checkedA ? '1px solid #fff' : '', height: '100%'  }} >
+                            <Card style={{ height: '100%'  }} >
                                 <CardContent>
                                     <Grid container style={{ justifyContent: 'space-between' }}>
                                         <Grid item><Typography variant="caption">TOTAL TASKS</Typography>
@@ -411,7 +415,7 @@ const BacklogTasks = ({ match }) => {
                                 </CardContent>
                             </Card>
                         </div>
-                        <div className="col col-3">  <Card style={{ backgroundColor: 'rgba(122, 67, 139, 0.397)', border: value.state.checkedA ? '1px solid #fff' : '', height: '100%'  }}>
+                        <div className="col col-3">  <Card style={{height: '100%'  }}>
                             <CardContent>
                                 <Grid container style={{ justifyContent: 'space-between' }} >
                                     <Grid item><Typography variant="caption">TASKS PROGRESS</Typography>
@@ -428,12 +432,12 @@ const BacklogTasks = ({ match }) => {
                     </div>
                 </div>
 
-                <div style={{ backgroundColor: value.state.checkedA ? '#695586' : 'transparent' }}>
+                <div>
                     <div className="projectHeadingStyle" >  <Button id="task-csv" onClick={() => getTasksCSV(activeProjectId)} variant="contained" size="small" className={classes.button} startIcon={<SaveIcon />}>Save .csv</Button></div>
 
                     <div className="headingStyleBacklog2" >
-                        <Button id="project-create-button2" style={{ height: 40 }} className={classes.createButton} size="medium" variant="contained">
-                            <AddIcon style={{ marginLeft: -10 }} className={classes.colorWhite} id="add-project-button2" />
+                        <Button id="task-create-button2" style={{ height: 40 }} className={classes.createButton} size="medium" variant="contained">
+                            <AddIcon style={{ marginLeft: -10 }} className={classes.colorWhite} id="add-task-button2" />
                             <ViewTask task={{}} status='BACKLOG' projectId={activeProjectId} add={true} />
                         </Button>
                         {/* <div style={{ display: 'flex', justifyContent: 'right' }}><AddIcon /><ViewTask task={{}} status='BACKLOG' projectId={activeProjectId} add={true} /> */}
@@ -456,11 +460,11 @@ const BacklogTasks = ({ match }) => {
 
 
 
-                <div className={"dndContainerBacklog"} style={{ backgroundColor: value.state.checkedA ? '#695586' : 'transparent' }}>
+                <div className={"dndContainerBacklog"} >
                     <DragDropContext onDragEnd={handleDragEnd}>
                         {_.map(state, (data, key) => {
                             return (
-                                <div key={key} className={"column"} style={{ backgroundColor: value.state.checkedA ? '#917dad' : 'transparent'}}>
+                                <div key={key} className={"column"} style={{ backgroundColor: value.state.checkedA ? 'rgba(13, 17, 31, 0.514)' : 'transparent',}}>
                                     <div>
                                         <div><Typography color="textPrimary" variant="h6" style={{ padding: 10, color: '#ffc814', paddingLeft: 30 }}>{data.title}</Typography>
                                         </div>

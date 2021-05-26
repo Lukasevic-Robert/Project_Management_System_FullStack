@@ -30,6 +30,7 @@ import ViewHeadlineOutlinedIcon from '@material-ui/icons/ViewHeadlineOutlined';
 import LayersIcon from '@material-ui/icons/Layers';
 import logo from '../images/diamond-vector.png';
 import Switch from '@material-ui/core/Switch';
+import BrightnessMediumOutlinedIcon from '@material-ui/icons/BrightnessMediumOutlined';
 
 const drawerWidth = 240;
 
@@ -37,7 +38,7 @@ const drawerWidth = 240;
 const theme = createMuiTheme({
   palette: {
     primary: {
-      main: '#9579d1',
+      main: '#fffffff',
 
     },
     secondary: {
@@ -60,11 +61,12 @@ const theme = createMuiTheme({
     MuiSwitch: {
 
       backgroundColor: 'transparent',
+      color: 'white'
 
     },
     MuiDrawer: {
       paper: {
-        background: 'linear-gradient(#695586 30%, transparent 70%)',
+        background: 'linear-gradient(rgba(13, 17, 31, 0.856) 30%, transparent 70%)',
         color: 'white',
         // backgroundColor: 'transparent',
         // backgroundImage: 'url(' + drawerImage + ')',
@@ -81,7 +83,7 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     '&:hover': {
-      fontWeight: 800
+      // fontWeight: 800
     },
   },
   appBar: {
@@ -199,7 +201,7 @@ export default function NavBar() {
                 edge="start"
                 className={clsx(classes.menuButton, open && classes.hide)}
               >
-                <MenuIcon />
+                <MenuIcon  style={{ color: 'white' }}/>
               </IconButton>)}
             <Typography variant="h6" className={classes.title}>
               <Link id="nav-logo-link" style={{ color: 'white', fontSize: 20, fontFamily: 'Righteous' }} className="nav-link" to={() => isAuthenticated() ? "/projects" : "/signin"}><img style={{ width: 50 }} src={logo} alt="logo"></img> JawBreaker</Link>
@@ -211,10 +213,10 @@ export default function NavBar() {
               onChange={handleChange}
               name="checkedA"
               inputProps={{ 'aria-label': 'primary checkbox' }}
-            />
+            /><BrightnessMediumOutlinedIcon style={{ color: '#f7f8fa' }}/>
 
             {isAdmin() && (
-              <Link id="link-to-admin" to={"/admin"} style={{ color: '#92ddea' }} className={classes.align}><Button variant="contained" style={{ color: 'white' }}>USER BOARD</Button></Link>
+              <Link id="link-to-admin" to={"/admin"} style={{ color: '#92ddea' }}  className={classes.align} ><Button variant="contained" style={{ color: 'white' }}>USER BOARD</Button></Link>
             )}
 
             {isAdmin() && (

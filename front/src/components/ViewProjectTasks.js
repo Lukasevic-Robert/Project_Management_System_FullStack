@@ -33,6 +33,8 @@ const theme = createMuiTheme({
 
 const useStyles = makeStyles((theme) => ({
     root: {
+        borderRadius: '0',
+        borderTop: '1px solid #fff',
         minWidth: 500,
         maxWidth: 800,
         '& > * + *': {
@@ -107,9 +109,9 @@ const ViewProjectTasks = ({ match }) => {
 
     return (
         <ThemeProvider theme={theme}>
-            <Card className={classes.root} style={{ backgroundColor: state.checkedA ? '#695586' : 'rgba(122, 67, 139, 0.397)'}}>
+            <Card className={classes.root} style={{ backgroundColor: state.checkedA ? 'rgba(13, 17, 31, 0.514)' : 'transparent'}}>
                 <CardContent>
-                    <Typography className={classes.title} style={{ color: "white"}} gutterBottom>
+                    <Typography className={classes.title} style={{ color: "silver"}} gutterBottom>
                         {title}
                     </Typography>
                     <Typography className={classes.content} style={{ color: "white"}} variant="h5" component="h2">
@@ -117,9 +119,9 @@ const ViewProjectTasks = ({ match }) => {
                     </Typography>
                     {<br />}
                     <Typography className={classes.pos} color="textSecondary">
-                        <span style={{ fontSize: 24, color: status === 'ACTIVE' ? '#cf932b' : '#63cf7f' }}>{status}</span>
+                        <span style={{ fontSize: 24, color: status === 'ACTIVE' ? '#ff9b8a' : '#63cf7f' }}>{status}</span>
                     </Typography>
-                    {<hr />}
+                    {<hr color="silver"/>}
 
                     <Typography style={{ color: "white"}} variant="caption">TASKS PROGRESS</Typography>
                     <Typography style={{ color: "white"}} variant="h5">{totalTasksCount && (Math.round(100 - unfinishedTasksCount / totalTasksCount * 100))}%</Typography>

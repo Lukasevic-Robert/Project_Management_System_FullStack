@@ -233,7 +233,7 @@ export default function EmployeeTable() {
     }
 
     const getUserByKeyword = async (empty) => {
-        await UserService.getUserByKeyword(empty === '' ? '' : searchRequest, empty === '' ? 0 : page, rowsPerPage).then((response) => {
+        await UserService.getUserByKeyword(empty === '' ? '' : searchRequest.trim(), empty === '' ? 0 : page, rowsPerPage).then((response) => {
 
             setResponseData(response.data);
             setData(response.data.content);
@@ -285,7 +285,7 @@ export default function EmployeeTable() {
 
     return (
         <ThemeProvider theme={theme}>
-            <Paper style={{ backgroundColor: state.checkedA ? '#695586' : 'transparent', border: 'none', boxShadow: 'none', marginTop: '-70px' }} className="table-container">
+            <Paper style={{ backgroundColor: state.checkedA ? 'rgba(13, 17, 31, 0.514)' : 'transparent', border: 'none', boxShadow: 'none', marginTop: '-70px' }} className="table-container">
                 <TableContainer ><div className="projectHeadingStyle">
                     <Button id="user-create-button" onClick={() => history.push(`/admin/create-user/-1`)} size="medium" variant="contained"  className={classes.createButton}>
                         <AddIcon style={{ marginLeft: -10 }} className={classes.colorWhite} id="add-user-button" /> Add New User
@@ -331,7 +331,7 @@ export default function EmployeeTable() {
                                         <TableCell align="center" style={{ color: 'white' }}><span>{row.firstName + ` ` + row.lastName}</span></TableCell>
                                         <TableCell align="center" style={{ color: 'white' }}>{row.email}</TableCell>
                                         <TableCell align="center"><span style={{ color: row.status === 'ACTIVE' ? '#ccffbf' : row.status === 'PENDING' ? '#ffffff' : '#d44a28' }}>{row.status}</span></TableCell>
-                                        <TableCell align="center" style={{ color: row.roles[0].name.split('_')[1] === 'ADMIN' ? '#7c169e' : row.roles[0].name.split('_')[1] === 'MODERATOR' ? '#000000' : '#ffffff' }}><span>{row.roles[0].name.split('_')[1]}</span></TableCell>
+                                        <TableCell align="center" style={{ color: row.roles[0].name.split('_')[1] === 'ADMIN' ? '#a52fcc' : row.roles[0].name.split('_')[1] === 'MODERATOR' ? '#42a1ff' : '#ffffff' }}><span>{row.roles[0].name.split('_')[1]}</span></TableCell>
                                         <TableCell align="right">
 
                                             <Fab id="link-to-edit-users1" size="small" onClick={() => history.push(`/admin/create-user/${row.id}`)} aria-label="Edit" className={classes.fab}>

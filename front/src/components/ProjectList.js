@@ -361,7 +361,7 @@ function ProjectList() {
         }
     }
     const getProjectByKeyword = async (empty) => {
-        await ProjectService.getProjectByKeyword(empty === '' ? '' : searchRequest, empty === '' ? 0 : page, rowsPerPage).then((response) => {
+        await ProjectService.getProjectByKeyword(empty === '' ? '' : searchRequest.trim(), empty === '' ? 0 : page, rowsPerPage).then((response) => {
             console.log('getProjectByKeyword ' + searchSubmit);
 
             setResponseData(response.data);
@@ -385,7 +385,7 @@ function ProjectList() {
     return (
 
         <ThemeProvider theme={theme}>
-            <Paper style={{ backgroundColor: value.state.checkedA ? '#695586' : 'transparent', border: 'none', boxShadow: 'none', marginTop: '-70px'}} className="table-container">
+            <Paper style={{ backgroundColor: value.state.checkedA ? 'rgba(13, 17, 31, 0.514)' : 'transparent', border: 'none', boxShadow: 'none', marginTop: '-70px'}} className="table-container">
                 <TableContainer  >
                     <div className="projectHeadingStyle">
                         {projectBoss && (
