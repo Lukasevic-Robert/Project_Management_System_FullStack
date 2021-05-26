@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Link } from "react-router-dom";
 import UserService from "../../services/UserService.js";
 import TaskService from "../../services/TaskService.js"
 import swal from 'sweetalert';
@@ -13,23 +12,122 @@ import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
-import Checkbox from '@material-ui/core/Checkbox';
-import Input from '@material-ui/core/Input';
-import ListItemText from '@material-ui/core/ListItemText';
 import { useHistory } from 'react-router';
 import { makeStyles } from '@material-ui/core/styles';
 import { ProjectContext } from '../../context/ProjectContext';
 
 const theme = createMuiTheme({
+    overrides: {
+        MuiFormHelperText: {
+            root: {
+                '&.Mui-error': {
+                    color: '#ff9b8a'
+                }
+            }
+        },
+        MuiFormLabel: {
+            root: {
+                '&.Mui-error': {
+                    color: '#ff9b8a'
+                }
+            },
+            asterisk: {
+                '&.Mui-error': {
+                    color: '#ff9b8a'
+                }
+            }
+        },
+        MuiChip: {
+            deleteIcon: {
+                color: '#d44a28',
+                "&:hover": {
+                    color: '#91341d'
+                }
+
+            }
+        },
+        MuiInputBase: {
+            root: {
+                backgroundColor: 'transparent',
+            }
+        },
+
+        MuiInputLabel: {
+            root: {
+                color: 'white',
+            },
+        },
+        MuiOutlinedInput: {
+            root: {
+                borderColor: 'white',
+                color: 'white',
+                '&.Mui-error': {
+                    color: '#ff9b8a',
+                    '& $notchedOutline': {
+                        borderColor: '#ff9b8a',
+                    }
+                },
+            },
+            notchedOutline: {
+                borderColor: 'white',
+            },
+        },
+        MuiInput: {
+            underline: {
+                '&:before': {
+                    borderBottom: '1px solid white',
+                }
+            }
+        },
+        MuiSelect: {
+            icon: {
+                color: 'white',
+            },
+            selectMenu: {
+                backgroundColor: 'transparent',
+            },
+            listbox: {
+                backgroundColor: 'transparent',
+            },
+            menuPaper: {
+                backgroundColor: 'transparent',
+            },
+        },
+        MuiIconButton: {
+            label: {
+                color: 'white'
+            },
+        },
+        MuiMenu: {
+            paper: {
+                background: 'linear-gradient(to right, #27408b 30%, transparent)',
+                backgroundColor: 'transparent',
+            }
+        },
+        MuiButton:{
+            contained: {
+            backgroundColor: '#d44a28',
+            '&:hover':{
+                backgroundColor: 'transparent',
+            }
+        }
+    }
+
+    },
     palette: {
         primary: {
-            main: '#7eb8da',
+            main: '#ffffff',
+
         },
         secondary: {
             light: '#92ddea',
-            main: '#be9ddf',
+            main: '#d44a28',
             backgroundColor: '#fff',
         },
+        default: {
+            main: '#be9ddf',
+            backgroundColor: '#fff',
+        }
     },
 });
 
@@ -43,6 +141,11 @@ const useStyles = makeStyles((theme) => ({
     colorWhite: {
         color: 'white',
     },
+    submit:{
+      
+        backgroundColor: '#ffffff',
+},
+
     container: {
         width: 400
     }
@@ -57,9 +160,7 @@ const CreateTask = ({ handleClose, taskStatus, taskId, projectId, add }) => {
     const [description, setDescription] = useState('');
     const [status, setStatus] = useState('');
     const [priority, setPriority] = useState('');
-    const [personName, setPersonName] = useState([]);
     const [userList, setUserList] = useState([]);
-    const [userListId, setUserListId] = useState([]);
     const [userData, setUserData] = useState([]);
 
 
@@ -227,11 +328,11 @@ const CreateTask = ({ handleClose, taskStatus, taskId, projectId, add }) => {
     return (
         <div>
             <ThemeProvider theme={theme}>
-                <Container component="main" className={classes.container}>
+                <Container  style={{ padding:40, borderRadius: 5}} component="main" className={classes.container}>
 
                     <ValidatorForm onSubmit={saveOrUpdatetask}>
 
-                        <Typography color="secondary" component="div" variant="h5">{getTitle()}</Typography>
+                        <Typography style={{ color: '#ffc814' }} component="div" variant="h5">{getTitle()}</Typography>
 
                         <TextValidator
                             variant="outlined"
@@ -245,8 +346,8 @@ const CreateTask = ({ handleClose, taskStatus, taskId, projectId, add }) => {
                             value={name}
                             inputProps={{ maxLength: 50 }}
                             // autoComplete="email"
-                            validators={['required', 'matchRegexp:^([A-Za-z0-9]+ )+[A-Za-z0-9]+$|^[A-Za-z0-9]+$']}
-                            errorMessages={['this field is required']}
+                            validators={['required', 'matchRegexp:^([A-Za-z0-9,.!]+ )+[A-Za-z0-9,.!]+$|^[A-Za-z0-9,.!]+$']}
+                            errorMessages={['this field is required', 'Task name must be valid']}
                             onChange={changeTitle}
                             autoFocus
                         />
@@ -275,10 +376,10 @@ const CreateTask = ({ handleClose, taskStatus, taskId, projectId, add }) => {
                                 value={status}
                                 onChange={changeStatus}
                             >
-                                <MenuItem value={`TODO`}>TO DO</MenuItem>
-                                <MenuItem value={`IN_PROGRESS`}>IN PROGRESS</MenuItem>
-                                <MenuItem value={`DONE`}>DONE</MenuItem>
-                                <MenuItem value={`BACKLOG`}>BACKLOG</MenuItem>
+                                <MenuItem style={{ color: '#fa7857' }} value={`TODO`}><span style={{ color: '#fa7857' }}>TO DO</span></MenuItem>
+                                <MenuItem style={{ color: '#ffc814' }} value={`IN_PROGRESS`}><span style={{ color: '#ffc814' }}>IN PROGRESS</span></MenuItem>
+                                <MenuItem style={{ color: '#ccffbf' }} value={`DONE`}><span style={{ color: '#ccffbf' }}>DONE</span></MenuItem>
+                                <MenuItem value={`BACKLOG`}><span >BACKLOG</span></MenuItem>
 
                             </Select>
                         </FormControl> : ''}
@@ -291,9 +392,9 @@ const CreateTask = ({ handleClose, taskStatus, taskId, projectId, add }) => {
                                 value={priority}
                                 onChange={changePriority}
                             >
-                                <MenuItem value={`LOW`}>LOW</MenuItem>
-                                <MenuItem value={`MEDIUM`}>MEDIUM</MenuItem>
-                                <MenuItem value={`HIGH`}>HIGH</MenuItem>
+                                <MenuItem style={{ color: '#ccffbf' }} value={`LOW`}><span style={{ color: '#ccffbf' }}>LOW</span></MenuItem>
+                                <MenuItem style={{ color: '#ffc814' }} value={`MEDIUM`}><span style={{ color: '#ffc814' }}>MEDIUM</span></MenuItem>
+                                <MenuItem style={{ color: '#fa7857' }} value={`HIGH`}><span style={{ color: '#fa7857' }}>HIGH</span></MenuItem>
 
                             </Select>
                         </FormControl>
@@ -319,8 +420,8 @@ const CreateTask = ({ handleClose, taskStatus, taskId, projectId, add }) => {
                             </Select>
                         </FormControl> */}
 
-                        <Button id="submit-task-update-create-form" className={classes.colorWhite} variant="contained" color="primary" type="submit" style={{ marginRight: '10px' }}>Submit</Button>
-                        <Button id="cancel-task-update-create-form" onClick={() => handleCancel()} className={classes.colorWhite} variant="contained" color="secondary">Cancel</Button>
+                        <Button id="submit-task-update-create-form" className={classes.submit} variant="contained"  type="submit" style={{ marginRight: '10px', color: '#d1a411' }}>Submit</Button>
+                        <Button id="cancel-task-update-create-form" onClick={() => handleCancel()} className={classes.colorWhite} variant="contained">Cancel</Button>
                     </ValidatorForm>
                 </Container>
             </ThemeProvider>

@@ -7,7 +7,9 @@ import { ThemeProvider } from '@material-ui/styles';
 import { ProjectContext } from '../context/ProjectContext.js';
 import JournalService from '../services/JournalService';
 import SaveIcon from '@material-ui/icons/Save';
+import { AuthContext } from '../context/AuthContext.js';
 import swal from 'sweetalert';
+
 
 
 const theme = createMuiTheme({
@@ -16,9 +18,46 @@ const theme = createMuiTheme({
             main: '#be9ddf',
         },
         secondary: {
-            main: '#ffa5d8',
+            main: '#f6c1c7',
         },
     },
+    overrides: {
+        MuiTablePagination: {
+
+            root: {
+                color: 'white',
+                backgroundColor: 'transparent'
+            },
+            selectIcon: {
+                color: 'white',
+            },
+        },
+        MuiPaper: {
+            root: {
+                backgroundColor: '#4d81d8',
+                color: 'white'
+            }
+
+        },
+        MuiButton: {
+            contained: {
+                // boxShadow: 'none',
+                backgroundColor: '#d44a28',
+                '&:hover': {
+                    backgroundColor: 'transparent',
+                },
+            }
+
+        },
+        MuiFab: {
+            root: {
+                '&:hover': {
+                    backgroundColor: 'transparent',
+                    boxShadow: '1px 1px 5px black'
+                },
+            }
+        },
+    }
 });
 
 const useStyles = makeStyles({
@@ -27,9 +66,13 @@ const useStyles = makeStyles({
     },
     fab: {
         margin: 5,
+        backgroundColor: 'transparent',
+        boxShadow: 'none'
+
     },
-    create: {
-        marginLeft: 20,
+    createButton: {
+        textTransform: 'none',
+        color: 'white',
     },
     tableRow: {
         height: 60,
@@ -39,6 +82,7 @@ const useStyles = makeStyles({
     },
     filterProjects: {
         marginLeft: 10,
+        height: 40,
         textTransform: 'none',
         backgroundColor: '#f5f4f4',
         border: 'none',
@@ -52,17 +96,49 @@ const useStyles = makeStyles({
         overflow: 'hidden',
         maxWidth: '150px'
     },
-    projectName: {
-        textOverflow: 'ellipsis',
-        whiteSpace: 'nowrap',
-        overflow: 'hidden',
-        maxWidth: '150px'
-    }
+
+    button: {
+        margin: theme.spacing(1),
+        color: 'white',
+        marginLeft: 'auto',
+        backgroundColor: '#ffc814'
+
+    },
+    margin: {
+        margin: theme.spacing(1),
+    },
+    search: {
+        padding: '2px 4px',
+        display: 'flex',
+        alignItems: 'center',
+        width: 200,
+        marginLeft: 10,
+        height: 40,
+        border: '1px solid #dddbdb',
+        boxShadow: 'none',
+        backgroundColor: 'transparent',
+    },
+    input: {
+        color: 'white',
+        marginLeft: theme.spacing(1),
+        flex: 1,
+        fontSize: 14,
+        fontWeight: '500',
+        fontFamily: 'Fira Sans'
+    },
+    iconButton: {
+        padding: 10,
+        '&:hover': {
+            color: '#9c6ccc',
+        }
+    },
 });
 
 function Journal() {
 
+    
     const { rowsPerPageJournal, setRowsPerPageJournal, pageJournal, setPageJournal, refreshJournal } = useContext(ProjectContext);
+    const {state} = useContext(AuthContext);
     const classes = useStyles();
     const [entries, setEntries] = useState([]);
     // const [responseData, setResponseData] = useState([]);
@@ -83,6 +159,7 @@ function Journal() {
                 // setUsersId(response.data.content.users.id);
             },
             error => {
+
                 getErrorMessage();
             }
         );
@@ -111,13 +188,13 @@ function Journal() {
     const getJournalCSV = () => {
         JournalService.requestJournalCSV();
     }
-    
+
     return (
 
         <ThemeProvider theme={theme}>
-            <Paper className="table-container">
+            <Paper style={{ backgroundColor: state.checkedA ? 'rgba(13, 17, 31, 0.514)' : 'transparent', border: 'none', boxShadow: 'none', marginTop: '-70px' }} className="table-container">
                 <TableContainer >
-                   <div>  <Button id="project-csv" onClick={getJournalCSV} variant="contained" color="primary" size="small" className={classes.button} startIcon={<SaveIcon />}>Save .csv</Button></div>
+                    <div style={{ display: 'flex' }}>  <Button id="journal-csv" onClick={getJournalCSV} variant="contained"  size="small" className={classes.button} startIcon={<SaveIcon />}>Save All .csv</Button></div>
                     <Table className={classes.table} size="small" aria-label="a dense table">
                         <TableHead>
                             <TableRow id="table-head" >
@@ -126,8 +203,8 @@ function Journal() {
                                 <TableCell id="table-cell" align="center">TIME</TableCell>
                                 <TableCell id="table-cell" align="center">TYPE</TableCell>
                                 <TableCell id="table-cell" align="center">CATEGORY</TableCell>
-                                    <TableCell id="table-cell" align="center">ACTIVITY</TableCell>
-                                    <TableCell id="table-cell" align="center">MESSAGE</TableCell>
+                                <TableCell id="table-cell" align="center">ACTIVITY</TableCell>
+                                <TableCell id="table-cell" align="center">MESSAGE</TableCell>
 
                             </TableRow>
                         </TableHead>
@@ -135,19 +212,19 @@ function Journal() {
                             {
                                 (entries).map((row) => (
 
-                                    <TableRow key={row.entryID} className={classes.tableRow}>
+                                    <TableRow key={row.entryID} style={row.type === 'ERROR' ? {backgroundColor: 'rgba(179, 11, 11, 0.397)'} : {backgroundColor: ''}} className={classes.tableRow}>
 
-                                        <TableCell className={classes.projectName}><span>{row.entryID}</span></TableCell>
+                                        <TableCell style={{ color: 'white' }} className={classes.projectName}><span>{row.entryID}</span></TableCell>
 
-                                        <TableCell className={classes.description} align="center">{row.email}</TableCell>
-                                        
-                                        <TableCell align="center">{row.time.replace("T", " ").substr(0, 19)}</TableCell>
-                                        
-                                        <TableCell align="center">{row.type}</TableCell>
+                                        <TableCell style={{ color: 'white' }} className={classes.description} align="center"><span>{row.email}</span></TableCell>
 
-                                        <TableCell align="center">{row.category}</TableCell>
-                                        <TableCell align="center">{row.activity}</TableCell> 
-                                        <TableCell align="center">{row.message}</TableCell>
+                                        <TableCell style={{ color: 'white' }} align="center">{row.time.replace("T", " ").substr(0, 19)}</TableCell>
+
+                                        <TableCell align="center" style={row.type === 'ERROR' ? { color: '#fa9a89' } : { color: '#ccffbf' }}><span>{row.type}</span></TableCell>
+
+                                        <TableCell style={{ color: 'white' }} align="center">{row.category}</TableCell>
+                                        <TableCell align="center" style={row.type === 'ERROR' ? { color: '#fa9a89', } : { color: '#ccffbf' }}><span>{row.activity}</span></TableCell>
+                                        <TableCell style={{ color: 'white' }} align="center">{row.message}</TableCell>
 
                                     </TableRow>
                                 ))}

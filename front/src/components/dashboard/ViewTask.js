@@ -1,13 +1,12 @@
-import React, {useEffect} from 'react';
+import React,{useContext, useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
-import { useHistory } from "react-router-dom";
 import { createMuiTheme } from '@material-ui/core/styles';
-import swal from 'sweetalert';
-import CreateTask from "../tasks/CreateTask.js"
-import CloseIcon from '@material-ui/icons/Close';
+import CreateTask from "../tasks/CreateTask.js";
+import { AuthContext } from '../../context/AuthContext.js';
+
 
 const theme = createMuiTheme({
   palette: {
@@ -28,23 +27,40 @@ const useStyles = makeStyles((theme) => ({
 
   },
   paper: {
-    backgroundColor: theme.palette.background.paper,
+    background: 'linear-gradient(transparent, #4f71b8 40%, transparent 100%)',
+    backgroundColor: 'transparent',
+      // background: 'linear-gradient(transparent, #4f71b8 40%, transparent 100%)',
+      // background: 'linear-gradient(#4f71b8 30%, transparent 100%)',
+      // backgroundColor: '#151c36',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     // border: '1px solid #000',
-    boxShadow: theme.shadows[5],
+    boxShadow: theme.shadows[50],
     padding: theme.spacing(2, 4, 3),
     width: '60vw',
     height: '80vh',
     overflow: 'auto'
   },
+  switched:{
+      background: 'linear-gradient(#4f71b8 30%, transparent 100%)',
+      backgroundColor: '#151c36',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      // border: '1px solid #000',
+      boxShadow: theme.shadows[50],
+      padding: theme.spacing(2, 4, 3),
+      width: '60vw',
+      height: '80vh',
+      overflow: 'auto'
+  }
 }));
 
-const ViewTask = ({location, status, task, projectId, add }) => {
+const ViewTask = ({ location, status, task, projectId, add }) => {
   const classes = useStyles();
-  const history = useHistory();
 
+  const {state} = useContext(AuthContext);
   const [open, setOpen] = React.useState(false);
 
   const handleOpen = () => {
@@ -54,16 +70,6 @@ const ViewTask = ({location, status, task, projectId, add }) => {
   const handleClose = () => {
     setOpen(false);
   };
-
-  const getErrorMessage = () => {
-    const errorMessage = swal({
-      text: "Something went wrong! ",
-      button: "Go back to backlog",
-      icon: "warning",
-      dangerMode: true,
-    });
-    return errorMessage;
-  }
 
   return (
     <div>
@@ -84,19 +90,12 @@ const ViewTask = ({location, status, task, projectId, add }) => {
           timeout: 500,
         }}
       >
-        <Fade in={open}>
-          <div className={classes.paper}>
-              {/* <div> <CloseIcon id="icon" onClick={() => handleClose()} style={{textAlign:"right", cursor: 'pointer'}}></CloseIcon></div> */}
-<div>
-
-  <CreateTask handleClose={handleClose} taskStatus={status} taskId={task.id} projectId={projectId} add={add}></CreateTask>
-               
-           
-            </div>
-           
-          
-
+        <Fade in={open}><div className={state.checkedA ? classes.switched : classes.paper}>
+          {/* <div> <CloseIcon id="icon" onClick={() => handleClose()} style={{textAlign:"right", cursor: 'pointer'}}></CloseIcon></div> */}
+          <div>
+            <CreateTask handleClose={handleClose} taskStatus={status} taskId={task.id} projectId={projectId} add={add}></CreateTask>
           </div>
+        </div>
         </Fade>
       </Modal>
     </div>

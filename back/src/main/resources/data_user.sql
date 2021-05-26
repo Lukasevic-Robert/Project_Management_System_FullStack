@@ -1,0 +1,1 @@
+INSERT INTO user_projects (project_id, user_id) VALUES (10,3),(7,3),(5,3),(2,3),(8,1),(8,6),(7,9),(5,4),(3,1),(2,9),(1,9),(1,5);

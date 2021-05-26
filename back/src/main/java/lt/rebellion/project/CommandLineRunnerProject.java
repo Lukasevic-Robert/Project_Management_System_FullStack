@@ -16,7 +16,7 @@ import lt.rebellion.role.RoleRepository;
 import lt.rebellion.user.User;
 import lt.rebellion.user.UserRepository;
 
-@Component
+//@Component
 @Order(2)
 @AllArgsConstructor
 public class CommandLineRunnerProject implements CommandLineRunner {

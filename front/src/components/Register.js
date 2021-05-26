@@ -19,14 +19,74 @@ import { AuthContext } from '../context/AuthContext.js';
 
 
 const theme = createMuiTheme({
+    overrides: {
+        MuiFormHelperText: {
+            root: {
+                '&.Mui-error': {
+                    color: '#ff9b8a'
+                }
+            }
+        },
+        MuiFormLabel: {
+            root: {
+                '&.Mui-error': {
+                    color: '#ff9b8a'
+                }
+            },
+            asterisk: {
+                '&.Mui-error': {
+                    color: '#ff9b8a'
+                }
+            }
+        },
+        MuiButton: {
+            contained: {
+                background: 'linear-gradient(to right, #ffc814 30%, transparent)',
+                backgroundColor: 'transparent',
+
+                // boxShadow: 'none',
+                '&:hover': {
+                    backgroundColor: 'transparent',
+                },
+            }
+
+        },
+        MuiInputBase: {
+            root: {
+                backgroundColor: 'transparent',
+            }
+        },
+
+        MuiInputLabel: {
+            root: {
+                color: 'white',
+            },
+        },
+        MuiOutlinedInput: {
+            root: {
+                borderColor: 'white',
+                color: 'white',
+                '&.Mui-error': {
+                    color: '#ff9b8a',
+                    '& $notchedOutline': {
+                        borderColor: '#ff9b8a',
+                    }
+                },
+            },
+            notchedOutline: {
+                borderColor: 'white',
+            },
+        },
+
+    },
     palette: {
         primary: {
-            main: '#7eb8da',
+            main: '#ffffff',
 
         },
         secondary: {
             light: '#92ddea',
-            main: '#ffa5d8',
+            main: '#ffc814',
             backgroundColor: '#fff',
         },
     },
@@ -35,7 +95,7 @@ const theme = createMuiTheme({
 
 function Copyright() {
     return (
-        <Typography variant="body2" color="textSecondary" align="center">
+        <Typography variant="body2" color="primary" align="center">
             {'Copyright © '}
             <Link color="inherit" href="https://github.com/Lukasevic-Robert/Project_Management_System_FullStack">
                 Spring Rebellion
@@ -55,7 +115,8 @@ const useStyles = makeStyles({
     },
     avatar: {
         margin: theme.spacing(1),
-        backgroundColor: theme.palette.secondary.main,
+        backgroundColor: 'transparent',
+        color: '#ffc814'
     },
     form: {
         width: '100%', // Fix IE 11 issue.
@@ -153,14 +214,14 @@ export default function SignIn() {
 
     return (!value.isAuthenticated() ? (
         <ThemeProvider theme={theme}>
-            <Container component="main" maxWidth="xs">
+            <Container style={{  backgroundColor: value.state.checkedA ? 'rgba(13, 17, 31, 0.514)' : 'transparent', padding:40, marginTop: -10, borderRadius: 5}} component="main" maxWidth="xs">
                 <CssBaseline />
                 <div className={classes.paper}>
-                    {successMessage ? (<div className="alert alert-success" style={{ marginTop: 200, textAlign: 'center' }} role="alert"><span>{successMessage}</span> <br/> <span style={{color : 'red'}}>Admin must confirm your registration.</span><br/><Link href="/signin" variant="body2">{"Press here to Sign In!"}</Link></div>)
-                        : (<><Avatar color="secondary" className={classes.avatar}>
+                    {successMessage ? (<Typography style={{ marginTop: 200, textAlign: 'center', backgroundColor: 'transparent', border:'none' }} role="alert"><span style={{fontSize: '24px', color: 'white'}}>{successMessage}</span> <br /> <span style={{ color: '#ffc814', fontSize: '15px'}}>Admin must confirm your registration.</span><br /><Link href="/signin" variant="body2">{"Press here to Sign In!"}</Link></Typography>)
+                        : (<><Avatar className={classes.avatar}>
                             <LockOutlinedIcon />
                         </Avatar>
-                            <Typography component="h1" variant="h5">Sign up</Typography>
+                            <Typography component="h1" color="primary" variant="h5">Sign up</Typography>
                             <ValidatorForm id="register-form" className={classes.form} onSubmit={handleSubmit}>
                                 {(errUnauthorized === 403 || errUnauthorized === 401) && <div className="alert alert-danger" role="alert"> Please double-check the email and password you entered and try again.</div>}
                                 {errUnauthorized === 400 && (<div className="alert alert-danger" role="alert">{message}</div>)}
@@ -175,7 +236,7 @@ export default function SignIn() {
                                     name="fname"
                                     value={firstName}
                                     validators={['required', `matchRegexp:^[A-Z][a-z]+$`]}
-                                    errorMessages={['This field is required', 'Last Name must be a valid']}
+                                    errorMessages={['This field is required', 'Firstname must be a valid']}
                                     onChange={handleFirstNameChange}
                                     autoFocus
 
@@ -191,7 +252,7 @@ export default function SignIn() {
                                     name="lname"
                                     value={lastName}
                                     validators={['required', `matchRegexp:^[A-Z][a-z]+$`]}
-                                    errorMessages={['This field is required', 'Last Name must be a valid']}
+                                    errorMessages={['This field is required', 'Lastname must be a valid']}
                                     onChange={handleLastNameChange}
 
                                 />
@@ -249,7 +310,6 @@ export default function SignIn() {
                                     type="submit"
                                     fullWidth
                                     variant="contained"
-                                    color="primary"
                                     className={classes.submit}
                                 >
                                     <span className={classes.colorWhite}>Sign Up</span>

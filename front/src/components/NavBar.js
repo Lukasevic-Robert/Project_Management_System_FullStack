@@ -28,7 +28,9 @@ import LayersOutlinedIcon from '@material-ui/icons/LayersOutlined';
 import ViewWeekOutlinedIcon from '@material-ui/icons/ViewWeekOutlined';
 import ViewHeadlineOutlinedIcon from '@material-ui/icons/ViewHeadlineOutlined';
 import LayersIcon from '@material-ui/icons/Layers';
-import logo from '../images/jawbreaker.png';
+import logo from '../images/diamond-vector.png';
+import Switch from '@material-ui/core/Switch';
+import BrightnessMediumOutlinedIcon from '@material-ui/icons/BrightnessMediumOutlined';
 
 const drawerWidth = 240;
 
@@ -36,7 +38,7 @@ const drawerWidth = 240;
 const theme = createMuiTheme({
   palette: {
     primary: {
-      main: '#9579d1',
+      main: '#fffffff',
 
     },
     secondary: {
@@ -44,6 +46,34 @@ const theme = createMuiTheme({
       main: '#ffa5d8',
     },
   },
+  overrides: {
+
+    MuiButton: {
+      contained: {
+        backgroundColor: 'transparent',
+        boxShadow: 'none',
+        '&:hover': {
+          backgroundColor: 'transparent',
+        },
+      }
+
+    },
+    MuiSwitch: {
+
+      backgroundColor: 'transparent',
+      color: 'white'
+
+    },
+    MuiDrawer: {
+      paper: {
+        background: 'linear-gradient(rgba(13, 17, 31, 0.856) 30%, transparent 70%)',
+        color: 'white',
+        // backgroundColor: 'transparent',
+        // backgroundImage: 'url(' + drawerImage + ')',
+      },
+
+    }
+  }
 });
 
 const useStyles = makeStyles((theme) => ({
@@ -53,7 +83,7 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     '&:hover': {
-      fontWeight: 800
+      // fontWeight: 800
     },
   },
   appBar: {
@@ -98,6 +128,7 @@ const useStyles = makeStyles((theme) => ({
   content: {
     flexGrow: 1,
     padding: theme.spacing(3),
+    backgroundColor: 'transparent',
     transition: theme.transitions.create('margin', {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
@@ -111,7 +142,7 @@ const useStyles = makeStyles((theme) => ({
     }),
     marginLeft: 0,
   },
-  projectName:{
+  projectName: {
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
     overflow: 'hidden',
@@ -123,10 +154,15 @@ const useStyles = makeStyles((theme) => ({
 export default function NavBar() {
 
   let history = useHistory();
-  const { isAdmin, isAuthenticated, authUser, logout } = useContext(AuthContext);
+  const { isAdmin, isAuthenticated, authUser, logout, state, setState } = useContext(AuthContext);
   const { refreshContext, setRefreshContext, activeProjectId, projectName } = useContext(ProjectContext);
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
+
+
+  const handleChange = (event) => {
+    setState({ ...state, [event.target.name]: event.target.checked });
+  };
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -155,7 +191,7 @@ export default function NavBar() {
         <AppBar position="fixed"
           className={clsx(classes.appBar, {
             [classes.appBarShift]: open,
-          })} style={{ background: '#7eb8da' }}>
+          })} style={{ backgroundColor: 'transparent', boxShadow: 'none' }}>
           <Toolbar>
             {isAuthenticated() && (
               <IconButton
@@ -165,29 +201,37 @@ export default function NavBar() {
                 edge="start"
                 className={clsx(classes.menuButton, open && classes.hide)}
               >
-                <MenuIcon />
+                <MenuIcon  style={{ color: 'white' }}/>
               </IconButton>)}
             <Typography variant="h6" className={classes.title}>
-              <Link id="nav-logo-link" style={{ color: 'white', fontSize: 20, fontFamily: 'Righteous' }} className="nav-link" to={() => isAuthenticated() ? "/projects" : "/signin"}><img style={{ width: 30 }} src={logo} alt="logo"></img> JawBreaker</Link>
+              <Link id="nav-logo-link" style={{ color: 'white', fontSize: 20, fontFamily: 'Righteous' }} className="nav-link" to={() => isAuthenticated() ? "/projects" : "/signin"}><img style={{ width: 50 }} src={logo} alt="logo"></img> JawBreaker</Link>
             </Typography>
+            <Switch
+              size="small"
+              checked={state.checkedA}
+              color="primary"
+              onChange={handleChange}
+              name="checkedA"
+              inputProps={{ 'aria-label': 'primary checkbox' }}
+            /><BrightnessMediumOutlinedIcon style={{ color: '#f7f8fa' }}/>
 
             {isAdmin() && (
-              <Link id="link-to-admin" to={"/admin"} style={{ color: '#92ddea' }} className={classes.align}><Button style={{ color: 'white' }}>USER BOARD</Button></Link>
+              <Link id="link-to-admin" to={"/admin"} style={{ color: '#92ddea' }}  className={classes.align} ><Button variant="contained" style={{ color: 'white' }}>USER BOARD</Button></Link>
             )}
 
             {isAdmin() && (
-              <Link id="link-to-admin" to={"/admin/journal"} style={{ color: '#92ddea' }} className={classes.align}><Button style={{ color: 'white' }}>EVENT JOURNAL</Button></Link>
+              <Link id="link-to-admin" to={"/admin/journal"} style={{ color: '#92ddea' }}><Button variant="contained" style={{ color: 'white' }}>EVENT JOURNAL</Button></Link>
             )}
 
             {isAuthenticated() ? (
               <>
-               <Link id="link-to-projects" to={"/projects"} style={{ color: '#92ddea' }} className={classes.align}><Button style={{ color: 'white' }}>PROJECTS</Button></Link>
-                <Link id="link-to-profile" to={"/profile"} ><Button style={{ color: 'white' }}>{authUser.email}</Button></Link>
-                <Button onClick={() => logOut()} color="secondary">LogOut</Button>
+                <Link id="link-to-projects" to={"/projects"} className={isAdmin() ? '' : classes.align} style={{ color: '#92ddea' }} ><Button variant="contained" style={{ color: 'white' }}>PROJECTS</Button></Link>
+                <Link id="link-to-profile" to={"/profile"} ><Button variant="contained" style={{ color: 'white' }}>{authUser.email}</Button></Link>
+                <Button variant="contained" onClick={() => logOut()} style={{ color: '#ffa5d8' }}>LogOut</Button>
               </>
             ) : (
               <>
-                <Link id="nav-link-to-signin" className={classes.align} to={"/signin"}><Button style={{ color: 'white' }}>LogIn</Button></Link>
+                <Link id="nav-link-to-signin" className={classes.align} to={"/signin"}><Button variant="contained" style={{ color: 'white' }}>LogIn</Button></Link>
                 {/* <li className="nav-item">
                 <Link to={"/register"} className="nav-link">
                   Sign Up
@@ -210,18 +254,18 @@ export default function NavBar() {
         >
           <div className={classes.drawerHeader}>
             <IconButton id="handle-drawer" onClick={handleDrawerClose}>
-              {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+              {theme.direction === 'ltr' ? <ChevronLeftIcon style={{ color: 'white' }} /> : <ChevronRightIcon style={{ color: 'white' }} />}
             </IconButton>
           </div>
-          <Divider />
+          <Divider style={{ backgroundColor: 'white' }} />
           <List>
-            <ListItem id="button-to-projects-drawer" button key={1} onClick={() => handleRedirect('/projects')}><ListItemIcon><LayersOutlinedIcon /></ListItemIcon><ListItemText primary={'Projects'} /></ListItem>
+            <ListItem id="button-to-projects-drawer" button key={1} onClick={() => handleRedirect('/projects')}><ListItemIcon><LayersOutlinedIcon style={{ color: 'white' }} /></ListItemIcon><ListItemText primary={'Projects'} /></ListItem>
           </List>
-          <Divider />
+          <Divider style={{ backgroundColor: 'white' }} />
           {activeProjectId && (<>
-            <ListItem id="button-name-projects-drawer" button key={1} onClick={() => handleRedirect(`/tasks/${activeProjectId}`)}><ListItemIcon><LayersIcon /></ListItemIcon><ListItemText className={classes.projectName} primary={`${projectName}`} /></ListItem>
-            <ListItem id="button-to-backlog-drawer" button key={2} onClick={() => handleRedirect(`/backlog/${activeProjectId}`)}><ListItemIcon><ViewHeadlineOutlinedIcon /></ListItemIcon><ListItemText primary={'Backlog'} /></ListItem>
-            <ListItem id="button-to-activeboard-drawer" button key={3} onClick={() => handleRedirect(`/active-board/${activeProjectId}`)}><ListItemIcon><ViewWeekOutlinedIcon /></ListItemIcon><ListItemText primary={'Active Board'} /></ListItem> </>)}
+            <ListItem id="button-name-projects-drawer" button key={1} onClick={() => handleRedirect(`/tasks/${activeProjectId}`)}><ListItemIcon><LayersIcon style={{ color: 'white' }} /></ListItemIcon><ListItemText className={classes.projectName} primary={`${projectName}`} /></ListItem>
+            <ListItem id="button-to-backlog-drawer" button key={2} onClick={() => handleRedirect(`/backlog/${activeProjectId}`)}><ListItemIcon><ViewHeadlineOutlinedIcon style={{ color: 'white' }} /></ListItemIcon><ListItemText primary={'Backlog'} /></ListItem>
+            <ListItem id="button-to-activeboard-drawer" button key={3} onClick={() => handleRedirect(`/active-board/${activeProjectId}`)}><ListItemIcon><ViewWeekOutlinedIcon style={{ color: 'white' }} /></ListItemIcon><ListItemText primary={'Active Board'} /></ListItem> </>)}
           {/* <List>
             {['All mail', 'Trash', 'Spam'].map((text, index) => (
               <ListItem button key={text}>
@@ -231,12 +275,12 @@ export default function NavBar() {
             ))}
           </List> */}
         </Drawer>
-        <main
+        <main style={{ height: '100%', backgroundColor: 'transparent' }}
           className={clsx(classes.content, {
             [classes.contentShift]: open,
           })}
         >
-          <div className={classes.drawerHeader} />
+          <div style={{ height: '100%', backgroundColor: 'transparent' }} className={classes.drawerHeader} />
           <Routes />
         </main>
       </div>

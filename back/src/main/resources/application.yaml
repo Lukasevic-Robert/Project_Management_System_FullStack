@@ -1,12 +1,11 @@
 spring:
     datasource:
         driverClassName: org.h2.Driver
+        initialization-mode: always
         password: 
         platform: h2
-
 #        url: jdbc:h2:tcp://localhost/~/h2/rebel;COLLATION=LITHUANIAN;DB_CLOSE_ON_EXIT=FALSE
         url: jdbc:h2:mem:testdb;COLLATION=LITHUANIAN;DB_CLOSE_ON_EXIT=FALSE
-
         username: sa
     h2:
         console:
@@ -18,11 +17,11 @@ spring:
     jpa:
         database-platform: org.hibernate.dialect.H2Dialect
         hibernate:
-            ddl-auto: update
+            ddl-auto: validate
         properties:
             hibernate:
                 hbm2ddl:
-                    auto: update
+                    auto: create-drop 
                 hibernate:
                     dialect: org.hibernate.dialect.H2Dialect
             javax:

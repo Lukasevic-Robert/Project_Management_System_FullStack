@@ -19,21 +19,37 @@ import { createFilterOptions } from '@material-ui/lab/Autocomplete';
 import { makeStyles } from '@material-ui/core/styles';
 import { withStyles } from "@material-ui/core/styles";
 import { ProjectContext } from './../context/ProjectContext';
+import { AuthContext } from '../context/AuthContext.js';
 
 
 const CustomAutocomplete = withStyles({
     tag: {
         backgroundColor: 'transparent',
         height: 30,
-        color: "#5c99bd",
+        color: "white",
         fontSize: "15px",
         variant: "outlined",
         position: "relative",
-        border: "1px solid #be9ddf",
+        border: "1px solid white",
         width: "100%",
         display: "flex",
         justifyContent: "space-between",
     },
+    input: {
+        backgroundColor: 'transparent',
+    },
+    listbox: {
+        backgroundColor: 'transparent',
+        color: 'white',
+    },
+    paper: {
+        background: 'linear-gradient(to right, #27408b 30%, transparent)',
+        backgroundColor: 'transparent',
+    },
+    popupIndicator: {
+        color: 'white',
+    }
+
 
 })(Autocomplete);
 
@@ -41,24 +57,110 @@ const CustomAutocomplete = withStyles({
 const theme = createMuiTheme({
 
     overrides: {
+        MuiFormHelperText: {
+            root: {
+                '&.Mui-error': {
+                    color: '#ff9b8a'
+                }
+            }
+        },
+        MuiFormLabel: {
+            root: {
+                '&.Mui-error': {
+                    color: '#ff9b8a'
+                }
+            },
+            asterisk: {
+                '&.Mui-error': {
+                    color: '#ff9b8a'
+                }
+            }
+        },
         MuiChip: {
             deleteIcon: {
-                color: '#be9ddf',
+                color: '#d44a28',
                 "&:hover": {
-                    color: '#8d6dad'
+                    color: '#91341d'
                 }
 
             }
         },
+        MuiInputBase: {
+            root: {
+                backgroundColor: 'transparent',
+            }
+        },
+
+        MuiInputLabel: {
+            root: {
+                color: 'white',
+            },
+        },
+        MuiOutlinedInput: {
+            root: {
+                borderColor: 'white',
+                color: 'white',
+                '&.Mui-error': {
+                    color: '#ff9b8a',
+                    '& $notchedOutline': {
+                        borderColor: '#ff9b8a',
+                    }
+                },
+            },
+            notchedOutline: {
+                borderColor: 'white',
+            },
+        },
+        MuiInput: {
+            underline: {
+                '&:before': {
+                    borderBottom: '1px solid white',
+                }
+            }
+        },
+        MuiSelect: {
+            icon: {
+                color: 'white',
+            },
+            selectMenu: {
+                backgroundColor: 'transparent',
+            },
+            listbox: {
+                backgroundColor: 'transparent',
+            },
+            menuPaper: {
+                backgroundColor: 'transparent',
+            },
+        },
+        MuiIconButton: {
+            label: {
+                color: 'white'
+            },
+        },
+        MuiMenu: {
+            paper: {
+                background: 'linear-gradient(to right, #27408b 30%, transparent)',
+                backgroundColor: 'transparent',
+            }
+        },
+        MuiButton:{
+            contained: {
+            backgroundColor: '#d44a28',
+            '&:hover':{
+                backgroundColor: 'transparent',
+            }
+        }
+    }
+
     },
     palette: {
         primary: {
-            main: '#7eb8da',
+            main: '#ffffff',
 
         },
         secondary: {
             light: '#92ddea',
-            main: '#be9ddf',
+            main: '#d44a28',
             backgroundColor: '#fff',
         },
         default: {
@@ -77,7 +179,11 @@ const useStyles = makeStyles((theme) => ({
     },
     colorWhite: {
         color: 'white',
-    }
+    },
+    submit:{
+      
+            backgroundColor: '#ffffff',
+    },
 }));
 
 
@@ -86,6 +192,7 @@ function CreateProject({ match }) {
     const classes = useStyles();
 
     const { location, activeProjectId, setProjectName } = useContext(ProjectContext);
+    const {state} = useContext(AuthContext);
     let history = useHistory();
     const [id, setId] = useState(match.params.id);
     const [title, setTitle] = useState('');
@@ -231,76 +338,76 @@ function CreateProject({ match }) {
     }
     return (
         <ThemeProvider theme={theme}>
-            <Container component="main" maxWidth="xs" className={classes.root}>
-                <ValidatorForm id="create-update-project-form" onSubmit={saveOrUpdateProject}>
-                    <Typography color="secondary" component="h1" variant="h5">{getTitle()}</Typography>
-                    <TextValidator
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        fullWidth
-                        id="project"
-                        label="Project name"
-                        name="project"
-                        value={title}
-                        inputProps={{ maxLength: 50 }}
-                        // autoComplete="email"
-                        validators={['required', 'matchRegexp:^([A-Za-z0-9]+ )+[A-Za-z0-9]+$|^[A-Za-z0-9]+$']}
-                        errorMessages={['this field is required']}
-                        onChange={changeTitle}
-                        autoFocus
-                    />
-                    <TextValidator
-                        variant="outlined"
-                        margin="normal"
-                        multiline
-                        required
-                        fullWidth
-                        id="filled-textarea"
-                        label="Description"
-                        name="description"
-                        value={content}
-                        // autoComplete="email"
-                        validators={['required']}
-                        errorMessages={['this field is required']}
-                        onChange={changeContent}
-                    />
-                    {id !== '-1' ? <FormControl required id="form-control">
-                        <InputLabel id="demo-simple-select-label">Status</InputLabel>
-                        <Select
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            value={status}
-                            onChange={changeStatus}
-                        >
-                            <MenuItem style={{ color: '#cf932b', backgroundColor: 'transparent' }} value={`ACTIVE`}><span style={{ color: '#cf932b' }}>ACTIVE</span></MenuItem>
-                            <MenuItem style={{ color: '#63cf7f', backgroundColor: 'transparent' }} value={`DONE`}><span style={{ color: '#63cf7f' }}>DONE</span></MenuItem>
-
-                        </Select>
-                    </FormControl> : ''}
-                    <FormControl style={{ maxWidth: 'xs' }} id="form-control">
-                        <CustomAutocomplete
-                            filterOptions={filterOptions}
-                            multiple
-                            id="tags-standard"
-                            options={userList}
-                            onChange={handlePersonName}
-                            getOptionLabel={(option) => option}
-                            value={personName}
-                            renderInput={(params) => (
-                                <TextField
-                                    {...params}
-                                    variant="standard"
-                                    label="Users"
-                                    placeholder="Search"
-                                />
-                            )}
+                <Container style={{ backgroundColor: state.checkedA ? 'rgba(13, 17, 31, 0.514)' : 'transparent', padding:40, borderRadius: 5}} component="main" maxWidth="xs" className={classes.root}>
+                    <ValidatorForm id="create-update-project-form" onSubmit={saveOrUpdateProject}>
+                        <Typography style={{ color: '#ffc814' }} component="h1" variant="h5">{getTitle()}</Typography>
+                        <TextValidator
+                            variant="outlined"
+                            margin="normal"
+                            required
+                            fullWidth
+                            id="project"
+                            label="Project name"
+                            name="project"
+                            value={title}
+                            inputProps={{ maxLength: 50 }}
+                            // autoComplete="email"
+                            validators={['required', 'matchRegexp:^([A-Za-z0-9]+ )+[A-Za-z0-9]+$|^[A-Za-z0-9]+$']}
+                            errorMessages={['this field is required']}
+                            onChange={changeTitle}
+                            autoFocus
                         />
-                    </FormControl>
-                    <Button id="submit-project-update-create-form" className={classes.colorWhite} variant="contained" color="primary" type="submit" style={{ marginRight: '10px' }}>Submit</Button>
-                    <Link to={activeProjectId && (location === 'active' ? `/active-board/${activeProjectId}` : '/projects')} style={{ textDecoration: 'none' }}><Button id="cancel-project-update-create-form" className={classes.colorWhite} variant="contained" color="secondary">Cancel</Button></Link>
-                </ValidatorForm>
-            </Container>
+                        <TextValidator
+                            variant="outlined"
+                            margin="normal"
+                            multiline
+                            required
+                            fullWidth
+                            id="filled-textarea"
+                            label="Description"
+                            name="description"
+                            value={content}
+                            // autoComplete="email"
+                            validators={['required']}
+                            errorMessages={['this field is required']}
+                            onChange={changeContent}
+                        />
+                        {id !== '-1' ? <FormControl required id="form-control">
+                            <InputLabel id="demo-simple-select-label">Status</InputLabel>
+                            <Select
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                value={status}
+                                onChange={changeStatus}
+                            >
+                                <MenuItem style={{ color: '#ff9b8a', backgroundColor: 'transparent' }} value={`ACTIVE`}><span style={{ color: '#ff9b8a' }}>ACTIVE</span></MenuItem>
+                                <MenuItem style={{ color: '#ccffbf', backgroundColor: 'transparent' }} value={`DONE`}><span style={{ color: '#ccffbf' }}>DONE</span></MenuItem>
+    
+                            </Select>
+                        </FormControl> : ''}
+                        <FormControl style={{ maxWidth: 'xs' }} id="form-control">
+                            <CustomAutocomplete
+                                filterOptions={filterOptions}
+                                multiple
+                                id="tags-standard"
+                                options={userList}
+                                onChange={handlePersonName}
+                                getOptionLabel={(option) => option}
+                                value={personName}
+                                renderInput={(params) => (
+                                    <TextField
+                                        {...params}
+                                        variant="standard"
+                                        label="Users"
+                                        placeholder="Search"
+                                    />
+                                )}
+                            />
+                        </FormControl>
+                        <Button id="submit-project-update-create-form" variant="contained" className={classes.submit}  type="submit" style={{ marginRight: '10px', color: '#ffc814'}}>Submit</Button>
+                        <Link to={activeProjectId && (location === 'active' ? `/active-board/${activeProjectId}` : '/projects')} style={{ textDecoration: 'none' }}><Button id="cancel-project-update-create-form" className={classes.colorWhite} variant="contained" >Cancel</Button></Link>
+                    </ValidatorForm>
+                </Container>
         </ThemeProvider>
     )
 }

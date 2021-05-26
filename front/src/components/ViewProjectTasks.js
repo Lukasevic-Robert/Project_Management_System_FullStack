@@ -7,6 +7,7 @@ import swal from 'sweetalert';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 import { makeStyles } from '@material-ui/core/styles';
+import { AuthContext } from '../context/AuthContext.js';
 
 
 
@@ -32,6 +33,8 @@ const theme = createMuiTheme({
 
 const useStyles = makeStyles((theme) => ({
     root: {
+        borderRadius: '0',
+        borderTop: '1px solid #fff',
         minWidth: 500,
         maxWidth: 800,
         '& > * + *': {
@@ -69,6 +72,7 @@ const ViewProjectTasks = ({ match }) => {
     const [content, setContent] = useState('');
     const [totalTasksCount, setTotalTasks] = useState(0);
     const [unfinishedTasksCount, setUnfinishedTasks] = useState(0);
+    const {state} = useContext(AuthContext);
 
 
     useEffect(() => {
@@ -105,28 +109,28 @@ const ViewProjectTasks = ({ match }) => {
 
     return (
         <ThemeProvider theme={theme}>
-            <Card className={classes.root}>
+            <Card className={classes.root} style={{ backgroundColor: state.checkedA ? 'rgba(13, 17, 31, 0.514)' : 'transparent'}}>
                 <CardContent>
-                    <Typography className={classes.title} color="textSecondary" gutterBottom>
+                    <Typography className={classes.title} style={{ color: "silver"}} gutterBottom>
                         {title}
                     </Typography>
-                    <Typography className={classes.content} variant="h5" component="h2">
+                    <Typography className={classes.content} style={{ color: "white"}} variant="h5" component="h2">
                         {content}
                     </Typography>
                     {<br />}
                     <Typography className={classes.pos} color="textSecondary">
-                        <span style={{ fontSize: 24, color: status === 'ACTIVE' ? '#cf932b' : '#63cf7f' }}>{status}</span>
+                        <span style={{ fontSize: 24, color: status === 'ACTIVE' ? '#ff9b8a' : '#63cf7f' }}>{status}</span>
                     </Typography>
-                    {<hr />}
+                    {<hr color="silver"/>}
 
-                    <Typography color="textSecondary" variant="caption">TASKS PROGRESS</Typography>
-                    <Typography color="textPrimary" variant="h5">{totalTasksCount && (Math.round(100 - unfinishedTasksCount / totalTasksCount * 100))}%</Typography>
-                    <LinearProgress style={{ height: '5px', color: 'black' }}
+                    <Typography style={{ color: "white"}} variant="caption">TASKS PROGRESS</Typography>
+                    <Typography style={{ color: "white"}} variant="h5">{totalTasksCount && (Math.round(100 - unfinishedTasksCount / totalTasksCount * 100))}%</Typography>
+                    <LinearProgress style={{ height: '5px', color: '#d44a28' }}
                         value={totalTasksCount ? (100 - unfinishedTasksCount / totalTasksCount * 100) : 0} variant="determinate" /><br /><br />
 
-                    <Typography><span>Working on the Project:</span><br /><br /></Typography>
+                    <Typography><span style={{ color: "#ffc814"}}>Working on the Project:</span><br /><br /></Typography>
 
-                    {personName.map((fullname, index) => <Typography style={{ fontSize: 16, color: '#9579d1' }} variant="body2" component="p" key={index}>{fullname}</Typography>)}
+                    {personName.map((fullname, index) => <Typography style={{ fontSize: 16, color: 'white' }} variant="body2" component="p" key={index}>{fullname}</Typography>)}
                 </CardContent>
                 {/* <CardActions>
                     <Button size="small">Learn More</Button>

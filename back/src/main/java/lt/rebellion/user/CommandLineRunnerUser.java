@@ -92,7 +92,7 @@ public class CommandLineRunnerUser implements CommandLineRunner {
 			User dummy = new User();
 			dummy.setFirstName(entry.getKey());
 			dummy.setLastName(entry.getValue());
-			dummy.setEmail("user" + i + "@mail.com");
+			dummy.setEmail(entry.getKey().toLowerCase() + "@mail.com");
 			dummy.setPassword(encoder.encode("User1"));
 			dummy.setRoles(rolesForUser);
 			dummy.setStatus(EStatus.ACTIVE);
