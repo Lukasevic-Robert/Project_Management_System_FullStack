@@ -108,7 +108,7 @@ function Copyright() {
 
 const useStyles = makeStyles({
     paper: {
-        marginTop: theme.spacing(5),
+        marginTop: theme.spacing(4),
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -214,7 +214,7 @@ export default function SignIn() {
 
     return (!value.isAuthenticated() ? (
         <ThemeProvider theme={theme}>
-            <Container style={{  backgroundColor: value.state.checkedA ? 'rgba(13, 17, 31, 0.514)' : 'transparent', padding:40, marginTop: -10, borderRadius: 5}} component="main" maxWidth="xs">
+            <Container style={{  backgroundColor: value.state.checkedA ? 'rgba(13, 17, 31, 0.514)' : 'transparent', padding:40, marginTop: -20, borderRadius: 5}} component="main" maxWidth="xs">
                 <CssBaseline />
                 <div className={classes.paper}>
                     {successMessage ? (<Typography style={{ marginTop: 200, textAlign: 'center', backgroundColor: 'transparent', border:'none' }} role="alert"><span style={{fontSize: '24px', color: 'white'}}>{successMessage}</span> <br /> <span style={{ color: '#ffc814', fontSize: '15px'}}>Admin must confirm your registration.</span><br /><Link href="/signin" variant="body2">{"Press here to Sign In!"}</Link></Typography>)
@@ -283,8 +283,8 @@ export default function SignIn() {
                                     type="password"
                                     id="password-register"
                                     value={password}
-                                    validators={['required', `matchRegexp:^(?=.{8,}$)(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9]).*$`]}
-                                    errorMessages={['This field is required']}
+                                    validators={['required', `matchRegexp:^(?=.{6,}$)(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9]).*$`]}
+                                    errorMessages={['This field is required', `Password must contain at least one digit, uppercase and lowercase letter - min 6 characters long`]}
                                     onChange={handlePasswordChange}
                                 // autoComplete="current-password"
                                 />
@@ -300,7 +300,7 @@ export default function SignIn() {
                                     id="repeat-password-register"
                                     value={repeatPassword}
                                     error={!validForm}
-                                    validators={['isPasswordMatch', 'required', `matchRegexp:^(?=.{8,}$)(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9]).*$`]}
+                                    validators={['isPasswordMatch', 'required', `matchRegexp:^(?=.{6,}$)(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9]).*$`]}
                                     errorMessages={['Password mismatch', 'This field is required']}
                                     onChange={handleRepeatPasswordChange}
                                 // autoComplete="current-password"
