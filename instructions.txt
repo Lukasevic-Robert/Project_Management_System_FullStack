@@ -1,0 +1,39 @@
+Project management system
+The system is designed to manage projects and track their status. Projects can be registered, updated, deleted. Tasks can be added to specific projects, registered, updated, deleted. Task status can be tracked in backlog and active board.
+
+Getting started
+1. Clone the repository: https://github.com/Lukasevic-Robert/Project_Management_System_FullStack
+2. Open Spring Tools Suite 
+3. Import project: File -> Import... -> Maven -> Existing Maven Projects -> Next -> Browse... ->
+(select folder the project was saved in f. ex. G:\Programs \Project_Management_System\back)  -> Finish
+3. Right Mouse Click on project -> Run As -> Spring Boot App
+4. Open Visual Studio Code
+5. Open project File -> Open Folder... -> (select folder the project was saved in f.ex. G:\Programs \ Project_Management_System\front) -> Select Folder
+3. Open terminal: Terminal -> New Terminal
+4. Command in the opened terminal to install required packages:  npm i  
+5. Command in the opened terminal to start the project: npm start
+6. System will open on port 3000: http://localhost:3000/
+
+System roles:
+ADMIN confirm new user account, create, update users, reviews system logs, create, update, view, delete projects and tasks, assign projects to users
+MODERATOR create, view, update, delete projects and tasks, assign projects to users
+USER create, view, update, delete tasks of project which one is assigned to, view project status of projects one is not assigned to
+
+Register/ login
+One can log in with precreated accounts:
+User: user@mail.com Password: User1
+Admin: admin@mail.com Password: Admin1
+or setup a new account by using signup option
+
+Projects
+Only users with roles admin and moderator have permission to create, update and delete a project and assign users to it
+Projects can be saved to csv file
+
+Tasks
+Users assinged to specific projects can view, delete, update tasks by selecting a project one is assigned to
+User can view task status in backlog and active board and change task status accordingly 
+Tasks can be saved to csv file
+
+
+
+

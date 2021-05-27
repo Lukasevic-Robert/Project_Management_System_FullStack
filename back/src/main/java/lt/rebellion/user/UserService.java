@@ -188,6 +188,8 @@ public class UserService {
 
 		if (!userRepository.existsById(id)) {
 			if (userRepository.existsByEmail(userRequestDTO.getEmail())) {
+				journalService.newJournalEntry(userRequestDTO.getEmail(), Type.ERROR, Category.USER,
+						Activity.UNSUCCESSFUL_SIGNUP, "User sign up unsuccessful: email is already in use");
 				return ResponseEntity.badRequest().body(new ApiError("Error: Email is already in use!"));
 			} else {
 				EStatus status = EStatus.valueOf(userRequestDTO.getStatus());
@@ -196,6 +198,8 @@ public class UserService {
 				user.setStatus(status);
 				user.setRoles(roles);
 				userRepository.save(user);
+				journalService.newJournalEntry(userRequestDTO.getEmail(), Type.INFO, Category.USER, Activity.SUCCESSFUL_SIGNUP,
+						"User sign up successful");
 				return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
 			}
 		} else {
