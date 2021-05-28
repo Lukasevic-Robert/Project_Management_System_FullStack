@@ -308,7 +308,7 @@ function CreateUser({ match }) {
                         inputProps={{ maxLength: 50 }}
                         // autoComplete="email"
                         validators={['required', `matchRegexp:^[A-Z][a-z]+$`]}
-                        errorMessages={['this field is required', 'Firstname is not valid']}
+                        errorMessages={['this field is required', 'Firstname is not valid. First letter should be capital - min 2 characters long']}
                         onChange={changeFirstName}
                         autoFocus
                     />
@@ -324,7 +324,7 @@ function CreateUser({ match }) {
                         value={lastName}
                         // autoComplete="email"
                         validators={['required', `matchRegexp:^[A-Z][A-z]+$`]}
-                        errorMessages={['this field is required', 'Lastname is not valid']}
+                        errorMessages={['this field is required', 'Lastname is not valid. First letter should be capital - min 2 characters long']}
                         onChange={changeLastName}
                     />
                     <TextValidator
@@ -366,8 +366,8 @@ function CreateUser({ match }) {
                             onChange={changeRole}
                         >
                             <MenuItem style={{ backgroundColor: 'transparent' }} value={`ROLE_USER`}><span style={{ color: '#ffffff' }}>USER</span></MenuItem>
-                            <MenuItem style={{ color: '#2e6fd9', backgroundColor: 'transparent' }} value={`ROLE_MODERATOR`}><span style={{ color: '#000000' }}>MODERATOR</span></MenuItem>
-                            <MenuItem style={{ color: '#9545d8', backgroundColor: 'transparent' }} value={`ROLE_ADMIN`}><span style={{ color: '#7c169e' }}>ADMIN</span></MenuItem>
+                            <MenuItem style={{ color: '#42a1ff', backgroundColor: 'transparent' }} value={`ROLE_MODERATOR`}><span style={{ color: '#42a1ff' }}>MODERATOR</span></MenuItem>
+                            <MenuItem style={{ color: '#a52fcc', backgroundColor: 'transparent' }} value={`ROLE_ADMIN`}><span style={{ color: '#a52fcc' }}>ADMIN</span></MenuItem>
 
                         </Select>
                     </FormControl>

@@ -236,7 +236,7 @@ export default function SignIn() {
                                     name="fname"
                                     value={firstName}
                                     validators={['required', `matchRegexp:^[A-Z][a-z]+$`]}
-                                    errorMessages={['This field is required', 'Firstname must be a valid']}
+                                    errorMessages={['This field is required', 'Firstname must be valid. First letter should be capital - min 2 characters long']}
                                     onChange={handleFirstNameChange}
                                     autoFocus
 
@@ -252,7 +252,7 @@ export default function SignIn() {
                                     name="lname"
                                     value={lastName}
                                     validators={['required', `matchRegexp:^[A-Z][a-z]+$`]}
-                                    errorMessages={['This field is required', 'Lastname must be a valid']}
+                                    errorMessages={['This field is required', 'Lastname must be valid. First letter should be capital - min 2 characters long']}
                                     onChange={handleLastNameChange}
 
                                 />

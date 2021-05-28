@@ -109,7 +109,7 @@ const ViewProjectTasks = ({ match }) => {
 
     return (
         <ThemeProvider theme={theme}>
-            <Card className={classes.root} style={{ backgroundColor: state.checkedA ? 'rgba(13, 17, 31, 0.514)' : 'transparent'}}>
+            <Card className={classes.root} style={{background: 'linear-gradient(rgba(13, 17, 31, 0.514), transparent 100%)', backgroundColor: state.checkedA ? 'rgba(13, 17, 31, 0.514)' : 'transparent'}}>
                 <CardContent>
                     <Typography className={classes.title} style={{ color: "silver"}} gutterBottom>
                         {title}

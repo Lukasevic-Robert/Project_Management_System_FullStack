@@ -476,7 +476,7 @@ const BacklogTasks = ({ match }) => {
                     <DragDropContext onDragEnd={handleDragEnd}>
                         {_.map(state, (data, key) => {
                             return (
-                                <div key={key} className={"column"} style={{ backgroundColor: value.state.checkedA ? 'rgba(13, 17, 31, 0.514)' : 'transparent',}}>
+                                <div key={key} className={"column"} style={{backgroundColor: value.state.checkedA ? 'rgba(13, 17, 31, 0.514)' : 'transparent',}}>
                                     <div>
                                         <div><Typography color="textPrimary" variant="h6" style={{ padding: 10, color: '#ffc814', paddingLeft: 30 }}>{data.title}</Typography>
                                         </div>

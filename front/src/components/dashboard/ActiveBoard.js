@@ -253,7 +253,7 @@ const ActiveBoard = ({ match }) => {
                     {_.map(state, (data, key) => {
                         return (
 
-                            <div key={key} className={"column"} style={{ backgroundColor: value.state.checkedA ? 'rgba(13, 17, 31, 0.514)' : 'transparent', boxShadow: '2px 20px 20px rgba(27, 28, 43, 0.514)'}}>
+                            <div key={key} className={"column"} style={{background: 'linear-gradient(rgba(13, 17, 31, 0.514), transparent 100%)', backgroundColor: value.state.checkedA ? 'rgba(13, 17, 31, 0.514)' : 'transparent', boxShadow: '2px 20px 20px rgba(27, 28, 43, 0.514)'}}>
                                 <div>
                                     <div style={{ display: 'flex', justifyContent: 'space-between' }}><h3><span style={{color: 'white'}}>{data.title}</span></h3>
                                     </div>
