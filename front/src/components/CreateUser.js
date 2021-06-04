@@ -253,7 +253,7 @@ function CreateUser({ match }) {
             title: "Request successful",
             text: `The user has been ${status}`,
             icon: "success",
-            button: "Go back to project list",
+            button: "Go back to user list",
         });
         return successMessage;
     }

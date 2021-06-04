@@ -294,7 +294,7 @@ const CreateTask = ({ handleClose, taskStatus, taskId, projectId, add }) => {
 
     const getTitle = () => {
         if (add == true) {
-            return <h3 className="text-center">Add a new task</h3>
+            return <h3 className="text-center">Add new task</h3>
         }
         else {
             return <h3 className="text-center">Update the task</h3>
