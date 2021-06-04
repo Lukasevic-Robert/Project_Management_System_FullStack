@@ -3,6 +3,8 @@ The system is designed to manage projects and track their status. Projects can b
 
 ___
 
+![SignIn](front/public/Screenshots/Sign-in-page-filled-wide.png)
+
 ## Getting started
 1. Clone the [repository](https://github.com/Lukasevic-Robert/Project_Management_System_FullStack)
 2. Open _Spring Tools Suite_ 
