@@ -5,6 +5,14 @@ ___
 
 ![SignIn](front/public/Screenshots/Sign-in-page-filled-wide.png)
 
+___
+
+![Projects](front/public/Screenshots/Project-page-extra-wide.png)
+
+___
+
+![Active-board](front/public/Screenshots/Active-board-extra-wide-drawer.png)
+
 ## Getting started
 1. Clone the [repository](https://github.com/Lukasevic-Robert/Project_Management_System_FullStack)
 2. Open _Spring Tools Suite_ 
